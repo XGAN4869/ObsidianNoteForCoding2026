@@ -184,6 +184,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "44038906c323b848",
-  "lastOpenFiles": []
+  "active": "ced00f099010b889",
+  "lastOpenFiles": [
+    "claude-sync/zora-homepage",
+    "claude-sync/general",
+    "claude-sync"
+  ]
 }
