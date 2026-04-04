@@ -1,4 +1,5 @@
 # claude Obsidian 指令
+![[Pasted image 20260404212918.png]]
 
 # git 远程仓库同步 Obsidian
 https://linxiaomu.blog.csdn.net/article/details/155615887
