@@ -72,6 +72,19 @@ Current notes:
 - When editing notes, consider Obsidian's features like backlinks, graph view, and properties.
 - Use the installed skills to interact with the vault programmatically via Claude Code.
 
+## Context Management
+
+- Keep sessions narrow: prefer one concrete task, bug, or edit pass per thread.
+- Read only the files needed for the next step; avoid broad repo scans unless the user asks for them.
+- Prefer short checkpoints over long conversational history. After meaningful progress, summarize:
+  - goal
+  - relevant files
+  - current status
+  - next step
+- If the conversation grows large, suggest `/compact`.
+- If the topic has shifted or the thread is noisy, suggest `/clear` or a fresh `cc` session.
+- Treat this `CLAUDE.md` file as durable memory for project rules. Do not rely on old chat history for long-lived instructions.
+
 ## Useful References
 
 - Obsidian Help: https://help.obsidian.md/
