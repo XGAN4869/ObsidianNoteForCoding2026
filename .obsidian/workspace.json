@@ -29,7 +29,7 @@
               "state": {
                 "file": "指令/git命令选项详解.md",
                 "mode": "preview",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
               "title": "git命令选项详解"
@@ -201,8 +201,9 @@
   },
   "active": "adfe0c1a93f11f48",
   "lastOpenFiles": [
-    "指令/git.md",
+    "指令/git-commands.canvas",
     "指令/git命令选项详解.md",
+    "指令/git.md",
     "指令/git.md.tmp.6372.1775821037133",
     "指令/cc指令大全.md",
     "指令/git命令选项详解.md.tmp.6372.1775821018092",
