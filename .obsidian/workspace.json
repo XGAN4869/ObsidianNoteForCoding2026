@@ -29,9 +29,9 @@
               "state": {
                 "file": "指令/git-commands.canvas",
                 "viewState": {
-                  "x": 75,
-                  "y": 400,
-                  "zoom": -1.2201132817773108
+                  "x": 107.30079676825606,
+                  "y": 300.6367337022522,
+                  "zoom": -0.5088261595421232
                 }
               },
               "icon": "lucide-layout-dashboard",
@@ -204,9 +204,9 @@
   },
   "active": "adfe0c1a93f11f48",
   "lastOpenFiles": [
+    "指令/git.md",
     "指令/git命令选项详解.md",
     "指令/git-commands.canvas",
-    "指令/git.md",
     "指令/git.md.tmp.6372.1775821037133",
     "指令/cc指令大全.md",
     "指令/git命令选项详解.md.tmp.6372.1775821018092",
