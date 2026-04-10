@@ -59,14 +59,17 @@
             "id": "a9f6d935bb424d46",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "canvas",
               "state": {
-                "file": "指令/git.md",
-                "mode": "source",
-                "source": false
+                "file": "指令/git-flow.canvas",
+                "viewState": {
+                  "x": 411.76523290330147,
+                  "y": 479.6712313953171,
+                  "zoom": -0.21716119324805994
+                }
               },
-              "icon": "lucide-file",
-              "title": "git"
+              "icon": "lucide-layout-dashboard",
+              "title": "git-flow"
             }
           }
         ],
@@ -235,12 +238,12 @@
   },
   "active": "a9f6d935bb424d46",
   "lastOpenFiles": [
+    "指令/git.md",
     "指令/git-flow.canvas",
     "指令/git-commands.canvas",
     "指令/git.md.tmp.6372.1775821899249",
     "指令/git命令选项详解.md",
     "指令/git-flow.canvas.tmp.6372.1775821734182",
-    "指令/git.md",
     "指令/git.md.tmp.6372.1775821037133",
     "指令/cc指令大全.md",
     "指令/git命令选项详解.md.tmp.6372.1775821018092",
