@@ -27,26 +27,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "git.md",
+                "file": "指令/git.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "git"
             }
-          },
-          {
-            "id": "c4fd30eb86e1e8f9",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
-            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -209,15 +199,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c4fd30eb86e1e8f9",
+  "active": "adfe0c1a93f11f48",
   "lastOpenFiles": [
-    "git.md",
-    "cc指令大全.md",
-    "cc指令大全.md.tmp.53752.1775820057985",
-    "Obsidian怎么玩.md",
-    "git.md.tmp.53752.1775819877345",
+    "指令/cc指令大全.md",
     "CLAUDE.md",
+    "未命名.base",
+    "Pasted image 20260404212918.png",
+    "指令/Obsidian怎么玩.md",
+    "指令/git.md",
+    "指令",
+    "未命名 1.canvas",
     "未命名.md",
+    "未命名.canvas",
+    "cc指令大全.md.tmp.53752.1775820057985",
+    "git.md.tmp.53752.1775819877345",
     "面试整理/前端面试记录解析.md",
     "claude-sync/general/流程.md",
     "claude-sync/zora-homepage",
