@@ -484,4 +484,4 @@ git bisect reset              # 结束二分查找
 
 **标签**：#Git #前端开发 #GitFlow #版本控制 #开发流程
 
-**相关笔记**：[[前端面试记录解析]] [[CLAUDE]] [[git命令选项详解]]
+**相关笔记**：[[前端面试记录解析]] [[CLAUDE]] [[git命令选项详解]] [[git-flow.canvas]]
