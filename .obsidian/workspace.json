@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "git相关.md",
+                "file": "git.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "git相关"
+              "title": "git"
             }
           }
         ],
@@ -202,7 +202,7 @@
   "active": "adfe0c1a93f11f48",
   "lastOpenFiles": [
     "面试整理/前端面试记录解析.md",
-    "git相关.md",
+    "git.md",
     "Obsidian怎么玩.md",
     "CLAUDE.md",
     "claude-sync/general/流程.md",
