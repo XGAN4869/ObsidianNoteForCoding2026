@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Obsidian怎么玩.md",
+                "file": "面试整理/前端面试记录解析.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Obsidian怎么玩"
+              "title": "前端面试记录解析"
             }
           }
         ]
@@ -186,6 +186,7 @@
   },
   "active": "44038906c323b848",
   "lastOpenFiles": [
+    "Obsidian怎么玩.md",
     "CLAUDE.md",
     "claude-sync/general/流程.md",
     "claude-sync/zora-homepage",
