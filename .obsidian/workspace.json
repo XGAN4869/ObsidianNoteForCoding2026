@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "指令/git.md",
-                "mode": "source",
-                "source": false
+                "file": "指令/git命令选项详解.md",
+                "mode": "preview",
+                "source": true
               },
               "icon": "lucide-file",
-              "title": "git"
+              "title": "git命令选项详解"
             }
           }
         ],
@@ -201,12 +201,15 @@
   },
   "active": "adfe0c1a93f11f48",
   "lastOpenFiles": [
+    "指令/git.md",
+    "指令/git命令选项详解.md",
+    "指令/git.md.tmp.6372.1775821037133",
     "指令/cc指令大全.md",
+    "指令/git命令选项详解.md.tmp.6372.1775821018092",
     "CLAUDE.md",
     "未命名.base",
     "Pasted image 20260404212918.png",
     "指令/Obsidian怎么玩.md",
-    "指令/git.md",
     "指令",
     "未命名 1.canvas",
     "未命名.md",
