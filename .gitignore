@@ -1,0 +1,14 @@
+# Claude Code / Claude 特定配置（机器相关）
+.claude/
+.claudian/
+.claudeignore
+
+# Obsidian vault 配置（插件/主题每个机器独立）
+.obsidian/
+
+# IDE / 编辑器配置
+.agents/
+.troe/
+
+# 其他
+skills-lock.json
