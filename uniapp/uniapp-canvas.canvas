@@ -3,11 +3,11 @@
     {
       "id": "root0000000001",
       "type": "group",
-      "x": 350,
-      "y": 280,
-      "width": 300,
-      "height": 160,
-      "label": "uni-app 速成",
+      "x": 380,
+      "y": 400,
+      "width": 500,
+      "height": 900,
+      "label": "uni-app 一天速成",
       "color": "5"
     },
     {
@@ -15,126 +15,145 @@
       "type": "text",
       "x": 0,
       "y": 30,
-      "width": 300,
-      "height": 80,
-      "text": "# 一句话理解\n\nVue 语法写多端\npages.json 管路由\nuni API 调能力\n条件编译处理差异"
+      "width": 350,
+      "height": 120,
+      "text": "# 一句话理解\n\nuni-app = Vue 写页面 + pages.json 管路由/窗口 + uni API 调系统能力 + 条件编译处理多端差异"
     },
     {
       "id": "n0b2c3d4e5f67892",
       "type": "text",
       "x": 0,
-      "y": 130,
-      "width": 300,
-      "height": 120,
-      "text": "# 工程结构\n\n- pages/ 业务页面\n- components/ 公共组件\n- static/ 静态资源\n- pages.json 路由配置\n- manifest.json 应用配置"
+      "y": 170,
+      "width": 350,
+      "height": 150,
+      "text": "# 工程结构\n\npages/ 业务页面\ncomponents/ 公共组件\nstatic/ 静态资源\nApp.vue 应用入口\nmain.js/ts Vue初始化入口\npages.json 页面路由、导航栏、tabBar\nmanifest.json App/小程/H5发行配置"
     },
     {
       "id": "n0b2c3d4e5f67893",
       "type": "text",
       "x": 0,
-      "y": 270,
-      "width": 300,
-      "height": 100,
-      "text": "# 页面怎么写\n\ntemplate + script + style\nview=text/div, text=span"
+      "y": 340,
+      "width": 350,
+      "height": 120,
+      "text": "# 页面怎么写\n\ntemplate 页面结构 (view/text/image/button)\nscript 数据、方法、生命周期、请求\nstyle 样式，支持CSS/SCSS，常用rpx做移动端适配"
     },
     {
       "id": "n0b2c3d4e5f67894",
       "type": "text",
       "x": 0,
-      "y": 390,
-      "width": 300,
-      "height": 140,
-      "text": "# 生命周期\n\n- onLoad(options) 页面加载\n- onShow 每次显示\n- onReady 首次渲染\n- onPullDownRefresh 下拉刷新\n- onReachBottom 触底加载"
+      "y": 480,
+      "width": 350,
+      "height": 180,
+      "text": "# 生命周期\n\nonLaunch App启动，全局初始化\nonShow App或页面显示，回来时也触发\nonHide App或页面隐藏\nonLoad(options) 页面加载，拿路由参数\nonReady 页面首次渲染完成\nonPullDownRefresh 下拉刷新\nonReachBottom 触底加载更多"
     },
     {
       "id": "n0b2c3d4e5f67895",
       "type": "text",
       "x": 0,
-      "y": 550,
-      "width": 300,
-      "height": 120,
-      "text": "# 常用内置组件\n\nview, text, image, button\ninput, textarea\nscroll-view, swiper\nnavigator"
+      "y": 680,
+      "width": 350,
+      "height": 150,
+      "text": "# 常用内置组件\n\nview=div 容器\ntext=span 文本\nimage=img 图片\nbutton 按钮\ninput 输入框\ntextarea 多行输入\nscroll-view 滚动容器\nswiper 轮播\nnavigator 路由链接"
     },
     {
       "id": "n0b2c3d4e5f67896",
       "type": "text",
       "x": 0,
-      "y": 690,
-      "width": 300,
-      "height": 130,
-      "text": "# 路由跳转\n\n- navigateTo 保留当前页\n- switchTab 跳tabBar\n- redirectTo 关闭当前页\n- navigateBack 返回\n⚠️ tabBar只能用switchTab"
+      "y": 850,
+      "width": 350,
+      "height": 160,
+      "text": "# 路由跳转\n\nnavigateTo 保留当前页，跳非tabBar页\nredirectTo 关闭当前页，跳非tabBar页\nswitchTab 跳tabBar页面\nreLaunch 关闭所有页面，打开新页面\nnavigateBack 返回上一页\n\n⚠️ tabBar只能用switchTab"
     },
     {
       "id": "n0b2c3d4e5f67897",
       "type": "text",
       "x": 0,
-      "y": 840,
-      "width": 300,
-      "height": 90,
-      "text": "# 请求接口\n\nuni.request({ url, method, data })\n记得配置合法域名"
+      "y": 1030,
+      "width": 350,
+      "height": 120,
+      "text": "# 请求接口\n\nuni.request({ url, method, data })\n真实项目建议封装成Promise\n\n⚠️ 小程序需配置合法域名\n⚠️ H5本地调试注意跨域"
     },
     {
       "id": "n0b2c3d4e5f67898",
       "type": "text",
-      "x": 700,
+      "x": 900,
       "y": 30,
-      "width": 300,
-      "height": 80,
-      "text": "# 本地缓存\n\nsetStorageSync / getStorageSync\n保存token、用户信息"
+      "width": 380,
+      "height": 130,
+      "text": "# 本地缓存\n\nuni.setStorageSync('token', 'xxx')\nuni.getStorageSync('token')\nuni.removeStorageSync('token')\nuni.clearStorageSync()\n\n⚠️ 不要用 uni-、uni_、dcloud-、dcloud_ 前缀"
     },
     {
       "id": "n0b2c3d4e5f67899",
       "type": "text",
-      "x": 700,
-      "y": 130,
-      "width": 300,
-      "height": 90,
-      "text": "# 提示弹窗\n\n- showToast\n- showLoading / hideLoading\n- showModal"
+      "x": 900,
+      "y": 180,
+      "width": 380,
+      "height": 130,
+      "text": "# 提示弹窗\n\nuni.showToast({ title, icon })\nuni.showLoading({ title })\nuni.hideLoading()\nuni.showModal({ title, content, success })\nuni.showActionSheet({ itemList })"
     },
     {
       "id": "n0b2c3d4e5f6789a",
       "type": "text",
-      "x": 700,
-      "y": 240,
-      "width": 300,
-      "height": 90,
-      "text": "# 样式适配\n\nrpx: 750rpx=屏幕宽\npx: 固定像素\nvh/vw: vue页面支持"
+      "x": 900,
+      "y": 330,
+      "width": 380,
+      "height": 130,
+      "text": "# 样式适配\n\nrpx 推荐移动端适配\n750rpx 等于屏幕宽度\npx 固定像素\nvh/vw vue页面支持\n\n⚠️ nvue/uvue是原生渲染，CSS支持更有限"
     },
     {
       "id": "n0b2c3d4e5f6789b",
       "type": "text",
-      "x": 700,
-      "y": 350,
-      "width": 300,
-      "height": 110,
-      "text": "# 条件编译\n\n// #ifdef MP-WEIXIN\n// #endif\n\n处理 H5/App/小程序差异"
+      "x": 900,
+      "y": 480,
+      "width": 380,
+      "height": 150,
+      "text": "# 条件编译\n\n// #ifdef MP-WEIXIN\n// #endif\n\n// #ifdef APP\n// #endif\n\n// #ifndef H5\n// #endif\n\n常见平台值: WEB/H5, APP, APP-ANDROID, APP-IOS, MP-WEIXIN, MP-ALIPAY, VUE3"
     },
     {
       "id": "n0b2c3d4e5f6789c",
       "type": "text",
-      "x": 700,
-      "y": 480,
-      "width": 300,
-      "height": 140,
-      "text": "# 一天学习路线\n\n上午: 跑起来、看懂结构\n下午: 做业务页面、请求\n晚上: tabBar、刷新分页\n条件编译、发行"
+      "x": 900,
+      "y": 650,
+      "width": 380,
+      "height": 170,
+      "text": "# 一天学习路线\n\n上午: 安装HBuilderX，创建项目，跑H5，看懂pages.json和页面结构，新增页面并注册\n\n下午: 练内置组件，v-for/v-if，navigateTo跳转传参，uni.request请求，setStorage存token\n\n晚上: 配tabBar，封装request，下拉刷新，触底分页，条件编译，发行H5或小程序"
     },
     {
       "id": "n0b2c3d4e5f6789d",
       "type": "text",
-      "x": 700,
-      "y": 640,
-      "width": 300,
-      "height": 110,
-      "text": "# 踩坑点\n\n❌ 页面没注册到pages.json\n❌ tabBar用navigateTo\n❌ scroll-view没给高度\n❌ 不配置合法域名"
+      "x": 900,
+      "y": 840,
+      "width": 380,
+      "height": 160,
+      "text": "# 踩坑点\n\n❌ 新建页面后打不开 → 检查是否注册到pages.json\n❌ 跳tabBar页面失败 → 用switchTab不能用navigateTo\n❌ 参数丢失或乱码 → 用encodeURIComponent\n❌ scroll-view不滚动 → 必须给固定高度并设置scroll-y\n❌ H5请求失败 → 多半是跨域\n❌ 微信小程序请求失败 → 检查合法域名白名单"
     },
     {
       "id": "n0b2c3d4e5f6789e",
       "type": "text",
-      "x": 700,
-      "y": 770,
-      "width": 300,
-      "height": 130,
-      "text": "# 学习目标\n\n✅ 看懂项目、新增页面\n✅ 写页面、调接口\n✅ 跳转传参、缓存弹窗\n✅ 下拉刷新、触底分页\n✅ 配tabBar、处理多端差异"
+      "x": 900,
+      "y": 1020,
+      "width": 380,
+      "height": 170,
+      "text": "# 一天结束应该能做到\n\n✅ 看懂uni-app项目目录\n✅ 新增页面并配置路由\n✅ 写基本页面和组件\n✅ 调接口并渲染列表\n✅ 页面跳转和传参\n✅ 使用缓存、弹窗、loading\n✅ 下拉刷新和触底加载\n✅ 配tabBar\n✅ 处理简单多端差异\n✅ 跑H5或微信小程序"
+    },
+    {
+      "id": "link00000000001",
+      "type": "link",
+      "x": 900,
+      "y": 1210,
+      "width": 380,
+      "height": 60,
+      "url": "uniapp://show?path=cursor-uniapp.md"
+    },
+    {
+      "id": "file00000000001",
+      "type": "file",
+      "x": 0,
+      "y": 1170,
+      "width": 350,
+      "height": 100,
+      "file": "uniapp/cursor-uniapp.md",
+      "subpath": "#速成必背代码模板"
     }
   ],
   "edges": [
@@ -151,6 +170,7 @@
     {"id": "e0b2c3d4e5f6780b", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789b", "toSide": "left"},
     {"id": "e0b2c3d4e5f6780c", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789c", "toSide": "left"},
     {"id": "e0b2c3d4e5f6780d", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789d", "toSide": "left"},
-    {"id": "e0b2c3d4e5f6780e", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789e", "toSide": "left"}
+    {"id": "e0b2c3d4e5f6780e", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789e", "toSide": "left"},
+    {"id": "e0b2c3d4e5f6780f", "fromNode": "root0000000001", "fromSide": "bottom", "toNode": "file00000000001", "toSide": "top", "label": "原文"}
   ]
 }
