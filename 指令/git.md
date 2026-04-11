@@ -1,3 +1,48 @@
+# Zora的问题解决
+
+## 1. 清理已上传的配置文件
+
+当不小心将 `.claude`、`.obsidian` 等配置文件上传到 GitHub 后，需要从版本控制中移除：
+
+```bash
+# 1. 创建或更新 .gitignore
+# 添加需要忽略的目录和文件：
+# .claude/
+# .claudian/
+# .agents/
+# .vscode/
+# .obsidian/
+
+# 2. 从 git 缓存中移除（保留本地文件）
+git rm -r --cached .claude/ .claudian/ .agents/ .vscode/ .obsidian/
+
+# 3. 提交并推送
+git commit -m "Remove config files from tracking"
+git push origin main
+```
+
+## 2. 分支合并
+
+**保留哪个分支，就切换到那个分支，然后它去 merge 别的分支，最后推送。**
+
+```bash
+# 场景：把 feature/air14 的内容合并到 main
+git checkout main      # 切换到 main（要保留的分支）
+git pull origin main   # 拉取远程最新
+git merge feature/air14 # main 合并 feature 分支
+git push origin main    # 推送到远程
+```
+
+**反向操作**：把 main 同步到 feature
+```bash
+git checkout feature/air14
+git pull origin feature/air14
+git merge main
+git push origin feature/air14
+```
+
+---
+
 # Git 常用指令指南（前端开发）
 
 本指南整理了前端开发中常用的 Git 指令，并遵循 Git Flow 工作流。
