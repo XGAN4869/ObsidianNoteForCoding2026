@@ -1,5 +1,8 @@
 # Claude Code
 .claude/
+.claudian/
+.agents/
+.vscode/
 
 # Obsidian
 .obsidian/
