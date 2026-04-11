@@ -165,6 +165,55 @@ skills-lock.json
 
 ---
 
+## 4. git pull 与 git pull --rebase 的区别
+
+### 4.1 基本概念
+
+- `git pull` = `git fetch` + `git merge`
+- `git pull --rebase` = `git fetch` + `git rebase`
+- `git merge` = 手动合并两个分支
+
+### 4.2 区别图解
+
+**场景：你的本地和远程都有新提交**
+
+远程 origin/main 领先你的本地：
+```
+远程: A---B---D (新提交)
+           ↑
+本地: A---B---C1---C2---C3---C4 (你的本地提交)
+```
+
+**`git pull`（默认 = fetch + merge）：**
+```
+A---B---D---M (merge commit)
+        ↑
+     C1---C2---C3---C4
+```
+会产生一个"合并提交 M"，历史变成两条线。
+
+**`git pull --rebase`：**
+```
+A---B---D---C1---C2---C3---C4
+```
+把你的提交"接"到远程最新提交的后面，变成一条直线。
+
+### 4.3 何时用
+
+| 命令 | 场景 |
+|------|------|
+| `git pull` | 多人协作，想要保留完整历史 |
+| `git pull --rebase` | 单人开发，想保持线性干净 |
+| `git merge` | 合并两个不同分支 |
+
+### 4.4 实际建议
+
+- 单人开发或功能分支同步：`git pull --rebase`，避免无意义的 merge commit
+- 多人协作主干分支：用 `git pull`（默认），保留完整历史
+- 如果 rebase 时冲突：解决后 `git add .` → `git rebase --continue`
+
+---
+
 **标签**：#Git #前端开发 #GitFlow #版本控制 #开发流程
 
 **相关笔记**：[[前端面试记录解析]] [[CLAUDE]] [[git命令选项详解]] [[git-flow.canvas]]
