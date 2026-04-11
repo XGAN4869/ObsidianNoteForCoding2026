@@ -59,17 +59,14 @@
             "id": "a9f6d935bb424d46",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "指令/git-flow.canvas",
-                "viewState": {
-                  "x": 252.50310738869683,
-                  "y": 479.6712313953171,
-                  "zoom": -1.1085305467106896
-                }
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-layout-dashboard",
-              "title": "git-flow"
+              "icon": "lucide-file",
+              "title": "CLAUDE"
             }
           }
         ],
@@ -216,13 +213,23 @@
               "icon": "lucide-list",
               "title": "流程 的大纲"
             }
+          },
+          {
+            "id": "f6afb939cbc2de4d",
+            "type": "leaf",
+            "state": {
+              "type": "claudian-view",
+              "state": {},
+              "icon": "bot",
+              "title": "Claudian"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 365.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -233,13 +240,17 @@
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
-      "obsidian-git:Open Git source control": false
+      "obsidian-git:Open Git source control": false,
+      "obsidian42-brat:BRAT": false,
+      "claudian:Open Claudian": false
     }
   },
   "active": "a9f6d935bb424d46",
   "lastOpenFiles": [
-    "指令/git.md",
+    "Pasted image 20260404212918.png",
+    "CLAUDE.md",
     "指令/git-flow.canvas",
+    "指令/git.md",
     "指令/git-commands.canvas",
     "指令/git.md.tmp.6372.1775821899249",
     "指令/git命令选项详解.md",
@@ -247,9 +258,7 @@
     "指令/git.md.tmp.6372.1775821037133",
     "指令/cc指令大全.md",
     "指令/git命令选项详解.md.tmp.6372.1775821018092",
-    "CLAUDE.md",
     "未命名.base",
-    "Pasted image 20260404212918.png",
     "指令/Obsidian怎么玩.md",
     "指令",
     "未命名 1.canvas",

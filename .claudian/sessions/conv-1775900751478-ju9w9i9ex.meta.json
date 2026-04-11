@@ -1,0 +1,24 @@
+{
+  "id": "conv-1775900751478-ju9w9i9ex",
+  "providerId": "claude",
+  "title": "Revert Git commits",
+  "titleGenerationStatus": "success",
+  "createdAt": 1775900751493,
+  "updatedAt": 1775900777495,
+  "lastResponseAt": 1775900777495,
+  "sessionId": "bb0dc5f0-101e-4948-929b-22d8925567e9",
+  "providerState": {
+    "providerSessionId": "bb0dc5f0-101e-4948-929b-22d8925567e9"
+  },
+  "currentNote": "指令/git-flow.canvas",
+  "usage": {
+    "model": "haiku",
+    "inputTokens": 8839,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 200000,
+    "contextTokens": 8839,
+    "percentage": 4,
+    "contextWindowIsAuthoritative": true
+  }
+}
