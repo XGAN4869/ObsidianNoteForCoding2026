@@ -1,0 +1,23 @@
+{
+	"nodes":[
+		{"id":"e93645669a7ba64e","type":"text","text":"# Git 命令选项详解\n\n基于 [[git命令选项详解.md]] 创建的可视化图表","x":0,"y":0,"width":600,"height":150,"color":"4"},
+		{"id":"a3bb0974be04970f","type":"text","text":"## 合并与重置选项\n\n- `--no-ff` - 非快进合并\n- `--ff-only` - 只允许快进\n- `--abort` - 中止操作\n- `--soft` - 软重置\n- `--mixed` - 混合重置\n- `--hard` - 硬重置","x":480,"y":340,"width":350,"height":220,"color":"5"},
+		{"id":"6437af47679acee7","type":"text","text":"## 标签相关选项\n\n- `-a` - 创建附注标签\n- `-d` - 删除标签\n- `-l` - 列出标签","x":-150,"y":840,"width":350,"height":180,"color":"1"},
+		{"id":"039ce0a0e980879f","type":"text","text":"## 贮藏相关选项\n\n- `-u` - 包含未跟踪文件\n- `-p` - 交互式贮藏\n- `--keep-index` - 保留暂存区","x":-650,"y":800,"width":350,"height":180,"color":"6"},
+		{"id":"d00217be874cbd36","type":"text","text":"## 基础选项\n\n- `-h` / `--help` - 显示帮助\n- `-v` / `--version` - 显示版本","x":-680,"y":410,"width":350,"height":180,"color":"1"},
+		{"id":"a6b3843bb4e3d6dc","type":"text","text":"## 分支相关选项\n\n- `-b` - 创建并切换分支\n- `-d` - 删除已合并分支\n- `-D` - 强制删除分支\n- `-m` - 重命名分支\n- `-r` - 显示远程分支\n- `-a` - 显示所有分支","x":-800,"y":75,"width":350,"height":250,"color":"2"},
+		{"id":"655acb141d26830e","type":"text","text":"## 提交相关选项\n\n- `-m` - 提交信息\n- `-a` - 自动暂存并提交\n- `--amend` - 修改上次提交","x":-500,"y":1160,"width":350,"height":200,"color":"3"},
+		{"id":"a72ceb27911f1761","type":"text","text":"## 推送与拉取选项\n\n- `-u` - 设置上游分支\n- `--all` - 推送所有分支\n- `--tags` - 推送所有标签\n- `--rebase` - 变基拉取","x":25,"y":1260,"width":350,"height":200,"color":"4"},
+		{"id":"b2102bf0cd7adcf0","type":"text","text":"## 其他实用选项\n\n- `-n` - 预览操作\n- `-f` - 强制操作\n- `-C` - 在其他目录运行\n- `--cached` - 操作暂存区\n- `--dry-run` - 试运行","x":340,"y":830,"width":350,"height":200,"color":"2"}
+	],
+	"edges":[
+		{"id":"99d2f4a96227af31","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"d00217be874cbd36","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba64f","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"a6b3843bb4e3d6dc","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba650","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"655acb141d26830e","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba651","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"a72ceb27911f1761","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba652","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"a3bb0974be04970f","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba653","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"039ce0a0e980879f","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba654","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"6437af47679acee7","toSide":"top","color":"3"},
+		{"id":"e93645669a7ba655","fromNode":"e93645669a7ba64e","fromSide":"bottom","toNode":"b2102bf0cd7adcf0","toSide":"top","color":"3"}
+	]
+}

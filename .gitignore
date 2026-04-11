@@ -2,13 +2,18 @@
 .claude/
 .claudian/
 .claudeignore
+.agents/
+.troe/
+
+# IDE / 编辑器配置
+.vscode/
 
 # Obsidian vault 配置（插件/主题每个机器独立）
 .obsidian/
 
-# IDE / 编辑器配置
-.agents/
-.troe/
+# OS 垃圾文件
+.DS_Store
+Thumbs.db
 
 # 其他
 skills-lock.json

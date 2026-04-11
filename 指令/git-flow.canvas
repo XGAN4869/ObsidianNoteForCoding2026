@@ -1,0 +1,28 @@
+{
+	"nodes":[
+		{"id":"ee538279403b75e4","type":"group","x":400,"y":150,"width":800,"height":700,"color":"6","label":"开发流程"},
+		{"id":"3822e12cd30034c9","type":"group","x":-800,"y":150,"width":500,"height":700,"color":"1","label":"主要分支"},
+		{"id":"2e34134c309e6809","type":"group","x":-200,"y":150,"width":500,"height":700,"color":"3","label":"辅助分支"},
+		{"id":"0bf2be11aa4d1b5d","type":"text","text":"# Git Flow 工作流\n\n基于 [[git.md]] 创建的可视化图表，展示 Git Flow 分支管理模型","x":0,"y":0,"width":800,"height":120,"color":"4"},
+		{"id":"16cbc80f0027e403","type":"text","text":"## feature/*\n\n**功能分支**\n- 从 develop 创建\n- 开发新功能\n- 合并回 develop\n- 命名：`feature/user-auth`","x":-150,"y":200,"width":400,"height":200,"color":"3"},
+		{"id":"021750e122c82f78","type":"text","text":"## release/*\n\n**发布分支**\n- 从 develop 创建\n- 准备发布版本\n- 修复 bug（不添加新功能）\n- 合并到 develop 和 main","x":-150,"y":420,"width":400,"height":200,"color":"4"},
+		{"id":"1d24ec7a4a44eaad","type":"text","text":"## hotfix/*\n\n**热修复分支**\n- 从 main 创建\n- 修复生产环境 bug\n- 紧急修复\n- 合并到 develop 和 main","x":-150,"y":640,"width":400,"height":180,"color":"5"},
+		{"id":"291f64e1445f742d","type":"text","text":"### 功能开发流程\n1. `git checkout develop`\n2. `git pull origin develop`\n3. `git checkout -b feature/xxx`\n4. 开发并提交\n5. `git merge --no-ff feature/xxx`\n6. 删除分支","x":450,"y":200,"width":350,"height":220,"color":"3"},
+		{"id":"3f12af0dc3b27840","type":"text","text":"## main / master\n\n**生产环境代码**\n- 只接受发布分支的合并\n- 代表稳定版本\n- 用于生产部署","x":-750,"y":200,"width":400,"height":180,"color":"1"},
+		{"id":"f4adf0e2e52d376c","type":"text","text":"## develop\n\n**开发主分支**\n- 集成所有功能\n- 日常开发的基础\n- 准备发布的代码","x":-750,"y":430,"width":400,"height":180,"color":"2"},
+		{"id":"e3dee34807b64bd9","type":"text","text":"### 发布流程\n1. `git checkout develop`\n2. `git checkout -b release/v1.2.0`\n3. 修复 bug\n4. `git merge --no-ff release/v1.2.0` 到 main\n5. 打标签 `git tag -a v1.2.0`\n6. 合并到 develop\n7. 删除分支","x":820,"y":200,"width":350,"height":240,"color":"4"},
+		{"id":"6dcaf57de132919b","type":"text","text":"### 热修复流程\n1. `git checkout main`\n2. `git checkout -b hotfix/xxx`\n3. 修复紧急问题\n4. `git merge --no-ff hotfix/xxx` 到 main\n5. 打标签\n6. 合并到 develop\n7. 删除分支","x":450,"y":450,"width":350,"height":220,"color":"5"},
+		{"id":"cd0eef892e4105e8","type":"text","text":"### 最佳实践\n- 保持提交原子性\n- 清晰的提交信息\n- 频繁推送\n- 定期拉取更新\n- 使用 Pull Request\n- 保护主分支","x":820,"y":450,"width":350,"height":200,"color":"1"}
+	],
+	"edges":[
+		{"id":"582a5d667a7d7c8c","fromNode":"3f12af0dc3b27840","fromSide":"bottom","toNode":"f4adf0e2e52d376c","toSide":"top","color":"3","label":"基础"},
+		{"id":"01431e2502ec8ffa","fromNode":"f4adf0e2e52d376c","fromSide":"right","toNode":"16cbc80f0027e403","toSide":"left","color":"3","label":"创建"},
+		{"id":"0bf2be11aa4d1b5e","fromNode":"16cbc80f0027e403","fromSide":"right","toNode":"f4adf0e2e52d376c","toSide":"left","color":"3","label":"合并"},
+		{"id":"0bf2be11aa4d1b5f","fromNode":"f4adf0e2e52d376c","fromSide":"right","toNode":"021750e122c82f78","toSide":"left","color":"4","label":"创建"},
+		{"id":"0bf2be11aa4d1b60","fromNode":"021750e122c82f78","fromSide":"right","toNode":"f4adf0e2e52d376c","toSide":"left","color":"4","label":"合并"},
+		{"id":"0bf2be11aa4d1b61","fromNode":"021750e122c82f78","fromSide":"right","toNode":"3f12af0dc3b27840","toSide":"left","color":"4","label":"合并"},
+		{"id":"0bf2be11aa4d1b62","fromNode":"3f12af0dc3b27840","fromSide":"right","toNode":"1d24ec7a4a44eaad","toSide":"left","color":"5","label":"创建"},
+		{"id":"0bf2be11aa4d1b63","fromNode":"1d24ec7a4a44eaad","fromSide":"right","toNode":"3f12af0dc3b27840","toSide":"left","color":"5","label":"合并"},
+		{"id":"0bf2be11aa4d1b64","fromNode":"1d24ec7a4a44eaad","fromSide":"right","toNode":"f4adf0e2e52d376c","toSide":"left","color":"5","label":"合并"}
+	]
+}
