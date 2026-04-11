@@ -482,6 +482,131 @@ git bisect reset              # 结束二分查找
 
 ---
 
+---
+
+## 12. 跨设备笔记同步问题解决
+
+### 12.1 问题背景
+
+两台电脑使用同一个 Obsidian 笔记仓库，但各自有独立的配置和不同的笔记内容：
+
+| 电脑 | 分支 | 问题 |
+|------|------|------|
+| 拯救者 | `feature/air14` | 上传了 `.claude`、`.obsidian` 等机器配置 |
+| 小新 | `main` | 有另一套笔记（测验整理等） |
+
+### 12.2 解决步骤
+
+#### 第一步：创建 .gitignore 排除机器配置
+
+```bash
+# 创建 .gitignore 文件，内容：
+# .claude/
+# .claudian/
+# .agents/
+# .obsidian/
+# .troe/
+# skills-lock.json
+```
+
+#### 第二步：从暂存区移除已追踪的配置文件
+
+```bash
+git rm --cached -r .claude .claudian .agents .obsidian
+git add .gitignore
+```
+
+`git rm --cached -r` 的作用：**只从 Git 暂存区删除，保留本地文件**。配合 .gitignore，以后这些目录不会再被追踪。
+
+#### 第三步：提交并推送
+
+```bash
+git commit -m "chore: remove machine-specific config, add .gitignore"
+git push origin feature/air14
+```
+
+#### 第四步：合并两台电脑的笔记
+
+在拯救者电脑上，将 main 分支合并到 feature/air14：
+
+```bash
+# 如果两个分支没有共同祖先，需要 --allow-unrelated-histories
+git merge origin/main --allow-unrelated-histories
+
+# 如果有冲突，手动解决后：
+git add .gitignore skills-lock.json
+git commit -m "Merge origin/main into feature/air14"
+git push origin feature/air14
+```
+
+#### 第五步：切回 main 并拉取
+
+```bash
+# 删除不需要的分支
+git push origin --delete feature/air14
+
+# 切换到 main
+git checkout main
+
+# 拉取合并后的代码
+git pull origin main
+```
+
+### 12.3 解决冲突示例
+
+两个分支的 `.gitignore` 冲突时，可以手动合并内容：
+
+```bash
+# .gitignore 冲突内容示例
+<<<<<< HEAD
+# 拯救者的配置
+.claude/
+.claudian/
+=======
+# 小新的配置
+.vscode/
+.DS_Store
+>>>>>>> origin/main
+```
+
+**解决方法**：保留两边有用的内容，合并成：
+
+```bash
+# Claude Code / Claude 特定配置（机器相关）
+.claude/
+.claudian/
+.claudeignore
+.agents/
+.troe/
+
+# IDE / 编辑器配置
+.vscode/
+
+# Obsidian vault 配置（插件/主题每个机器独立）
+.obsidian/
+
+# OS 垃圾文件
+.DS_Store
+Thumbs.db
+
+# 其他
+skills-lock.json
+```
+
+### 12.4 关键命令总结
+
+| 场景 | 命令 |
+|------|------|
+| 创建 .gitignore | 手动创建文件 |
+| 取消文件追踪 | `git rm --cached -r <file>` |
+| 合并无关分支 | `git merge <branch> --allow-unrelated-histories` |
+| 删除远程分支 | `git push origin --delete <branch-name>` |
+| 暂存本地变更 | `git stash` |
+| 恢复暂存 | `git stash pop` |
+| 查看远程分支 | `git fetch origin && git branch -a` |
+
+---
+
 **标签**：#Git #前端开发 #GitFlow #版本控制 #开发流程
 
 **相关笔记**：[[前端面试记录解析]] [[CLAUDE]] [[git命令选项详解]] [[git-flow.canvas]]
