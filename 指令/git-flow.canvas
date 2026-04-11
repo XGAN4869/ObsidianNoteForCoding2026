@@ -12,7 +12,8 @@
 		{"id":"f4adf0e2e52d376c","type":"text","text":"## develop\n\n**开发主分支**\n- 集成所有功能\n- 日常开发的基础\n- 准备发布的代码","x":-750,"y":430,"width":400,"height":180,"color":"2"},
 		{"id":"e3dee34807b64bd9","type":"text","text":"### 发布流程\n1. `git checkout develop`\n2. `git checkout -b release/v1.2.0`\n3. 修复 bug\n4. `git merge --no-ff release/v1.2.0` 到 main\n5. 打标签 `git tag -a v1.2.0`\n6. 合并到 develop\n7. 删除分支","x":820,"y":200,"width":350,"height":240,"color":"4"},
 		{"id":"6dcaf57de132919b","type":"text","text":"### 热修复流程\n1. `git checkout main`\n2. `git checkout -b hotfix/xxx`\n3. 修复紧急问题\n4. `git merge --no-ff hotfix/xxx` 到 main\n5. 打标签\n6. 合并到 develop\n7. 删除分支","x":450,"y":450,"width":350,"height":220,"color":"5"},
-		{"id":"cd0eef892e4105e8","type":"text","text":"### 最佳实践\n- 保持提交原子性\n- 清晰的提交信息\n- 频繁推送\n- 定期拉取更新\n- 使用 Pull Request\n- 保护主分支","x":820,"y":450,"width":350,"height":200,"color":"1"}
+		{"id":"cd0eef892e4105e8","type":"text","text":"### 最佳实践\n- 保持提交原子性\n- 清晰的提交信息\n- 频繁推送\n- 定期拉取更新\n- 使用 Pull Request\n- 保护主分支","x":820,"y":450,"width":350,"height":200,"color":"1"},
+		{"id":"f6596590011e2428","x":-40,"y":-720,"width":840,"height":660,"type":"link","url":"https://www.jianshu.com/p/9a76e9aa9534?mtype=group"}
 	],
 	"edges":[
 		{"id":"582a5d667a7d7c8c","fromNode":"3f12af0dc3b27840","fromSide":"bottom","toNode":"f4adf0e2e52d376c","toSide":"top","color":"3","label":"基础"},
