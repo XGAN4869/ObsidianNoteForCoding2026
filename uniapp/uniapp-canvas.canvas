@@ -1,0 +1,156 @@
+{
+  "nodes": [
+    {
+      "id": "root0000000001",
+      "type": "group",
+      "x": 350,
+      "y": 280,
+      "width": 300,
+      "height": 160,
+      "label": "uni-app 速成",
+      "color": "5"
+    },
+    {
+      "id": "n0b2c3d4e5f67891",
+      "type": "text",
+      "x": 0,
+      "y": 30,
+      "width": 300,
+      "height": 80,
+      "text": "# 一句话理解\n\nVue 语法写多端\npages.json 管路由\nuni API 调能力\n条件编译处理差异"
+    },
+    {
+      "id": "n0b2c3d4e5f67892",
+      "type": "text",
+      "x": 0,
+      "y": 130,
+      "width": 300,
+      "height": 120,
+      "text": "# 工程结构\n\n- pages/ 业务页面\n- components/ 公共组件\n- static/ 静态资源\n- pages.json 路由配置\n- manifest.json 应用配置"
+    },
+    {
+      "id": "n0b2c3d4e5f67893",
+      "type": "text",
+      "x": 0,
+      "y": 270,
+      "width": 300,
+      "height": 100,
+      "text": "# 页面怎么写\n\ntemplate + script + style\nview=text/div, text=span"
+    },
+    {
+      "id": "n0b2c3d4e5f67894",
+      "type": "text",
+      "x": 0,
+      "y": 390,
+      "width": 300,
+      "height": 140,
+      "text": "# 生命周期\n\n- onLoad(options) 页面加载\n- onShow 每次显示\n- onReady 首次渲染\n- onPullDownRefresh 下拉刷新\n- onReachBottom 触底加载"
+    },
+    {
+      "id": "n0b2c3d4e5f67895",
+      "type": "text",
+      "x": 0,
+      "y": 550,
+      "width": 300,
+      "height": 120,
+      "text": "# 常用内置组件\n\nview, text, image, button\ninput, textarea\nscroll-view, swiper\nnavigator"
+    },
+    {
+      "id": "n0b2c3d4e5f67896",
+      "type": "text",
+      "x": 0,
+      "y": 690,
+      "width": 300,
+      "height": 130,
+      "text": "# 路由跳转\n\n- navigateTo 保留当前页\n- switchTab 跳tabBar\n- redirectTo 关闭当前页\n- navigateBack 返回\n⚠️ tabBar只能用switchTab"
+    },
+    {
+      "id": "n0b2c3d4e5f67897",
+      "type": "text",
+      "x": 0,
+      "y": 840,
+      "width": 300,
+      "height": 90,
+      "text": "# 请求接口\n\nuni.request({ url, method, data })\n记得配置合法域名"
+    },
+    {
+      "id": "n0b2c3d4e5f67898",
+      "type": "text",
+      "x": 700,
+      "y": 30,
+      "width": 300,
+      "height": 80,
+      "text": "# 本地缓存\n\nsetStorageSync / getStorageSync\n保存token、用户信息"
+    },
+    {
+      "id": "n0b2c3d4e5f67899",
+      "type": "text",
+      "x": 700,
+      "y": 130,
+      "width": 300,
+      "height": 90,
+      "text": "# 提示弹窗\n\n- showToast\n- showLoading / hideLoading\n- showModal"
+    },
+    {
+      "id": "n0b2c3d4e5f6789a",
+      "type": "text",
+      "x": 700,
+      "y": 240,
+      "width": 300,
+      "height": 90,
+      "text": "# 样式适配\n\nrpx: 750rpx=屏幕宽\npx: 固定像素\nvh/vw: vue页面支持"
+    },
+    {
+      "id": "n0b2c3d4e5f6789b",
+      "type": "text",
+      "x": 700,
+      "y": 350,
+      "width": 300,
+      "height": 110,
+      "text": "# 条件编译\n\n// #ifdef MP-WEIXIN\n// #endif\n\n处理 H5/App/小程序差异"
+    },
+    {
+      "id": "n0b2c3d4e5f6789c",
+      "type": "text",
+      "x": 700,
+      "y": 480,
+      "width": 300,
+      "height": 140,
+      "text": "# 一天学习路线\n\n上午: 跑起来、看懂结构\n下午: 做业务页面、请求\n晚上: tabBar、刷新分页\n条件编译、发行"
+    },
+    {
+      "id": "n0b2c3d4e5f6789d",
+      "type": "text",
+      "x": 700,
+      "y": 640,
+      "width": 300,
+      "height": 110,
+      "text": "# 踩坑点\n\n❌ 页面没注册到pages.json\n❌ tabBar用navigateTo\n❌ scroll-view没给高度\n❌ 不配置合法域名"
+    },
+    {
+      "id": "n0b2c3d4e5f6789e",
+      "type": "text",
+      "x": 700,
+      "y": 770,
+      "width": 300,
+      "height": 130,
+      "text": "# 学习目标\n\n✅ 看懂项目、新增页面\n✅ 写页面、调接口\n✅ 跳转传参、缓存弹窗\n✅ 下拉刷新、触底分页\n✅ 配tabBar、处理多端差异"
+    }
+  ],
+  "edges": [
+    {"id": "e0b2c3d4e5f67801", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67891", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67802", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67892", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67803", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67893", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67804", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67894", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67805", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67895", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67806", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67896", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67807", "fromNode": "root0000000001", "fromSide": "left", "toNode": "n0b2c3d4e5f67897", "toSide": "right"},
+    {"id": "e0b2c3d4e5f67808", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f67898", "toSide": "left"},
+    {"id": "e0b2c3d4e5f67809", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f67899", "toSide": "left"},
+    {"id": "e0b2c3d4e5f6780a", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789a", "toSide": "left"},
+    {"id": "e0b2c3d4e5f6780b", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789b", "toSide": "left"},
+    {"id": "e0b2c3d4e5f6780c", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789c", "toSide": "left"},
+    {"id": "e0b2c3d4e5f6780d", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789d", "toSide": "left"},
+    {"id": "e0b2c3d4e5f6780e", "fromNode": "root0000000001", "fromSide": "right", "toNode": "n0b2c3d4e5f6789e", "toSide": "left"}
+  ]
+}
