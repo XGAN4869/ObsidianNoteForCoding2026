@@ -1,0 +1,23 @@
+{
+  "id": "conv-1775901994722-1d4hprp4e",
+  "providerId": "claude",
+  "title": "询问AI模型身份",
+  "titleGenerationStatus": "success",
+  "createdAt": 1775901994735,
+  "updatedAt": 1775913358042,
+  "lastResponseAt": 1775913358042,
+  "sessionId": "8f634e15-705a-4d5e-af36-a35cc827d93c",
+  "providerState": {
+    "providerSessionId": "8f634e15-705a-4d5e-af36-a35cc827d93c"
+  },
+  "usage": {
+    "model": "haiku",
+    "inputTokens": 121,
+    "cacheCreationInputTokens": 26895,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 200000,
+    "contextTokens": 27016,
+    "percentage": 14,
+    "contextWindowIsAuthoritative": true
+  }
+}
