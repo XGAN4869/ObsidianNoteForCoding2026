@@ -1,0 +1,826 @@
+{
+  "nodes": [
+    {
+      "id": "root001",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 80,
+      "text": "# 前端面试记录解析\n\n共 14 个面试场次，123+ 题目"
+    },
+    {
+      "id": "group001",
+      "type": "group",
+      "x": -600,
+      "y": 150,
+      "width": 550,
+      "height": 600,
+      "label": "北京xx,中厂｜12.31",
+      "color": "1"
+    },
+    {
+      "id": "q001001",
+      "type": "text",
+      "x": -550,
+      "y": 220,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#35|1. 你对es6了解多少]]"
+    },
+    {
+      "id": "q001002",
+      "type": "text",
+      "x": -550,
+      "y": 280,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#70|2. 区分一下const,let,var这几个关键字]]"
+    },
+    {
+      "id": "q001003",
+      "type": "text",
+      "x": -550,
+      "y": 340,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#98|3. 你是怎么区分后端的数据类型的？]]"
+    },
+    {
+      "id": "q001004",
+      "type": "text",
+      "x": -550,
+      "y": 400,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#125|4. 前后端是怎么连接的]]"
+    },
+    {
+      "id": "q001005",
+      "type": "text",
+      "x": -550,
+      "y": 460,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#153|5. 计算机基础课程和前端的关系]]"
+    },
+    {
+      "id": "group002",
+      "type": "group",
+      "x": 100,
+      "y": 150,
+      "width": 550,
+      "height": 600,
+      "label": "某黎明的｜1.14线上",
+      "color": "2"
+    },
+    {
+      "id": "q002001",
+      "type": "text",
+      "x": 150,
+      "y": 220,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#183|1. var let const区别]]"
+    },
+    {
+      "id": "q002002",
+      "type": "text",
+      "x": 150,
+      "y": 280,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#205|2. map,set,array]]"
+    },
+    {
+      "id": "q002003",
+      "type": "text",
+      "x": 150,
+      "y": 340,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#232|3. js的各种作用域和作用域链]]"
+    },
+    {
+      "id": "q002004",
+      "type": "text",
+      "x": 150,
+      "y": 400,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#255|4. 暂时性死区]]"
+    },
+    {
+      "id": "q002005",
+      "type": "text",
+      "x": 150,
+      "y": 460,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#282|5. 函数定义的方式]]"
+    },
+    {
+      "id": "q002006",
+      "type": "text",
+      "x": 150,
+      "y": 520,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#301|6. 事件绑定的方式]]"
+    },
+    {
+      "id": "q002007",
+      "type": "text",
+      "x": 150,
+      "y": 580,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#325|7. 展开运算符]]"
+    },
+    {
+      "id": "group003",
+      "type": "group",
+      "x": 700,
+      "y": 150,
+      "width": 550,
+      "height": 650,
+      "label": "黎明的经典代码题｜1.14",
+      "color": "3"
+    },
+    {
+      "id": "q003001",
+      "type": "text",
+      "x": 750,
+      "y": 220,
+      "width": 450,
+      "height": 60,
+      "text": "[[前端面试记录解析#348|1. for+setTimeout 输出 123]]"
+    },
+    {
+      "id": "q003002",
+      "type": "text",
+      "x": 750,
+      "y": 290,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#380|2. 你对闭包的理解]]"
+    },
+    {
+      "id": "q003003",
+      "type": "text",
+      "x": 750,
+      "y": 350,
+      "width": 450,
+      "height": 60,
+      "text": "[[前端面试记录解析#402|3. this指向 - foo() vs obj.foo()]]"
+    },
+    {
+      "id": "q003004",
+      "type": "text",
+      "x": 750,
+      "y": 420,
+      "width": 450,
+      "height": 60,
+      "text": "[[前端面试记录解析#432|4. 事件循环输出顺序]]"
+    },
+    {
+      "id": "q003005",
+      "type": "text",
+      "x": 750,
+      "y": 490,
+      "width": 450,
+      "height": 60,
+      "text": "[[前端面试记录解析#467|5. Promise.then.catch 输出顺序]]"
+    },
+    {
+      "id": "q003006",
+      "type": "text",
+      "x": 750,
+      "y": 560,
+      "width": 450,
+      "height": 60,
+      "text": "[[前端面试记录解析#498|6. []==![] 结果是什么？为什么？]]"
+    },
+    {
+      "id": "group004",
+      "type": "group",
+      "x": -600,
+      "y": 800,
+      "width": 550,
+      "height": 800,
+      "label": "廊坊中小厂｜1.16线下",
+      "color": "4"
+    },
+    {
+      "id": "q004001",
+      "type": "text",
+      "x": -550,
+      "y": 870,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#522|1. 常用的html标签有哪些]]"
+    },
+    {
+      "id": "q004002",
+      "type": "text",
+      "x": -550,
+      "y": 930,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#688|2. 一个等于号，两个等于号，三个等于号]]"
+    },
+    {
+      "id": "q004003",
+      "type": "text",
+      "x": -550,
+      "y": 990,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#730|3. html 5中画一个三角形]]"
+    },
+    {
+      "id": "q004004",
+      "type": "text",
+      "x": -550,
+      "y": 1050,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#764|4. flex:1的意思是什么]]"
+    },
+    {
+      "id": "q004005",
+      "type": "text",
+      "x": -550,
+      "y": 1110,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#789|5. 文本溢出，显示省略号]]"
+    },
+    {
+      "id": "q004006",
+      "type": "text",
+      "x": -550,
+      "y": 1170,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#858|6. css是怎么布局的]]"
+    },
+    {
+      "id": "q004007",
+      "type": "text",
+      "x": -550,
+      "y": 1230,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#882|7. position的类型]]"
+    },
+    {
+      "id": "q004008",
+      "type": "text",
+      "x": -550,
+      "y": 1290,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#905|8. transfrom,calc]]"
+    },
+    {
+      "id": "q004009",
+      "type": "text",
+      "x": -550,
+      "y": 1350,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#956|9. span如何设置宽高，span里面能放p标签不]]"
+    },
+    {
+      "id": "q004010",
+      "type": "text",
+      "x": -550,
+      "y": 1410,
+      "width": 450,
+      "height": 60,
+      "text": "[[前端面试记录解析#977|10. js可以放到header里面吗]]"
+    },
+    {
+      "id": "q004011",
+      "type": "text",
+      "x": -550,
+      "y": 1480,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#998|11. z-index]]"
+    },
+    {
+      "id": "q004012",
+      "type": "text",
+      "x": -550,
+      "y": 1540,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1019|12. 事件冒泡是什么，怎么解决]]"
+    },
+    {
+      "id": "group005",
+      "type": "group",
+      "x": 100,
+      "y": 850,
+      "width": 550,
+      "height": 200,
+      "label": "js的经典题目｜1.16",
+      "color": "5"
+    },
+    {
+      "id": "q005001",
+      "type": "text",
+      "x": 150,
+      "y": 920,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1618|1. 手写 Promise]]"
+    },
+    {
+      "id": "group006",
+      "type": "group",
+      "x": 700,
+      "y": 850,
+      "width": 550,
+      "height": 300,
+      "label": "hr面试｜1.16",
+      "color": "6"
+    },
+    {
+      "id": "q006001",
+      "type": "text",
+      "x": 750,
+      "y": 920,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1640|HR面试题合集]]"
+    },
+    {
+      "id": "group007",
+      "type": "group",
+      "x": -600,
+      "y": 1650,
+      "width": 550,
+      "height": 500,
+      "label": "全栈工程师面｜1.16",
+      "color": "1"
+    },
+    {
+      "id": "q007001",
+      "type": "text",
+      "x": -550,
+      "y": 1720,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1767|1. 从0到1描述前端项目构建流程]]"
+    },
+    {
+      "id": "q007002",
+      "type": "text",
+      "x": -550,
+      "y": 1780,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1790|2. 描述一个你参与最多的项目]]"
+    },
+    {
+      "id": "q007003",
+      "type": "text",
+      "x": -550,
+      "y": 1840,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1813|3. 项目的难点在哪？]]"
+    },
+    {
+      "id": "q007004",
+      "type": "text",
+      "x": -550,
+      "y": 1900,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#1835|4. 前端安全相关]]"
+    },
+    {
+      "id": "q007005",
+      "type": "text",
+      "x": -550,
+      "y": 1960,
+      "width": "450",
+      "height": 50,
+      "text": "[[前端面试记录解析#1857|5. 性能优化思路]]"
+    },
+    {
+      "id": "group008",
+      "type": "group",
+      "x": 100,
+      "y": 1200,
+      "width": 550,
+      "height": 500,
+      "label": "vue常见面试题｜1.18",
+      "color": "2"
+    },
+    {
+      "id": "q008001",
+      "type": "text",
+      "x": 150,
+      "y": 1270,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2050|1. vue生命周期]]"
+    },
+    {
+      "id": "q008002",
+      "type": "text",
+      "x": 150,
+      "y": 1330,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2090|2. computed和watch区别]]"
+    },
+    {
+      "id": "q008003",
+      "type": "text",
+      "x": 150,
+      "y": 1390,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2118|3. vue响应式原理]]"
+    },
+    {
+      "id": "q008004",
+      "type": "text",
+      "x": 150,
+      "y": 1450,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2145|4. nextTick原理]]"
+    },
+    {
+      "id": "q008005",
+      "type": "text",
+      "x": 150,
+      "y": 1510,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2172|5. 组件通信方式]]"
+    },
+    {
+      "id": "q008006",
+      "type": "text",
+      "x": 150,
+      "y": 1570,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2200|6. v-if vs v-show]]"
+    },
+    {
+      "id": "q008007",
+      "type": "text",
+      "x": 150,
+      "y": 1630,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2225|7. v-for为什么要加key]]"
+    },
+    {
+      "id": "group009",
+      "type": "group",
+      "x": 700,
+      "y": 1200,
+      "width": 550,
+      "height": 400,
+      "label": "学校的二面｜1.20",
+      "color": "3"
+    },
+    {
+      "id": "q009001",
+      "type": "text",
+      "x": 750,
+      "y": 1270,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2389|二面题目合集]]"
+    },
+    {
+      "id": "group010",
+      "type": "group",
+      "x": -600,
+      "y": 2200,
+      "width": 550,
+      "height": 700,
+      "label": "小H大战群主的小厂一面｜1.22",
+      "color": "4"
+    },
+    {
+      "id": "q010001",
+      "type": "text",
+      "x": -550,
+      "y": 2270,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2623|1. 项目介绍和技术栈]]"
+    },
+    {
+      "id": "q010002",
+      "type": "text",
+      "x": -550,
+      "y": 2330,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2650|2. var/let/const 区别]]"
+    },
+    {
+      "id": "q010003",
+      "type": "text",
+      "x": -550,
+      "y": 2390,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2670|3. 箭头函数和普通函数区别]]"
+    },
+    {
+      "id": "q010004",
+      "type": "text",
+      "x": -550,
+      "y": 2450,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2695|4. 深拷贝浅拷贝]]"
+    },
+    {
+      "id": "q010005",
+      "type": "text",
+      "x": -550,
+      "y": 2510,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2720|5. 防抖和节流]]"
+    },
+    {
+      "id": "q010006",
+      "type": "text",
+      "x": -550,
+      "y": 2570,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2745|6. Promise使用场景]]"
+    },
+    {
+      "id": "q010007",
+      "type": "text",
+      "x": -550,
+      "y": 2630,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2770|7. async/await]]"
+    },
+    {
+      "id": "q010008",
+      "type": "text",
+      "x": -550,
+      "y": 2690,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2795|8. Vue双向绑定原理]]"
+    },
+    {
+      "id": "q010009",
+      "type": "text",
+      "x": -550,
+      "y": 2750,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2820|9. nextTick]]"
+    },
+    {
+      "id": "q010010",
+      "type": "text",
+      "x": -550,
+      "y": 2810,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#2845|10. 性能优化]]"
+    },
+    {
+      "id": "group011",
+      "type": "group",
+      "x": 100,
+      "y": 1750,
+      "width": 550,
+      "height": 900,
+      "label": "小H大战群主的小厂二面｜1.23",
+      "color": "5"
+    },
+    {
+      "id": "q011001",
+      "type": "text",
+      "x": 150,
+      "y": 1820,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3178|1. 自我介绍]]"
+    },
+    {
+      "id": "q011002",
+      "type": "text",
+      "x": 150,
+      "y": 1880,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3200|2. 职业规划]]"
+    },
+    {
+      "id": "q011003",
+      "type": "text",
+      "x": 150,
+      "y": 1940,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3220|3. 离职原因]]"
+    },
+    {
+      "id": "q011004",
+      "type": "text",
+      "x": 150,
+      "y": 2000,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3240|4. 期望薪资]]"
+    },
+    {
+      "id": "q011005",
+      "type": "text",
+      "x": 150,
+      "y": 2060,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3260|5. 公司为什么你要你]]"
+    },
+    {
+      "id": "q011006",
+      "type": "text",
+      "x": 150,
+      "y": 2120,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3280|6. 你还有什么问题]]"
+    },
+    {
+      "id": "q011007",
+      "type": "text",
+      "x": 150,
+      "y": 2180,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3300|7. 研究生和本科区别]]"
+    },
+    {
+      "id": "q011008",
+      "type": "text",
+      "x": 150,
+      "y": 2240,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3320|8. 项目介绍]]"
+    },
+    {
+      "id": "q011009",
+      "type": "text",
+      "x": 150,
+      "y": 2300,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3340|9. 缓存策略]]"
+    },
+    {
+      "id": "q011010",
+      "type": "text",
+      "x": 150,
+      "y": 2360,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3360|10. Git命令]]"
+    },
+    {
+      "id": "q011011",
+      "type": "text",
+      "x": 150,
+      "y": 2420,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3380|11. http缓存]]"
+    },
+    {
+      "id": "q011012",
+      "type": "text",
+      "x": 150,
+      "y": 2480,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3400|12. 跨域解决方案]]"
+    },
+    {
+      "id": "q011013",
+      "type": "text",
+      "x": 150,
+      "y": 2540,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3420|13. CSS布局]]"
+    },
+    {
+      "id": "q011014",
+      "type": "text",
+      "x": 150,
+      "y": 2600,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3440|14. 事件循环]]"
+    },
+    {
+      "id": "q011015",
+      "type": "text",
+      "x": 150,
+      "y": 2660,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3460|15. 微前端]]"
+    },
+    {
+      "id": "group012",
+      "type": "group",
+      "x": 700,
+      "y": 1650,
+      "width": 550,
+      "height": 500,
+      "label": "机构通用面试题｜1.26",
+      "color": "6"
+    },
+    {
+      "id": "q012001",
+      "type": "text",
+      "x": 750,
+      "y": 1720,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#3882|机构通用面试题合集]]"
+    },
+    {
+      "id": "group013",
+      "type": "group",
+      "x": -600,
+      "y": 2950,
+      "width": 550,
+      "height": 300,
+      "label": "主播被虐呀｜1.25",
+      "color": "1"
+    },
+    {
+      "id": "q013001",
+      "type": "text",
+      "x": -550,
+      "y": 3020,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#4163|国企和小厂面试题]]"
+    },
+    {
+      "id": "group014",
+      "type": "group",
+      "x": 100,
+      "y": 2200,
+      "width": 550,
+      "height": 200,
+      "label": "TypeScript必问｜1.30",
+      "color": "2"
+    },
+    {
+      "id": "q014001",
+      "type": "text",
+      "x": 150,
+      "y": 2270,
+      "width": 450,
+      "height": 50,
+      "text": "[[前端面试记录解析#4264|TS必问题目合集]]"
+    }
+  ],
+  "edges": [
+    {"id": "e001", "fromNode": "root001", "fromSide": "bottom", "toNode": "group001", "toSide": "top"},
+    {"id": "e002", "fromNode": "root001", "fromSide": "bottom", "toNode": "group002", "toSide": "top"},
+    {"id": "e003", "fromNode": "root001", "fromSide": "bottom", "toNode": "group003", "toSide": "top"},
+    {"id": "e004", "fromNode": "root001", "fromSide": "bottom", "toNode": "group004", "toSide": "top"},
+    {"id": "e005", "fromNode": "root001", "fromSide": "bottom", "toNode": "group005", "toSide": "top"},
+    {"id": "e006", "fromNode": "root001", "fromSide": "bottom", "toNode": "group006", "toSide": "top"},
+    {"id": "e007", "fromNode": "root001", "fromSide": "bottom", "toNode": "group007", "toSide": "top"},
+    {"id": "e008", "fromNode": "root001", "fromSide": "bottom", "toNode": "group008", "toSide": "top"},
+    {"id": "e009", "fromNode": "root001", "fromSide": "bottom", "toNode": "group009", "toSide": "top"},
+    {"id": "e010", "fromNode": "root001", "fromSide": "bottom", "toNode": "group010", "toSide": "top"},
+    {"id": "e011", "fromNode": "root001", "fromSide": "bottom", "toNode": "group011", "toSide": "top"},
+    {"id": "e012", "fromNode": "root001", "fromSide": "bottom", "toNode": "group012", "toSide": "top"},
+    {"id": "e013", "fromNode": "root001", "fromSide": "bottom", "toNode": "group013", "toSide": "top"},
+    {"id": "e014", "fromNode": "root001", "fromSide": "bottom", "toNode": "group014", "toSide": "top"}
+  ]
+}
