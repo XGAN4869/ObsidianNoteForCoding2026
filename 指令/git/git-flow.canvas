@@ -3,7 +3,7 @@
 		{"id":"ee538279403b75e4","type":"group","x":400,"y":150,"width":800,"height":700,"color":"6","label":"开发流程"},
 		{"id":"3822e12cd30034c9","type":"group","x":-800,"y":150,"width":500,"height":700,"color":"1","label":"主要分支"},
 		{"id":"2e34134c309e6809","type":"group","x":-200,"y":150,"width":500,"height":700,"color":"3","label":"辅助分支"},
-		{"id":"0bf2be11aa4d1b5d","type":"text","text":"# Git Flow 工作流\n\n基于 [[git.md]] 创建的可视化图表，展示 Git Flow 分支管理模型","x":0,"y":0,"width":800,"height":120,"color":"4"},
+		{"id":"0bf2be11aa4d1b5d","type":"text","text":"# Git Flow 工作流\n\n基于 [[git]] 创建的可视化图表，展示 Git Flow 分支管理模型","x":0,"y":0,"width":800,"height":120,"color":"4"},
 		{"id":"16cbc80f0027e403","type":"text","text":"## feature/*\n\n**功能分支**\n- 从 develop 创建\n- 开发新功能\n- 合并回 develop\n- 命名：`feature/user-auth`","x":-150,"y":200,"width":400,"height":200,"color":"3"},
 		{"id":"021750e122c82f78","type":"text","text":"## release/*\n\n**发布分支**\n- 从 develop 创建\n- 准备发布版本\n- 修复 bug（不添加新功能）\n- 合并到 develop 和 main","x":-150,"y":420,"width":400,"height":200,"color":"4"},
 		{"id":"1d24ec7a4a44eaad","type":"text","text":"## hotfix/*\n\n**热修复分支**\n- 从 main 创建\n- 修复生产环境 bug\n- 紧急修复\n- 合并到 develop 和 main","x":-150,"y":640,"width":400,"height":180,"color":"5"},

@@ -1,6 +1,6 @@
 {
 	"nodes":[
-		{"id":"e93645669a7ba64e","type":"text","text":"# Git 命令选项详解\n\n基于 [[git命令选项详解.md]] 创建的可视化图表","x":0,"y":0,"width":600,"height":150,"color":"4"},
+		{"id":"e93645669a7ba64e","type":"text","text":"# Git 命令选项详解\n\n基于 [[git命令选项详解]] 创建的可视化图表","x":0,"y":0,"width":600,"height":150,"color":"4"},
 		{"id":"a3bb0974be04970f","type":"text","text":"## 合并与重置选项\n\n- `--no-ff` - 非快进合并\n- `--ff-only` - 只允许快进\n- `--abort` - 中止操作\n- `--soft` - 软重置\n- `--mixed` - 混合重置\n- `--hard` - 硬重置","x":480,"y":340,"width":350,"height":220,"color":"5"},
 		{"id":"6437af47679acee7","type":"text","text":"## 标签相关选项\n\n- `-a` - 创建附注标签\n- `-d` - 删除标签\n- `-l` - 列出标签","x":-150,"y":840,"width":350,"height":180,"color":"1"},
 		{"id":"039ce0a0e980879f","type":"text","text":"## 贮藏相关选项\n\n- `-u` - 包含未跟踪文件\n- `-p` - 交互式贮藏\n- `--keep-index` - 保留暂存区","x":-650,"y":800,"width":350,"height":180,"color":"6"},
