@@ -1,0 +1,224 @@
+{
+  "nodes": [
+    {
+      "id": "a1b2c3d4e5f67890",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 300,
+      "height": 80,
+      "color": "5",
+      "text": "# ObsidianNoteForCoding2026\nObsidian 知识库项目"
+    },
+    {
+      "id": "b2c3d4e5f678901a",
+      "type": "text",
+      "x": 400,
+      "y": -200,
+      "width": 200,
+      "height": 80,
+      "text": "## 配置目录\n.obsidian/\n.claude/\n.claudian/"
+    },
+    {
+      "id": "c3d4e5f678901ab2",
+      "type": "text",
+      "x": 400,
+      "y": -50,
+      "width": 200,
+      "height": 80,
+      "text": "## 面试整理/\n前端面试记录解析.md\n前端面试记录解析.canvas"
+    },
+    {
+      "id": "d4e5f678901ab2c3",
+      "type": "text",
+      "x": 400,
+      "y": 100,
+      "width": 200,
+      "height": 80,
+      "text": "## Blog/\n(空目录)"
+    },
+    {
+      "id": "e5f678901ab2c3d4",
+      "type": "text",
+      "x": 800,
+      "y": -200,
+      "width": 200,
+      "height": 80,
+      "text": "### .obsidian/\nObsidian 配置"
+    },
+    {
+      "id": "f678901ab2c3d4e5",
+      "type": "text",
+      "x": 800,
+      "y": -50,
+      "width": 200,
+      "height": 80,
+      "text": "### .claude/\nClaude Code 配置和 skills"
+    },
+    {
+      "id": "0123456789abcdef",
+      "type": "text",
+      "x": 1200,
+      "y": -200,
+      "width": 200,
+      "height": 60,
+      "text": "#### skills/\njson-canvas/"
+    },
+    {
+      "id": "a23456789abcdef0",
+      "type": "text",
+      "x": 1200,
+      "y": -120,
+      "width": 200,
+      "height": 60,
+      "text": "#### references/\nEXAMPLES.md"
+    },
+    {
+      "id": "g78901ab2c3d4e5f",
+      "type": "text",
+      "x": 400,
+      "y": 250,
+      "width": 200,
+      "height": 80,
+      "text": "## 指令/\ncc和codex/\ngit/\nskill大全/"
+    },
+    {
+      "id": "h8901ab2c3d4e5f6",
+      "type": "text",
+      "x": 800,
+      "y": 250,
+      "width": 200,
+      "height": 60,
+      "text": "### cc和codex/"
+    },
+    {
+      "id": "i901ab2c3d4e5f67",
+      "type": "text",
+      "x": 800,
+      "y": 330,
+      "width": 200,
+      "height": 60,
+      "text": "### git/"
+    },
+    {
+      "id": "j01ab2c3d4e5f678",
+      "type": "text",
+      "x": 800,
+      "y": 410,
+      "width": 200,
+      "height": 60,
+      "text": "### skill大全/"
+    },
+    {
+      "id": "k1ab2c3d4e5f6789",
+      "type": "text",
+      "x": 400,
+      "y": 400,
+      "width": 200,
+      "height": 80,
+      "text": "## uniapp/\nuniapp.md\nstage1/"
+    },
+    {
+      "id": "l2ab2c3d4e5f67890",
+      "type": "text",
+      "x": 400,
+      "y": 550,
+      "width": 200,
+      "height": 60,
+      "text": "## 根目录文件\nCLAUDE.md\nskills-lock.json"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1d2c3b4a5968273",
+      "fromNode": "a1b2c3d4e5f67890",
+      "fromSide": "right",
+      "toNode": "b2c3d4e5f678901a",
+      "toSide": "left"
+    },
+    {
+      "id": "e2d3c4b5a6978274",
+      "fromNode": "a1b2c3d4e5f67890",
+      "fromSide": "right",
+      "toNode": "c3d4e5f678901ab2",
+      "toSide": "left"
+    },
+    {
+      "id": "e3d4c5b6a7988275",
+      "fromNode": "a1b2c3d4e5f67890",
+      "fromSide": "right",
+      "toNode": "d4e5f678901ab2c3",
+      "toSide": "left"
+    },
+    {
+      "id": "e4d5c6b7a8998276",
+      "fromNode": "a1b2c3d4e5f67890",
+      "fromSide": "right",
+      "toNode": "g78901ab2c3d4e5f",
+      "toSide": "left"
+    },
+    {
+      "id": "e5d6c7b8a9008277",
+      "fromNode": "a1b2c3d4e5f67890",
+      "fromSide": "right",
+      "toNode": "k1ab2c3d4e5f6789",
+      "toSide": "left"
+    },
+    {
+      "id": "e6d7c8b9a0018278",
+      "fromNode": "a1b2c3d4e5f67890",
+      "fromSide": "right",
+      "toNode": "l2ab2c3d4e5f67890",
+      "toSide": "left"
+    },
+    {
+      "id": "e7d8c9b0a1028279",
+      "fromNode": "b2c3d4e5f678901a",
+      "fromSide": "right",
+      "toNode": "e5f678901ab2c3d4",
+      "toSide": "left"
+    },
+    {
+      "id": "e8d9c0b1a203827a",
+      "fromNode": "b2c3d4e5f678901a",
+      "fromSide": "right",
+      "toNode": "f678901ab2c3d4e5",
+      "toSide": "left"
+    },
+    {
+      "id": "e9d0c1b2a304827b",
+      "fromNode": "f678901ab2c3d4e5",
+      "fromSide": "right",
+      "toNode": "0123456789abcdef",
+      "toSide": "left"
+    },
+    {
+      "id": "ead1c2b3a405827c",
+      "fromNode": "f678901ab2c3d4e5",
+      "fromSide": "right",
+      "toNode": "a23456789abcdef0",
+      "toSide": "left"
+    },
+    {
+      "id": "ebd2c3b4a506827d",
+      "fromNode": "g78901ab2c3d4e5f",
+      "fromSide": "right",
+      "toNode": "h8901ab2c3d4e5f6",
+      "toSide": "left"
+    },
+    {
+      "id": "ecd3c4b5a607827e",
+      "fromNode": "g78901ab2c3d4e5f",
+      "fromSide": "right",
+      "toNode": "i901ab2c3d4e5f67",
+      "toSide": "left"
+    },
+    {
+      "id": "edd4c5b6a708827f",
+      "fromNode": "g78901ab2c3d4e5f",
+      "fromSide": "right",
+      "toNode": "j01ab2c3d4e5f678",
+      "toSide": "left"
+    }
+  ]
+}
