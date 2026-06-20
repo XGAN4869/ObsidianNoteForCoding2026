@@ -1,0 +1,19 @@
+# Claude Code / Claude 特定配置（机器相关）
+.claude/
+.claudian/
+.claudeignore
+.agents/
+.troe/
+
+# IDE / 编辑器配置
+.vscode/
+
+# Obsidian vault 配置（插件/主题每个机器独立）
+.obsidian/
+
+# OS 垃圾文件
+.DS_Store
+Thumbs.db
+
+# 其他
+skills-lock.json

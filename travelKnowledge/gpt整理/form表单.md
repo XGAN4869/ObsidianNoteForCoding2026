@@ -1,0 +1,375 @@
+## form 与 t-form
+```vue
+<t-form :data="formData">
+  <t-form-item
+    label="奖惩时间:"
+    name="date"
+    :rules="[{ required: true, message: '请选择奖惩时间', trigger: 'change' }]"
+  >
+    <t-date-picker v-model="formData.date" />
+  </t-form-item>
+</t-form>
+```
+
+### 三者必须对应起来
+
+你可以记这个关系：
+
+```
+<t-form :data="formData">
+```
+
+对应：
+
+```
+<t-form-item name="date">
+```
+
+对应：
+
+```
+<t-date-picker v-model="formData.date" />
+```
+
+也就是：
+
+```
+:data="formData"name="date"v-model="formData.date"
+```
+
+这三个要对齐。
+
+可以，这类 **弹窗 Form 表单** 以后你可以按一个固定思路写。你现在这份代码已经比较接近标准结构了。核心不是“先写模板”，而是先想清楚：**表单字段、表单规则、联动逻辑、提交数据**。✅
+
+---
+
+# Form 表单代码通用写法思路
+
+## 1. 先定义表单数据 `formData`
+
+表单里所有需要填写、校验、提交的字段，都统一放进 `formData`。
+
+```js
+const createEmptyForm = () => ({
+  accountId: '',
+  accountName: '',
+  type: '',
+  amount: undefined,
+  reasonOption: '',
+  customReason: '',
+  remark: '',
+  date: '',
+})
+
+const formData = reactive(createEmptyForm())
+```
+
+记住一句话：
+
+> 只要是表单项，就优先放进 `formData`。
+
+例如：
+
+```txt
+目标员工 → formData.accountId
+奖惩性质 → formData.type
+奖惩事由 → formData.reasonOption
+金额 → formData.amount
+日期 → formData.date
+备注 → formData.remark
+```
+
+---
+
+## 2. 模板中保持三者一致
+
+每一个表单项都要注意这三个地方对应：
+
+```vue
+<t-form :data="formData">
+```
+
+```vue
+<t-form-item name="date">
+```
+
+```vue
+<t-date-picker v-model="formData.date" />
+```
+
+也就是：
+
+```txt
+:data="formData"
+name="date"
+v-model="formData.date"
+```
+
+这三个要对齐，否则表单校验会找不到字段。
+
+---
+
+## 3. 配置类数据单独抽出来
+
+比如下拉选项、常量值、日期配置，不要直接写死在模板里。
+
+```js
+const REWARD_TYPE = '奖励'
+const PUNISH_TYPE = '惩罚'
+
+const createRewardTypeOptions = [
+  { label: REWARD_TYPE, value: REWARD_TYPE },
+  { label: PUNISH_TYPE, value: PUNISH_TYPE },
+]
+
+const defaultConfig = {
+  placeholder: '请选择日期',
+  format: 'YYYY-MM-DD',
+  valueType: 'YYYY-MM-DD',
+}
+```
+
+这样模板更干净，后期也更好改。
+
+---
+
+## 4. 有依赖关系的内容用 `computed`
+
+比如奖惩事由要根据奖惩性质变化：
+
+```js
+const filteredRewardReasonOptions = computed(() => {
+  if (!formData.type) {
+    return rewardReasonOptions
+  }
+
+  return rewardReasonOptions.filter((item) => {
+    return !item.type || item.type === formData.type
+  })
+})
+```
+
+金额的最大值 / 最小值也属于派生状态：
+
+```js
+const isRewardType = computed(() => formData.type === REWARD_TYPE)
+const isPunishType = computed(() => formData.type === PUNISH_TYPE)
+
+const amountMin = computed(() => (isRewardType.value ? 0.01 : undefined))
+const amountMax = computed(() => (isPunishType.value ? -0.01 : undefined))
+```
+
+简单说：
+
+```txt
+由 formData 推导出来的值 → 用 computed
+```
+
+---
+
+## 5. 字段之间有联动，用 `watch`
+
+比如切换了“奖励 / 惩罚”，原来的事由可能不合法了，所以要清空：
+
+```js
+watch(
+  () => formData.type,
+  () => {
+    const currentReasonIsValid = filteredRewardReasonOptions.value.some(
+      (item) => item.value === formData.reasonOption,
+    )
+
+    if (!currentReasonIsValid) {
+      formData.reasonOption = ''
+      formData.customReason = ''
+    }
+  },
+)
+```
+
+记住：
+
+```txt
+一个字段变化，需要影响另一个字段 → 用 watch
+```
+
+---
+
+## 6. 校验规则单独管理
+
+简单规则可以直接写在模板里：
+
+```vue
+:rules="[{ required: true, message: '请选择奖惩时间', trigger: 'change' }]"
+```
+
+复杂规则建议抽成变量：
+
+```js
+const amountRules = computed(() => [
+  { required: true, message: '请输入关联金额', trigger: 'blur' },
+  { validator: (value) => Number(value) !== 0, message: '金额不能为0', trigger: 'blur' },
+  { validator: validateAmountByRewardType, message: '奖励金额需 > 0，惩罚金额需 < 0', trigger: 'blur' },
+])
+```
+
+复杂校验再抽函数：
+
+```js
+const validateAmountByRewardType = (value) => {
+  const amount = Number(value)
+
+  if (!Number.isFinite(amount)) {
+    return false
+  }
+
+  if (isRewardType.value) {
+    return amount > 0
+  }
+
+  if (isPunishType.value) {
+    return amount < 0
+  }
+
+  return true
+}
+```
+
+这里建议你把原来的：
+
+```js
+amount >= 0
+amount <= 0
+```
+
+改成：
+
+```js
+amount > 0
+amount < 0
+```
+
+因为你前面已经写了“金额不能为 0”。
+
+---
+
+## 7. 打开弹窗时填充，关闭弹窗时重置
+
+新增时重置：
+
+```js
+const resetFormData = () => {
+  Object.assign(formData, createEmptyForm())
+}
+```
+
+编辑时回填：
+
+```js
+const fillFormData = (detail = {}) => {
+  const reason = detail.reason || ''
+
+  Object.assign(formData, {
+    accountId: detail.accountId || '',
+    accountName: detail.accountName || '',
+    type: detail.type || '',
+    amount: detail.amount ? Number(detail.amount) : undefined,
+    reasonOption: isPresetReason(reason) ? reason : reason ? CUSTOM_REASON_VALUE : '',
+    customReason: isPresetReason(reason) ? '' : reason,
+    remark: detail.remark || '',
+    date: detail.create_Time || detail.date || '',
+  })
+}
+```
+
+你现在的 `fillFormData` 里少了 `date`，如果以后编辑弹窗也要回显日期，记得补上。
+
+---
+
+## 8. 提交时统一处理：校验 → 组装参数 → 调接口
+
+提交函数一般固定这样写：
+
+```js
+const handleSubmit = async ({ close }) => {
+  if (submitLoading.value) return
+
+  const valid = await formRef.value?.validate?.()
+  if (valid !== true) return
+
+  submitLoading.value = true
+
+  try {
+    const amount = formatAmount(formData.amount)
+
+    await apiCreateRewardApplication({
+      accountId: Number(formData.accountId),
+      accountName: formData.accountName,
+      type: formData.type,
+      amount,
+      reason:
+        formData.reasonOption === CUSTOM_REASON_VALUE
+          ? formData.customReason.trim()
+          : formData.reasonOption,
+      remark: formData.remark?.trim() || '',
+      create_Time: formData.date || '',
+    })
+
+    MessagePlugin.success('新增奖惩记录成功')
+    close()
+    resetFormData()
+    emit('success')
+  } catch {
+    MessagePlugin.error('新增奖惩记录失败')
+  } finally {
+    submitLoading.value = false
+  }
+}
+```
+
+提交逻辑的顺序记住：
+
+```txt
+防重复提交
+→ 表单校验
+→ loading = true
+→ 整理接口参数
+→ 调接口
+→ 成功提示
+→ 关闭弹窗
+→ 重置表单
+→ 通知父页面刷新
+→ loading = false
+```
+
+---
+
+# 以后写 Form 的固定顺序
+
+你可以按这个顺序写，基本不会乱：
+
+```txt
+1. 定义 visible / props / emit
+2. 定义 formRef
+3. 定义 createEmptyForm
+4. 定义 formData
+5. 定义下拉选项 / 常量
+6. 定义 computed 派生数据
+7. 定义 watch 联动逻辑
+8. 定义 rules 校验规则
+9. 定义 resetFormData / fillFormData
+10. 定义 dialogButtons
+11. 定义 handleSubmit
+12. 写 template
+```
+
+---
+
+# 一句话总结
+
+这种表单代码的核心思路是：
+
+> **formData 管数据，rules 管校验，computed 管派生，watch 管联动，handleSubmit 管提交，reset/fill 管弹窗状态。**
+
+你以后看到复杂表单，不要一上来盯着模板看。先看这几块：  
+**数据在哪、校验在哪、联动在哪、提交时发了什么参数。**
