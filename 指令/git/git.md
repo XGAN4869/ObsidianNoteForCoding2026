@@ -43,8 +43,3 @@ git push origin main
 ```bash
 git reset xxx
 ```
-
-## 分支名字本地和远程对不上
-```bash
-git branch -m master main
-```
