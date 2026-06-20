@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Learning Journal"
+  short_description: "Accumulate frontend learning notes by topic"
+  default_prompt: "Use $frontend-learning-journal to record this successful frontend task as topic-based learning notes."
