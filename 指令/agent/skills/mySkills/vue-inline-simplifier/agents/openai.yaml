@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vue Inline Simplifier"
+  short_description: "Keep Vue page logic inline, simple, commented, and staged."
+  default_prompt: "Use $vue-inline-simplifier to simplify this Vue3 page by keeping JS logic inside the current .vue file with clear staged edits."
