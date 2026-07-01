@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Skill Advisor"
+  short_description: "Concise advice for project Skills"
+  default_prompt: "Review my Skill idea, code, error, or draft and tell me exactly what to change."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Enhance Explainer"
+  short_description: "前端小白 function 阅读与仿写分析助手"
+  default_prompt: "Use $code-enhance-explainer to explain this frontend function and teach me how to write a similar one."
