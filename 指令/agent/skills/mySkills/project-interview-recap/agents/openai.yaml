@@ -1,0 +1,4 @@
+interface:
+  display_name: "项目面试复盘"
+  short_description: "按照面试模板，把项目代码整理成新人也能讲清楚的复盘文档"
+  default_prompt: "Use $project-interview-recap to analyze 面试.md and the selected project files, then generate a Markdown interview recap."
