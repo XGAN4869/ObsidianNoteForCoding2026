@@ -111,9 +111,9 @@
 
 它不关心考勤业务，只负责让定位上报更稳。
 
-最重要的一句话：
+<font color="#4f81bd">**最重要的一句话：**</font>
 
-`attendanceVehicleState` 是业务状态缓存，`LOCATION_REPORTER_RUNTIME_STATE` 是定位上报器运行状态缓存，Pinia store 负责在登录、回前台时把它们串起来。
+<font color="#4f81bd">**`attendanceVehicleState` 是业务状态缓存，`LOCATION_REPORTER_RUNTIME_STATE` 是定位上报器运行状态缓存，Pinia store 负责在登录、回前台时把它们串起来。**</font>
 
 ## 一条完整的车辆定位恢复链路
 
