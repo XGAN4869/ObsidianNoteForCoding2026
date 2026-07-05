@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Canvas Analyzer"
+  short_description: "Generate Obsidian Canvas maps from frontend code."
+  default_prompt: "Use $frontend-canvas-analyzer to read the provided frontend files and create an Obsidian Canvas that explains modules, components, data flow, stores, localStorage, APIs, and nested functions."
