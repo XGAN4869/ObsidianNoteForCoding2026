@@ -25,12 +25,18 @@ Prioritize evidence from source files. Mark uncertain relationships as "needs co
    - user operation flows
    - key/difficult points, likely confusion points, and risky modification points
    - nested functions and callback/async execution chains
-4. Choose the clearest visual mode before writing:
+4. Build a layout and edge plan before writing nodes:
+   - Decide the main reading direction, usually left-to-right.
+   - Place nodes that connect to each other in the same row or neighboring groups.
+   - List unavoidable cross-region relationships and reduce them before drawing.
+   - Prefer duplicate small reference nodes, inline checkpoints, or "see also" text over long diagonal arrows.
+5. Choose the clearest visual mode before writing:
    - Use a main business chain when the user wants to understand how the feature runs.
    - Use separate architecture regions only when the user asks for a module inventory or the system has many independent flows.
-5. Create or update an Obsidian JSON Canvas with group nodes, text nodes, and labeled arrows.
-6. Validate that the `.canvas` JSON parses and every edge points to existing nodes.
-7. Also provide a short text explanation: recommended reading order, core flow, and unclear points.
+6. Create or update an Obsidian JSON Canvas with group nodes, text nodes, and labeled arrows.
+7. Validate that the `.canvas` JSON parses and every edge points to existing nodes.
+8. Do a visual readability pass: long arrows, diagonal arrows, and edge crossings should be rare and intentional.
+9. Also provide a short text explanation: recommended reading order, core flow, and unclear points.
 
 ## Canvas Regions
 
@@ -51,6 +57,34 @@ Create these large regions as group nodes when the evidence exists:
 ## Visual Layout and Color Rules
 
 Prefer a readable left-to-right business chain over many cross-region lines. When a store or cache is part of the flow, place a store/cache node directly in the flow lane instead of drawing a long line to a distant store region.
+
+## Anti-Crossing Layout Rules
+
+Optimize for a beginner opening the canvas in Obsidian. A slightly duplicated node is better than a spiderweb of long arrows.
+
+Before writing the final `.canvas`, apply these layout rules:
+
+- Put the primary user flow in one horizontal lane. Connect adjacent nodes only, using `fromSide: "right"` and `toSide: "left"` whenever possible.
+- Put secondary lanes directly below the node that triggers them, not far away on the opposite side of the canvas.
+- Keep supporting regions near their caller:
+  - API details should sit above or below the flow step that calls them.
+  - Nested function details should sit below the flow step/function they explain.
+  - Key/difficult points should sit next to the nearest risky node.
+  - Registry/store/config details should sit beside the flow checkpoint that reads them.
+- Avoid drawing an edge from a distant support region back into the main flow. Use a short "see details below" text note in the main node instead.
+- If one concept is relevant to multiple regions, create a small local reference node in each relevant region instead of drawing multiple long edges to one central hub.
+- Do not connect every supporting module to every registry/config node. Show the main relationship in node text, and draw only the 1-2 most important arrows.
+- For a region-to-region relationship, connect from a gateway/summary node to another gateway/summary node. Do not connect many child nodes across regions.
+- Avoid diagonal arrows that pass through unrelated groups. If a diagonal arrow crosses another group, move the target group, add a local reference node, or remove the edge and explain the relationship in text.
+- Keep "Key / Difficult Points" from becoming a hub. Each difficult point should connect to the nearest relevant node or have no edge if the evidence is already in the text.
+- Keep "Refactor Roadmap" mostly self-contained. Connect phases to each other, not to many distant implementation nodes.
+
+When a generated canvas looks crowded, reduce edges in this order:
+
+1. Remove cross-region "future merge", "risk area", or "see also" arrows and move that relationship into node text.
+2. Replace long edges with local reference nodes.
+3. Keep only edges needed to follow the main runtime flow.
+4. Keep only one edge from each difficult-point node to its nearest relevant node.
 
 Use consistent visual identities:
 
@@ -187,6 +221,22 @@ Do not draw arrows for relationships that only share similar names unless import
 
 For the main business chain, prefer arrows that connect adjacent left/right node sides. Avoid top/bottom or backtracking arrows inside the main chain unless the code truly loops or branches. Put branch and recovery details in separate short rows or in node text.
 
+Use a strict edge budget for beginner reading maps:
+
+- Main flow: draw adjacent step-to-step arrows.
+- Parent-child communication: draw only the essential props/emit arrows.
+- Store/cache/API checkpoints: draw inline arrows in the flow lane.
+- Support regions: draw few or no outgoing edges. Let node text carry secondary relationships.
+- Cross-region edges: allow only when the relationship is essential and cannot be understood from local text.
+- If more than two arrows would cross between the same two regions, replace them with one gateway node and one labeled edge.
+
+Before finishing, scan the canvas visually:
+
+- No group should be crossed by multiple unrelated long arrows.
+- No row should have arrows traveling both left-to-right and right-to-left unless it represents a real loop.
+- No single hub node should send arrows across three or more distant regions in a beginner map.
+- If a line label overlaps another node or edge, move the nodes or remove that edge.
+
 ## Nested Function Rules
 
 When code contains functions inside functions, callbacks, closures, watchers, computed logic, lifecycle hooks, event handlers, or async chains, draw them as layered nodes in the `Nested Functions` region.
@@ -286,6 +336,14 @@ For each request flow, identify:
 
 When a request participates in a user flow, connect it to the `User Flow` region as well as the `API / Requests` region.
 
+For readability, prefer one of these patterns:
+
+- Inline API node in the main flow when the request is central.
+- Nearby API detail node below the flow step when the request has important parameters or response handling.
+- API inventory region with text-only references when the requests are not part of the main flow.
+
+Do not draw long arrows from every API inventory node to every caller if that creates crossing lines. Put caller names inside the API node text instead.
+
 ## Output Requirements
 
 When the user asks for an actual canvas file:
@@ -297,6 +355,8 @@ When the user asks for an actual canvas file:
 - Leave spacing so the canvas is readable in Obsidian.
 - Validate JSON parsing.
 - Validate every edge references existing nodes.
+- Check that arrows are mostly local, mostly left-to-right, and not crossing many unrelated groups.
+- If the first visual pass has many crossings, update the canvas before responding: move groups, split lanes, duplicate local reference nodes, or remove secondary arrows and put those relationships in node text.
 - Include a separate `Key / Difficult Points` / `重难点` group unless the user explicitly asks for a minimal diagram.
 
 When the user only asks for a prompt or Skill content, provide the reusable prompt or Skill instructions without creating a canvas.
