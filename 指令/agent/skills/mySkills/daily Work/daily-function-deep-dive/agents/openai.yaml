@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily Function Deep Dive"
+  short_description: "Daily frontend function analysis and practice notes"
+  default_prompt: "Use $daily-function-deep-dive to explain this frontend function and turn it into a daily practice note."
