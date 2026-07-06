@@ -11,14 +11,28 @@ Generate an Obsidian `.canvas` file that helps a beginner understand a frontend 
 
 Prioritize evidence from source files. Mark uncertain relationships as "needs confirmation" instead of inventing business logic.
 
+When parent-child communication is important, prioritize the ownership chain over API lists: who holds the state, who triggers the method, who receives the data, and how the updated result flows back.
+
+Default to the simplest canvas that still explains the module correctly. Fewer nodes is better when the user's real question is "who is the parent, who is the child, and how do they communicate".
+
 ## Workflow
 
 1. Confirm the target file, folder, or module from the user's request.
 2. Read only the necessary project files. Start with routes/pages, entry components, imports, stores, API modules, and storage usage.
 3. Build a relationship inventory before writing the canvas:
    - folders and feature modules
-   - page components, business components, and shared components
+   - page/container components, business block components, and presentational/shared components
    - parent-child communication
+   - for every important interaction, answer in order:
+     - who owns the state
+     - who triggers the method
+     - who receives the data
+     - how the result flows back
+   - for every parent-child connection, determine whether it mainly passes:
+     - a value
+     - an action
+     - control authority
+     - shared state
    - store state, getters/computed values, and actions/mutations
    - localStorage/sessionStorage keys and read/write/clear timing
    - API request methods, parameters, response flow, and calling components
@@ -33,10 +47,130 @@ Prioritize evidence from source files. Mark uncertain relationships as "needs co
 5. Choose the clearest visual mode before writing:
    - Use a main business chain when the user wants to understand how the feature runs.
    - Use separate architecture regions only when the user asks for a module inventory or the system has many independent flows.
+   - When parent-child communication is the main question, prefer a compact communication template instead of a full architecture map.
+   - When the user says they do not understand the logic order, prefer the `Order-First Reading Template` and make execution order the first reading lane.
 6. Create or update an Obsidian JSON Canvas with group nodes, text nodes, and labeled arrows.
 7. Validate that the `.canvas` JSON parses and every edge points to existing nodes.
 8. Do a visual readability pass: long arrows, diagonal arrows, and edge crossings should be rare and intentional.
-9. Also provide a short text explanation: recommended reading order, core flow, and unclear points.
+9. Also provide a short text explanation: recommended reading order, core flow, component communication chain, and unclear points.
+
+## Component Role Model
+
+When reading or drawing component relationships, prefer this three-layer model:
+
+1. `Page / Container Component`
+   - Owns main business data, request results, store connections, cache restore, and cross-block coordination.
+   - Usually decides what to pass down and how to merge updates back.
+   - Should be the main owner of important state unless code evidence shows otherwise.
+2. `Business Block Component`
+   - Owns temporary UI state, local interaction state, and formatted display of parent-provided data.
+   - Often receives values from the container and emits business events upward.
+   - Can hold short-lived form state, panel open state, local validation state, tab state, or section-level interaction state.
+3. `Presentational Component`
+   - Focuses on UI rendering.
+   - Keeps only very light local state when needed.
+   - Should avoid owning business rules; prefer receiving values and emitting simple events.
+
+Always classify important components into one of these three roles when the code evidence is sufficient. If a component mixes roles, mark that explicitly as a difficult point instead of pretending the boundary is clean.
+
+## Component Communication First Principles
+
+Do not start with "how should the API be written". Start with one question:
+
+> Is this communication mainly passing a value, an action, control authority, or shared state?
+
+Use that answer to choose the communication explanation:
+
+- `Value`
+  - Usually `props`, derived props, selectors, or read-only inputs.
+  - Explain who owns the source value and who only displays or formats it.
+- `Action`
+  - Usually `emit`, callback props, event handlers, or command-style methods.
+  - Explain who is allowed to perform the business action.
+- `Control authority`
+  - Usually `v-model`, controlled props, refs/exposed methods, open/close flags, current-step indexes, or imperative handles.
+  - Explain who makes the final decision and who only requests a change.
+- `Shared state`
+  - Usually store/context/provide-inject/event bus/runtime cache.
+  - Explain why the state is shared instead of passed level by level.
+
+Prefer communication interpretations that improve:
+
+1. `Encapsulation`
+   - Business ownership stays in the correct layer.
+2. `Code simplicity`
+   - Fewer redundant props, watchers, or duplicate state copies.
+3. `Semantic clarity`
+   - Names and edges make it obvious whether the child receives a value, requests an action, asks for control, or reads shared state.
+
+## Minimal Communication Template
+
+When the user's real need is to understand parent-child communication, use this simplified template by default. Do not expand into many regions unless the user asks for a broader architecture view.
+
+Target size:
+
+- Prefer `5-10` nodes total.
+- Prefer `3-6` edges total.
+- Prefer one main group or even no group if the canvas stays readable.
+
+Recommended node set:
+
+1. `Parent Component`
+   - clearly labeled as the parent
+   - what real state it owns
+2. `Child Component`
+   - clearly labeled as the child
+   - what local state it owns
+3. `Parent -> Child`
+   - what values or control flags are passed by props
+4. `Child -> Parent`
+   - what actions are emitted upward
+5. `Flow Back`
+   - how the parent updates state and sends the new result back down
+6. Optional `Core Summary`
+   - one sentence that compresses the whole chain
+
+Recommended reading line:
+
+```text
+parent owns real state -> props pass values down -> child emits actions up -> parent updates state -> new props flow back
+```
+
+If the diagram starts growing past this and the extra nodes do not improve understanding of parent-child communication, remove them.
+
+## Order-First Reading Template
+
+When the user says they cannot understand the logic order, prioritize a readable execution-order lane without dropping the core `frontend-canvas-analyzer` responsibilities.
+
+In this mode, the canvas should still answer:
+
+- which layer owns the state
+- which component or module triggers the method
+- which module receives the data next
+- where the updated result flows back
+- which file the user should edit first if they want to change that step
+
+Recommended execution-order lane:
+
+```text
+UI trigger -> page/container handler -> store/service/API/runtime -> state/cache write -> UI/state flow back
+```
+
+Recommended supporting nodes:
+
+1. `Role Layer`
+   - page/container
+   - business block
+   - store
+   - service/runtime
+2. `Key Variables / Functions`
+   - include short Chinese meaning when helpful for beginners
+3. `Execution Order`
+   - the actual sequence from trigger to finish
+4. `Where To Modify`
+   - tell the reader which file/function to inspect first when changing behavior
+
+If the user is confused about "where should I change code", always add a small `Where To Modify` region or node.
 
 ## Canvas Regions
 
@@ -44,8 +178,8 @@ Create these large regions as group nodes when the evidence exists:
 
 - `Project Reading Entry`: recommended reading order and the shortest path to understand the module.
 - `Folders / Modules`: important folders, their responsibilities, and key files.
-- `Pages / Components`: page-level components, business components, shared components, and parent-child structure.
-- `Component Communication`: props, emit, v-model, slot, provide/inject, context, callbacks, or event bus.
+- `Pages / Components`: page/container components, business block components, presentational components, and parent-child structure.
+- `Component Communication`: props, emit, v-model, slot, provide/inject, context, callbacks, event bus, and ownership/return-flow chain.
 - `Store`: Pinia, Vuex, Redux, Zustand, context store, or other state containers.
 - `Local Storage`: localStorage, sessionStorage, cookies, IndexedDB, or framework storage APIs.
 - `API / Requests`: request files, request methods, callers, parameters, response data, and error handling.
@@ -54,9 +188,25 @@ Create these large regions as group nodes when the evidence exists:
 - `Nested Functions`: function wrappers, inner functions, callbacks, closures, lifecycle handlers, watchers, promises, and async chains.
 - `Questions / Needs Confirmation`: relationships that are plausible but not directly proven by code.
 
+Important:
+
+- These are optional regions, not a mandatory checklist.
+- For parent-child communication maps, do **not** create every region by default.
+- If a simple parent-child diagram answers the question, prefer one compact group such as `Parent-Child Communication` or even a single ungrouped lane.
+
 ## Visual Layout and Color Rules
 
 Prefer a readable left-to-right business chain over many cross-region lines. When a store or cache is part of the flow, place a store/cache node directly in the flow lane instead of drawing a long line to a distant store region.
+
+When parent-child communication is central, prefer a short local lane like:
+
+```text
+container owns state -> business block renders/interacts -> presentational child emits -> container updates -> new value flows down
+```
+
+For beginner-friendly component communication maps, this compact lane is usually enough. Do not add extra support regions unless they explain a real confusion point.
+
+When execution order is the user's main problem, make the left-to-right lane explicitly chronological. The reader should be able to answer "what runs first, second, third" just by following one row.
 
 ## Anti-Crossing Layout Rules
 
@@ -71,6 +221,7 @@ Before writing the final `.canvas`, apply these layout rules:
   - Nested function details should sit below the flow step/function they explain.
   - Key/difficult points should sit next to the nearest risky node.
   - Registry/store/config details should sit beside the flow checkpoint that reads them.
+  - Component communication details should sit beside the container or business block they explain.
 - Avoid drawing an edge from a distant support region back into the main flow. Use a short "see details below" text note in the main node instead.
 - If one concept is relevant to multiple regions, create a small local reference node in each relevant region instead of drawing multiple long edges to one central hub.
 - Do not connect every supporting module to every registry/config node. Show the main relationship in node text, and draw only the 1-2 most important arrows.
@@ -135,6 +286,14 @@ User Flow node -> long diagonal line -> distant Store region -> long diagonal li
 
 Long cross-region lines are only acceptable for overview architecture maps. For beginner reading maps, prefer inline state checkpoints and short arrows.
 
+When a parent-child chain is important, prefer this pattern:
+
+```text
+state owner -> handler trigger -> child/business block -> emit/callback/store write -> owner update -> new props/state flow down
+```
+
+If that chain cannot be read locally from left to right, add a compact communication lane instead of scattering the edges across distant groups.
+
 ## Key / Difficult Points Rules
 
 Always create a separate `Key / Difficult Points` or `重难点` group when generating an actual canvas. Keep it separate from `Questions / Needs Confirmation`:
@@ -182,6 +341,18 @@ Each important node should answer three beginner-friendly questions:
 - What does it depend on?
 - What does it affect?
 
+For important component-communication nodes, also answer:
+
+- Which layer is it: page/container, business block, or presentational?
+- Does it mainly receive a value, an action, control authority, or shared state?
+- How does the updated result flow back?
+
+When the user is confused about execution order, also answer:
+
+- What runs before this node?
+- What runs after this node?
+- If I want to change this behavior, which file/function should I inspect first?
+
 Prefer this text-node structure:
 
 ```md
@@ -203,12 +374,70 @@ Affects:
 
 Use file nodes only when linking directly to useful source files improves navigation. Use text nodes for explanations.
 
+When the node is a component, prefer this stronger template when relevant:
+
+```md
+## ComponentName.vue
+
+Layer:
+- Page / Container | Business Block | Presentational
+
+Role:
+- ...
+
+Owns state:
+- ...
+
+Receives:
+- props / shared state / control flags / callbacks
+
+Triggers:
+- click, submit, watch, lifecycle, child emit, store action
+
+Sends to:
+- child props / parent emit / store write / API call
+
+Flow back:
+- parent updates xxx
+- new props/state flow back to child
+```
+
+For minimal communication maps, an even shorter component node is preferred:
+
+```md
+## index.vue
+
+Parent component
+
+Owns:
+- selectedVehicle
+- vehicleActive
+
+Does:
+- handles submit and close
+```
+
+```md
+## AttendanceLocationSelector.vue
+
+Child component
+
+Owns:
+- formData
+
+Does:
+- emits submitVehicle / closeVehicle
+```
+
 ## Edge Rules
 
 Use labeled arrows to show real relationships:
 
 - parent -> child: `props: valueName`
 - child -> parent: `emit: eventName`
+- parent -> child control: `controls: visible/currentValue/open`
+- child -> parent action request: `requests action: save/delete/submit`
+- component -> component shared state: `reads shared state`, `writes shared state`
 - component -> store: `reads state`, `calls action`, `updates state`
 - component -> API: `calls getList(params)`
 - API -> component/store: `returns list/detail/status`
@@ -218,6 +447,16 @@ Use labeled arrows to show real relationships:
 - function -> nested function: `defines`, `calls`, `passes callback`, `awaits`
 
 Do not draw arrows for relationships that only share similar names unless imports, calls, props, events, routes, or storage keys prove the link.
+
+For parent-child communication, keep the labels semantically explicit. Prefer:
+
+- `props: userInfo`
+- `emit: submitVehicle`
+- `v-model: visible`
+- `callback: onConfirm`
+- `reads shared state: useXxxStore`
+
+Avoid vague labels like `data`, `communicates`, or `interaction`.
 
 For the main business chain, prefer arrows that connect adjacent left/right node sides. Avoid top/bottom or backtracking arrows inside the main chain unless the code truly loops or branches. Put branch and recovery details in separate short rows or in node text.
 
@@ -306,6 +545,8 @@ For each store, separate:
 
 Represent store nodes as a hub when making an architecture view. In beginner user-flow views, also create small inline store checkpoint nodes at the exact point where the flow reads, writes, or clears store state. These inline nodes must keep store color and store wording.
 
+When store usage replaces parent-to-child prop drilling, explicitly say that the communication type is `shared state`, and explain why that is simpler or more semantically correct than forwarding values through many layers.
+
 ## Storage Analysis Rules
 
 For each local cache usage, identify:
@@ -358,6 +599,26 @@ When the user asks for an actual canvas file:
 - Check that arrows are mostly local, mostly left-to-right, and not crossing many unrelated groups.
 - If the first visual pass has many crossings, update the canvas before responding: move groups, split lanes, duplicate local reference nodes, or remove secondary arrows and put those relationships in node text.
 - Include a separate `Key / Difficult Points` / `重难点` group unless the user explicitly asks for a minimal diagram.
+- If parent-child communication is important, include at least one explicit communication lane that answers:
+  - who owns the state
+  - who triggers the method
+  - who receives the data
+  - how the updated result flows back
+- In the `Pages / Components` or `Component Communication` region, classify important components as page/container, business block, or presentational whenever evidence is sufficient.
+- Prefer communication explanations that highlight encapsulation, code simplicity, and semantic clarity.
+- If the user's focus is specifically parent-child communication, default to the `Minimal Communication Template`:
+  - keep the canvas small
+  - clearly label `parent component` and `child component`
+  - include the three essential relationships:
+    - parent passes values/control by props
+    - child sends actions upward by emit/callback
+    - parent updates state and the new result flows back down
+- Do not add store, API, local storage, nested function, or difficult-point regions unless they are necessary to explain the parent-child communication itself.
+- If the user's focus is specifically execution order or "I don't know where to change the code", default to the `Order-First Reading Template`:
+  - include one explicit chronological lane
+  - include short Chinese meaning for key functions/variables when helpful
+  - include at least one `Where To Modify` hint
+  - still preserve layer ownership: page/component/store/service/runtime
 
 When the user only asks for a prompt or Skill content, provide the reusable prompt or Skill instructions without creating a canvas.
 
@@ -368,9 +629,36 @@ After creating the canvas, summarize in Chinese unless the user requests another
 - what to read first
 - the main data flow
 - the main component interaction flow
+- for the most important parent-child chain:
+  - who owns the state
+  - who triggers the method
+  - who receives the data
+  - how the result flows back
+- whether the communication is mainly value, action, control authority, or shared state
+- why that communication choice is better for encapsulation, concise code, or clearer semantics
 - the most important store/storage/API relationships
 - the most complex nested function chain
 - the key/difficult points and why they matter
 - any "needs confirmation" points
 
 Keep the explanation practical and tied to file paths, component names, function names, and code evidence.
+
+If the canvas is a simplified parent-child communication map, prefer an equally simple explanation:
+
+- who is the parent component
+- who is the child component
+- what the parent passes down
+- what the child sends up
+- how the state flows back after the parent updates it
+
+Do not inflate a simple communication map with long architecture commentary.
+
+If the canvas is an order-first map, make the explanation explicitly chronological:
+
+- what to read first
+- what runs second
+- what runs third
+- which state or storage changes at each step
+- where to modify the code for each step
+
+Do not only list modules; make the user feel the runtime order.
