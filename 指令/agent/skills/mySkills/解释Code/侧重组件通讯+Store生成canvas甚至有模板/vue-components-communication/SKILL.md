@@ -24,6 +24,7 @@ description: 用于分析、设计或重构 Vue 项目的组件职责边界与�
 - `App` 级恢复逻辑
 - `services` 中的运行时桥接和副作用
 - `uni.setStorageSync`、`uni.getStorageSync`、`uni.removeStorageSync` 的读写点
+- `schema`、`jsonSchema`、`formSchema`、`columns`、`fields`、`rules` 等 JSON Schema / 配置式 UI 定义
 
 如果用户要设计新组件，不要先发明接口；先分层、再定归属、最后才落通信 API。
 
@@ -37,9 +38,10 @@ description: 用于分析、设计或重构 Vue 项目的组件职责边界与�
 2. 为每一份状态找出唯一的真实持有者。
 3. 为每一个交互找出触发者、执行者、影响范围和回流点。
 4. 补查这条链路有没有继续流入 `store`、`services`、`Storage` 或 `App`。
-5. 根据传递内容选择通信方式。
-6. 用“更好的封装性、更简洁的代码、更明确的语义”解释方案。
-7. 只有在边界清楚后，才给出 `props`、`emit`、`v-model`、`slot`、`provide/inject` 或 store 设计。
+5. 如果页面由 JSON Schema 或配置数组驱动，先解释 Schema 约束了哪些数据结构和 UI 行为。
+6. 根据传递内容选择通信方式。
+7. 用“更好的封装性、更简洁的代码、更明确的语义”解释方案。
+8. 只有在边界清楚后，才给出 `props`、`emit`、`v-model`、`slot`、`provide/inject` 或 store 设计。
 
 ## 三类组件职责
 
@@ -126,6 +128,45 @@ description: 用于分析、设计或重构 Vue 项目的组件职责边界与�
   - 它代表业务状态、运行时状态，还是失败补偿状态
 - 如果一个模块有多个 Storage key，不要把它们混成同一层 source of truth。
 
+### `JSON Schema / 配置式 UI`
+
+当前端页面、表单、表格、筛选器、动态弹窗、低代码区域或 Agent 工具参数由配置驱动时，要把 JSON Schema 当成“数据结构规则 + UI 渲染契约”来解释。
+
+先区分两件事：
+
+- JSON 是实际数据本身，例如表单值、接口入参、后端返回值、缓存内容。
+- JSON Schema 是描述这份数据是否合法、字段是否完整、类型是否正确、结构是否稳定的规则说明。
+
+分析 Schema 时按这个顺序看：
+
+1. 看整体 `type`：它约束的是对象、数组、字符串、数字、布尔值，还是可以为空。
+2. 看 `properties` / 字段配置：每个字段叫什么、类型是什么、在 UI 上渲染成什么控件。
+3. 看 `required`：哪些字段是业务必填，哪些只是展示或可选配置。
+4. 看基础约束：`minimum`、`maximum`、`minLength`、`maxLength`、`pattern`、`enum`。
+5. 看数组结构：`items` 说明数组里每一项的结构，常见于列表、表格列、动态表单项。
+6. 看嵌套对象：继续追内部 `properties` 和 `required`，不要只停在第一层字段。
+7. 看业务扩展字段：例如 `label`、`component`、`placeholder`、`visible`、`disabled`、`rules`、`options`、`api`、`props`、`events`，它们通常不是标准 JSON Schema，而是项目自己的 UI 协议。
+
+解释配置式代码时，要说明这份 Schema 在链路中的位置：
+
+- 如果它决定页面结构或控件类型，它更像“渲染配置”，通常由页面组件/容器组件持有或从接口加载。
+- 如果它决定校验规则，它连接的是“输入值 -> 校验 -> 错误提示 -> 提交拦截”的链路。
+- 如果它决定选项、联动、显隐、禁用，它连接的是“状态变化 -> 配置条件判断 -> UI 重新渲染”的链路。
+- 如果它决定接口参数或工具参数，它连接的是“用户输入 -> 结构化参数 -> Schema 校验 -> API / tool call”的链路。
+
+前端讲解时优先使用这套句式：
+
+- “这份 JSON 是数据；这份 Schema 是规则。”
+- “`type` 决定值的基本形状，`properties` 决定字段清单，`required` 决定哪些字段必须出现。”
+- “`enum` 限制只能选固定值，`pattern` 限制字符串格式，`items` 说明数组每一项长什么样。”
+- “项目里的 `component`、`label`、`rules`、`options` 是在标准 Schema 外面扩展出来的 UI 配置。”
+
+不要把 Schema 解释成普通常量数组。它通常承担三类职责：
+
+- 数据约束：字段、类型、必填、范围、格式、枚举、嵌套结构。
+- UI 生成：根据字段配置渲染输入框、选择器、表格列、筛选项、弹窗内容。
+- 流程守门：在提交、保存、导入、接口调用或 Agent tool call 前统一校验结构。
+
 ## 状态归属判断
 
 - 会影响提交参数、接口调用、兄弟联动、页面摘要、权限、路由、缓存恢复的状态，优先由页面组件/容器组件持有。
@@ -153,9 +194,10 @@ description: 用于分析、设计或重构 Vue 项目的组件职责边界与�
 2. 项目级节点表：`App`、`store`、`services`、`Storage`、API 各自负责什么。
 3. 关键链路表：状态被谁持有、方法被谁触发、数据传给谁、改完怎么回流。
 4. Storage 总表：key、写入者、读取者、触发时机、业务语义。
-5. 通信方式选择：为什么是 `props` / `emit` / `v-model` / `slot` / `defineExpose` / `provide/inject` / `store`。
-6. 优势说明：分别从封装性、代码简洁度、语义明确性解释。
-7. 如果用户要生成 canvas，再补：
+5. Schema / 配置表：配置名、约束对象、字段定义、必填项、校验规则、UI 扩展字段、触发链路。
+6. 通信方式选择：为什么是 `props` / `emit` / `v-model` / `slot` / `defineExpose` / `provide/inject` / `store`。
+7. 优势说明：分别从封装性、代码简洁度、语义明确性解释。
+8. 如果用户要生成 canvas，再补：
    - 节点清单
    - 连线清单
    - 推荐分组方式
@@ -171,6 +213,8 @@ description: 用于分析、设计或重构 Vue 项目的组件职责边界与�
 - 不要把 `provide/inject` 用成难追踪的业务状态黑盒。
 - 不要把多个 Storage key 混成一份状态。
 - 不要把“业务状态”“runtime 状态”“失败补偿状态”混为一谈。
+- 不要把 JSON Schema 只说成“一个配置对象”，要讲清它约束了什么数据、驱动了什么 UI、在哪个流程点被校验。
+- 不要把项目自定义的 `component`、`label`、`rules`、`options` 误认为都是标准 JSON Schema 字段。
 
 ## 代码建议边界
 

@@ -1,6 +1,6 @@
 ---
 name: frontend-canvas-analyzer
-description: Analyze frontend project files and generate Obsidian JSON Canvas maps that explain project logic, folders, modules, parent-child component communication, stores, localStorage/sessionStorage, API calls, readable user flows, key/difficult points, and nested function execution chains. Use when the user asks to draw a canvas, UML-like frontend diagram, component interaction map, data-flow map, user-flow map with store/storage state, difficult-point map, or beginner-friendly project reading map from Vue, React, uni-app, mini-program, or other frontend code.
+description: Analyze frontend project files and generate Obsidian JSON Canvas maps that explain project logic, folders, modules, parent-child component communication, stores, localStorage/sessionStorage, API calls, readable main and branch user flows, per-flow explanations, key/difficult points, and nested function execution chains. Use when the user asks to draw a canvas, UML-like frontend diagram, component interaction map, data-flow map, user-flow map with store/storage state, difficult-point map, flow explanation map, or beginner-friendly project reading map from Vue, React, uni-app, mini-program, or other frontend code.
 ---
 
 # Frontend Canvas Analyzer
@@ -36,12 +36,19 @@ Default to the simplest canvas that still explains the module correctly. Fewer n
    - store state, getters/computed values, and actions/mutations
    - localStorage/sessionStorage keys and read/write/clear timing
    - API request methods, parameters, response flow, and calling components
-   - user operation flows
+   - user operation flows, separated into main flow and branch flows when the code has multiple paths
+   - for every main or branch flow, explain:
+     - what triggers the flow
+     - what condition chooses this path
+     - which function/component/store/API step runs next
+     - what state, cache, or UI changes at each step
+     - where the branch returns to the main flow or ends
    - key/difficult points, likely confusion points, and risky modification points
    - nested functions and callback/async execution chains
 4. Build a layout and edge plan before writing nodes:
    - Decide the main reading direction, usually left-to-right.
    - Place nodes that connect to each other in the same row or neighboring groups.
+   - Leave enough space between connected nodes for arrow labels to be readable.
    - List unavoidable cross-region relationships and reduce them before drawing.
    - Prefer duplicate small reference nodes, inline checkpoints, or "see also" text over long diagonal arrows.
 5. Choose the clearest visual mode before writing:
@@ -52,7 +59,7 @@ Default to the simplest canvas that still explains the module correctly. Fewer n
 6. Create or update an Obsidian JSON Canvas with group nodes, text nodes, and labeled arrows.
 7. Validate that the `.canvas` JSON parses and every edge points to existing nodes.
 8. Do a visual readability pass: long arrows, diagonal arrows, and edge crossings should be rare and intentional.
-9. Also provide a short text explanation: recommended reading order, core flow, component communication chain, and unclear points.
+9. Also provide a short text explanation: recommended reading order, main flow, each branch flow, component communication chain, and unclear points.
 
 ## Component Role Model
 
@@ -138,6 +145,85 @@ parent owns real state -> props pass values down -> child emits actions up -> pa
 
 If the diagram starts growing past this and the extra nodes do not improve understanding of parent-child communication, remove them.
 
+## Flow Explanation Rules
+
+When a canvas contains user flows, explain the flows as named runtime paths, not as one vague module list. The explanation should make every flow chart readable on its own.
+
+Separate flows into:
+
+- `Main Flow`: the normal happy path or most important business path.
+- `Branch Flow`: conditional paths such as validation failure, empty data, permission/status branches, error handling, cancel/close, retry/polling, cache restore, platform differences, or lifecycle recovery.
+
+For each main or branch flow, create either a flow explanation node near that flow lane or a compact `Flow Explanation` region. Each flow explanation must answer:
+
+1. Trigger: what user action, lifecycle hook, watcher, route entry, or callback starts the flow?
+2. Branch condition: why does this path run instead of another path? For the main flow, say it is the default/success path.
+3. Ordered steps: what runs first, second, third, using real component/function/store/API names.
+4. Data changes: which props, refs, reactive state, store fields, storage keys, request params, or response fields change.
+5. UI result: what the user sees after this flow step completes.
+6. Return or end: whether the branch returns to the main flow, stops, waits for another trigger, or enters a loop/polling/retry path.
+
+Prefer this node shape for each flow:
+
+```md
+## Flow: submit success main flow
+
+Type:
+- Main Flow
+
+Trigger:
+- User clicks submit in `FormPanel.vue`.
+
+Condition:
+- Validation passes.
+
+Steps:
+1. `handleSubmit` reads `formData`.
+2. `validateForm` confirms required fields.
+3. `apiSaveOrder(params)` sends the request.
+4. `orderStore.setCurrentOrder` writes the response.
+5. Parent updates `visible` and refreshes the list.
+
+State / API / Cache changes:
+- `loading = true -> false`
+- `orderStore.currentOrder = response.data`
+
+UI result:
+- Dialog closes and list shows the new order.
+
+Return / End:
+- Returns to the list refresh step in the main page flow.
+```
+
+For branch flows, name the branch plainly:
+
+```md
+## Branch Flow: validation failure
+
+Type:
+- Branch Flow
+
+Condition:
+- `validateForm` rejects because required fields are empty.
+
+Steps:
+1. `handleSubmit` calls `validateForm`.
+2. Validation rejects before the API request.
+3. Error messages bind back to form fields.
+
+State / API / Cache changes:
+- No API request.
+- Form error state updates.
+
+UI result:
+- User stays on the form and sees validation hints.
+
+Return / End:
+- Ends here until the user edits the form and submits again.
+```
+
+Do not collapse multiple branches into one sentence like "handles success and failure". If a branch has different conditions, state writes, or UI outcomes, give it its own short explanation. If a branch is tiny, keep the explanation tiny but still name the condition and result.
+
 ## Order-First Reading Template
 
 When the user says they cannot understand the logic order, prioritize a readable execution-order lane without dropping the core `frontend-canvas-analyzer` responsibilities.
@@ -184,6 +270,7 @@ Create these large regions as group nodes when the evidence exists:
 - `Local Storage`: localStorage, sessionStorage, cookies, IndexedDB, or framework storage APIs.
 - `API / Requests`: request files, request methods, callers, parameters, response data, and error handling.
 - `User Flow`: user action -> initialization -> state change -> request -> render/update.
+- `Flow Explanation`: one explanation node per important flow. Separate the main flow from branch flows, and explain each flow chart from trigger to finish.
 - `Key / Difficult Points`: the most important logic, risky state coordination, confusing branches, and places beginners are likely to misunderstand.
 - `Nested Functions`: function wrappers, inner functions, callbacks, closures, lifecycle handlers, watchers, promises, and async chains.
 - `Questions / Needs Confirmation`: relationships that are plausible but not directly proven by code.
@@ -206,7 +293,22 @@ container owns state -> business block renders/interacts -> presentational child
 
 For beginner-friendly component communication maps, this compact lane is usually enough. Do not add extra support regions unless they explain a real confusion point.
 
-When execution order is the user's main problem, make the left-to-right lane explicitly chronological. The reader should be able to answer "what runs first, second, third" just by following one row.
+When execution order is the user's main problem, make the left-to-right lane explicitly chronological. The reader should be able to answer "what runs first, second, third" just by following one row. Branch rows should be readable as separate paths connected to the main step that creates them.
+
+## Spacing and Arrow Label Readability Rules
+
+Leave visible breathing room between canvas boxes. A diagram is not readable if the connected boxes are so close that arrow labels overlap the node edges.
+
+Use these defaults unless the canvas is intentionally tiny:
+
+- Horizontal spacing between directly connected left-to-right nodes: at least `220-280` px from one node edge to the next node edge.
+- Vertical spacing between branch lanes or supporting rows: at least `160-220` px from one row edge to the next row edge.
+- Padding inside group nodes: at least `80` px around child nodes, and more when edge labels pass through the group.
+- For labeled arrows, leave a clear straight segment in the middle of the edge so the label can sit between boxes without touching either box.
+- If an arrow label would be too long for the available gap, shorten the edge label and move the detail into the source or target node text.
+- If two labels overlap, first increase spacing, then move the supporting node, then shorten labels, and only then remove non-essential edges.
+
+Prefer readable labels over compact coordinates. It is better for a beginner canvas to be wider with clear arrows than compact with hidden labels.
 
 ## Anti-Crossing Layout Rules
 
@@ -214,8 +316,9 @@ Optimize for a beginner opening the canvas in Obsidian. A slightly duplicated no
 
 Before writing the final `.canvas`, apply these layout rules:
 
-- Put the primary user flow in one horizontal lane. Connect adjacent nodes only, using `fromSide: "right"` and `toSide: "left"` whenever possible.
+- Put the primary user flow in one horizontal lane. Connect adjacent nodes only, using `fromSide: "right"` and `toSide: "left"` whenever possible. Keep enough horizontal gap for the edge label to be readable.
 - Put secondary lanes directly below the node that triggers them, not far away on the opposite side of the canvas.
+- For branch flows, place the branch lane below or near the exact main-flow step that creates the branch, then explain whether it returns, stops, waits, or loops.
 - Keep supporting regions near their caller:
   - API details should sit above or below the flow step that calls them.
   - Nested function details should sit below the flow step/function they explain.
@@ -351,6 +454,7 @@ When the user is confused about execution order, also answer:
 
 - What runs before this node?
 - What runs after this node?
+- Which main-flow or branch-flow step does this node belong to?
 - If I want to change this behavior, which file/function should I inspect first?
 
 Prefer this text-node structure:
@@ -474,7 +578,7 @@ Before finishing, scan the canvas visually:
 - No group should be crossed by multiple unrelated long arrows.
 - No row should have arrows traveling both left-to-right and right-to-left unless it represents a real loop.
 - No single hub node should send arrows across three or more distant regions in a beginner map.
-- If a line label overlaps another node or edge, move the nodes or remove that edge.
+- If a line label overlaps another node or edge, increase spacing first. If the canvas is still crowded, move the nodes, shorten the label, or remove that edge.
 
 ## Nested Function Rules
 
@@ -593,12 +697,14 @@ When the user asks for an actual canvas file:
 - Use unique node and edge IDs.
 - Use group nodes for the large regions.
 - Place child nodes inside their group bounds.
-- Leave spacing so the canvas is readable in Obsidian.
+- Leave spacing so the canvas is readable in Obsidian, especially between connected boxes with labeled arrows.
 - Validate JSON parsing.
 - Validate every edge references existing nodes.
-- Check that arrows are mostly local, mostly left-to-right, and not crossing many unrelated groups.
+- Check that arrows are mostly local, mostly left-to-right, not crossing many unrelated groups, and have enough label space between connected boxes.
 - If the first visual pass has many crossings, update the canvas before responding: move groups, split lanes, duplicate local reference nodes, or remove secondary arrows and put those relationships in node text.
 - Include a separate `Key / Difficult Points` / `重难点` group unless the user explicitly asks for a minimal diagram.
+- If the canvas contains multiple business paths, include flow explanation nodes or a `Flow Explanation` region that separately explains the main flow and each branch flow.
+- Each flow explanation must name the trigger, branch condition, ordered steps, state/cache/API changes, UI result, and whether the branch returns to the main flow or ends.
 - If parent-child communication is important, include at least one explicit communication lane that answers:
   - who owns the state
   - who triggers the method
@@ -628,6 +734,8 @@ After creating the canvas, summarize in Chinese unless the user requests another
 
 - what to read first
 - the main data flow
+- the main flow: trigger, ordered steps, state/API/cache changes, and final UI result
+- each branch flow: branch condition, ordered steps, changed state/API/cache, and where it returns or ends
 - the main component interaction flow
 - for the most important parent-child chain:
   - who owns the state
@@ -653,7 +761,7 @@ If the canvas is a simplified parent-child communication map, prefer an equally 
 
 Do not inflate a simple communication map with long architecture commentary.
 
-If the canvas is an order-first map, make the explanation explicitly chronological:
+If the canvas is an order-first map, make the explanation explicitly chronological and separated by flow:
 
 - what to read first
 - what runs second
