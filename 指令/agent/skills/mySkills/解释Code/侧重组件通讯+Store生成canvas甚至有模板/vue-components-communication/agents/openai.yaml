@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vue Components Communication"
+  short_description: "Design Vue component responsibilities and communication clearly."
+  default_prompt: "Use $vue-components-communication to analyze this Vue feature by tracing component roles, App/store/services/Storage links, and whether each exchange is a value, action, control authority, or shared state."
