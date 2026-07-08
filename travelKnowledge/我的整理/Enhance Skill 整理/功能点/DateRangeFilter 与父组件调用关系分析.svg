@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180">
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#d97706"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 34px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 18px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #475569; }
+      .lane-title { font: 700 20px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #0f172a; }
+      .box-title { font: 700 18px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #111827; }
+      .txt { font: 400 15px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #334155; }
+      .small { font: 400 13px "Microsoft YaHei", "PingFang SC", Arial, sans-serif; fill: #64748b; }
+      .edge { stroke: #2563eb; stroke-width: 3; fill: none; marker-end: url(#arrow-blue); }
+      .edge2 { stroke: #d97706; stroke-width: 3; fill: none; marker-end: url(#arrow-amber); }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 8; }
+      .parent { fill: #ecfeff; stroke: #06b6d4; stroke-width: 2; rx: 8; }
+      .child { fill: #f0fdf4; stroke: #22c55e; stroke-width: 2; rx: 8; }
+      .flow { fill: #eff6ff; stroke: #3b82f6; stroke-width: 2; rx: 8; }
+      .api { fill: #fefce8; stroke: #eab308; stroke-width: 2; rx: 8; }
+      .warn { fill: #fff1f2; stroke: #f43f5e; stroke-width: 2; rx: 8; }
+      .note { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; rx: 8; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1180"/>
+  <text class="title" x="70" y="70">DateRangeFilter 与父组件调用关系图</text>
+  <text class="subtitle" x="70" y="105">核心结论：子组件负责日期输入和局部校验，父组件持有真实筛选状态并决定接口查询。</text>
+
+  <text class="lane-title" x="70" y="160">1. 父子组件通信主链路</text>
+
+  <rect class="parent" x="70" y="190" width="300" height="190"/>
+  <text class="box-title" x="95" y="225">父页面 / Container</text>
+  <text class="txt" x="95" y="260">持有真实状态：</text>
+  <text class="txt" x="95" y="288">searchForm.startDate</text>
+  <text class="txt" x="95" y="316">searchForm.endDate</text>
+  <text class="txt" x="95" y="344">pagination / list data</text>
+
+  <rect class="flow" x="460" y="190" width="300" height="190"/>
+  <text class="box-title" x="485" y="225">向下传递</text>
+  <text class="txt" x="485" y="260">v-model:startDate</text>
+  <text class="txt" x="485" y="288">v-model:endDate</text>
+  <text class="txt" x="485" y="316">props.config</text>
+  <text class="small" x="485" y="348">类型：控制权 + 可编辑值</text>
+
+  <rect class="child" x="850" y="190" width="330" height="190"/>
+  <text class="box-title" x="875" y="225">DateRangeFilter</text>
+  <text class="txt" x="875" y="260">innerStartDate / innerEndDate</text>
+  <text class="txt" x="875" y="288">watch 外部值同步内部态</text>
+  <text class="txt" x="875" y="316">validateDateRange 校验</text>
+  <text class="txt" x="875" y="344">MessagePlugin.warning</text>
+
+  <rect class="flow" x="1270" y="190" width="300" height="190"/>
+  <text class="box-title" x="1295" y="225">向上回写</text>
+  <text class="txt" x="1295" y="260">defineModel 更新父值</text>
+  <text class="txt" x="1295" y="288">update:startDate</text>
+  <text class="txt" x="1295" y="316">update:endDate</text>
+  <text class="small" x="1295" y="348">父组件重新成为状态源头</text>
+
+  <path class="edge" d="M 370 285 L 450 285"/>
+  <path class="edge" d="M 760 285 L 840 285"/>
+  <path class="edge" d="M 1180 285 L 1260 285"/>
+  <path class="edge" d="M 1420 390 C 1420 440 220 440 220 392"/>
+  <text class="small" x="715" y="435">父组件 watcher 接到新日期后重置分页并查接口</text>
+
+  <text class="lane-title" x="70" y="510">2. 合法日期主流程</text>
+  <rect class="flow" x="70" y="540" width="230" height="135"/>
+  <text class="box-title" x="95" y="574">用户选择日期</text>
+  <text class="txt" x="95" y="606">t-date-picker 改变</text>
+  <text class="txt" x="95" y="632">内部编辑态</text>
+
+  <rect class="flow" x="370" y="540" width="230" height="135"/>
+  <text class="box-title" x="395" y="574">校验范围</text>
+  <text class="txt" x="395" y="606">parse / normalize</text>
+  <text class="txt" x="395" y="632">判断 start &lt;= end</text>
+
+  <rect class="flow" x="670" y="540" width="230" height="135"/>
+  <text class="box-title" x="695" y="574">回写父状态</text>
+  <text class="txt" x="695" y="606">startDate.value</text>
+  <text class="txt" x="695" y="632">endDate.value</text>
+
+  <rect class="flow" x="970" y="540" width="230" height="135"/>
+  <text class="box-title" x="995" y="574">watcher 触发</text>
+  <text class="txt" x="995" y="606">pagination = 1</text>
+  <text class="txt" x="995" y="632">fetch...</text>
+
+  <rect class="api" x="1270" y="540" width="230" height="135"/>
+  <text class="box-title" x="1295" y="574">参数转换</text>
+  <text class="txt" x="1295" y="606">startTime / endTime</text>
+  <text class="txt" x="1295" y="632">createTimeFrom / To</text>
+
+  <rect class="flow" x="1570" y="540" width="170" height="135"/>
+  <text class="box-title" x="1595" y="574">列表刷新</text>
+  <text class="txt" x="1595" y="606">table/card</text>
+  <text class="txt" x="1595" y="632">显示新结果</text>
+
+  <path class="edge" d="M 300 607 L 360 607"/>
+  <path class="edge" d="M 600 607 L 660 607"/>
+  <path class="edge" d="M 900 607 L 960 607"/>
+  <path class="edge" d="M 1200 607 L 1260 607"/>
+  <path class="edge" d="M 1500 607 L 1560 607"/>
+
+  <text class="lane-title" x="70" y="750">3. 支线流程</text>
+  <rect class="panel" x="70" y="780" width="380" height="210"/>
+  <text class="box-title" x="95" y="815">清空筛选</text>
+  <text class="txt" x="95" y="850">父组件把日期置空</text>
+  <text class="txt" x="95" y="878">DateRangeFilter watch 到空值</text>
+  <text class="txt" x="95" y="906">清空内部日期和 UI</text>
+  <text class="small" x="95" y="948">注意：主动 fetch + watcher 可能双触发</text>
+
+  <rect class="warn" x="510" y="780" width="380" height="210"/>
+  <text class="box-title" x="535" y="815">start &gt; end</text>
+  <text class="txt" x="535" y="850">子组件 warning</text>
+  <text class="txt" x="535" y="878">innerEndDate = ''</text>
+  <text class="txt" x="535" y="906">回写父组件空 endDate</text>
+  <text class="small" x="535" y="948">父组件 endDate 可能是被子组件修正的</text>
+
+  <rect class="panel" x="950" y="780" width="380" height="210"/>
+  <text class="box-title" x="975" y="815">单边日期</text>
+  <text class="txt" x="975" y="850">DateRangeFilter 允许存在</text>
+  <text class="txt" x="975" y="878">只有两边都有且非法才拦截</text>
+  <text class="txt" x="975" y="906">父页面决定是否传给接口</text>
+  <text class="small" x="975" y="948">sysLog 要两边都有才传日期参数</text>
+
+  <rect class="panel" x="1390" y="780" width="350" height="210"/>
+  <text class="box-title" x="1415" y="815">approval 路由恢复</text>
+  <text class="txt" x="1415" y="850">父组件清空 search 日期</text>
+  <text class="txt" x="1415" y="878">fetchApprovalList</text>
+  <text class="txt" x="1415" y="906">子组件跟随同步清空</text>
+  <text class="small" x="1415" y="948">不是子组件主动触发</text>
+
+  <text class="lane-title" x="70" y="1065">4. 父组件差异和难点</text>
+  <rect class="api" x="70" y="1090" width="390" height="60"/>
+  <text class="txt" x="95" y="1126">rewardPunish / jobFeedback / complaint：直接传原始日期</text>
+  <rect class="api" x="500" y="1090" width="390" height="60"/>
+  <text class="txt" x="525" y="1126">vehicle：列表补 00:00:00 / 23:59:59，导出传原始日期</text>
+  <rect class="api" x="930" y="1090" width="390" height="60"/>
+  <text class="txt" x="955" y="1126">sysLog / approval：createTimeTo = endDate + 1 day</text>
+  <rect class="warn" x="1360" y="1090" width="380" height="60"/>
+  <text class="txt" x="1385" y="1126">风险：双状态、双触发、日期边界规则不统一</text>
+</svg>

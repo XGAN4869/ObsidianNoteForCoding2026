@@ -1,0 +1,277 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3900" height="2500" viewBox="0 0 3900 2500">
+  <defs>
+    <style>
+      .bg { fill: #f7f5ef; }
+      .section { fill: #fcfbf7; stroke: #d6d0c3; stroke-width: 2; rx: 28; ry: 28; }
+      .group-title { font: 700 30px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #2b2b2b; }
+      .title { font: 700 42px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #222; }
+      .subtitle { font: 500 20px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #5a5a5a; }
+      .card { stroke-width: 2.5; rx: 22; ry: 22; }
+      .card-blue { fill: #eaf6ff; stroke: #5ca8df; }
+      .card-green { fill: #ebf7ef; stroke: #68ae79; }
+      .card-orange { fill: #fff3e4; stroke: #d89a3d; }
+      .card-purple { fill: #f2ecff; stroke: #8a72d8; }
+      .card-red { fill: #ffecec; stroke: #d96a6a; }
+      .card-teal { fill: #e8f8f7; stroke: #58a8a3; }
+      .card-title { font: 700 24px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #212121; }
+      .card-text { font: 500 17px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #333; }
+      .small { font-size: 16px; }
+      .tiny { font-size: 15px; }
+      .arrow { stroke: #5b5b5b; stroke-width: 3.2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 10 8; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5b5b5b"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="3900" height="2500"/>
+
+  <text class="title" x="60" y="72">request.js / api / config.js / web request.js 关系图</text>
+  <text class="subtitle" x="60" y="108">基于分析笔记整理成一张可独立查看的 SVG 关系图，重点是“共享 API + 平台请求实现注入”的运行时链路。</text>
+
+  <rect class="section" x="30" y="140" width="3840" height="330"/>
+  <text class="group-title" x="60" y="185">Project Reading Entry</text>
+
+  <rect class="card card-teal" x="70" y="220" width="430" height="190"/>
+  <text class="card-title" x="95" y="255">分析笔记入口</text>
+  <text class="card-text" x="95" y="292">
+    <tspan x="95" dy="0">先读：</tspan>
+    <tspan x="95" dy="28">`request.js、api、config.js、web request.js`</tspan>
+    <tspan x="95" dy="28">关系分析.md</tspan>
+    <tspan x="95" dy="28">这张 SVG 是它的结构化提炼版。</tspan>
+  </text>
+
+  <rect class="card card-orange" x="560" y="220" width="980" height="190"/>
+  <text class="card-title" x="585" y="255">核心结论</text>
+  <text class="card-text" x="585" y="292">
+    <tspan x="585" dy="0">共享 API 包只依赖 `RequestClient` 这个抽象入口。</tspan>
+    <tspan x="585" dy="28">web 和 uniapp 在各自启动时，把自己的真实请求实现注册进去。</tspan>
+    <tspan x="585" dy="28">所以共用的是：API 定义 + 请求描述格式，不是共用一个 axios 实例。</tspan>
+  </text>
+
+  <rect class="card card-blue" x="1600" y="220" width="1220" height="190"/>
+  <text class="card-title" x="1625" y="255">推荐阅读顺序 / Where To Modify</text>
+  <text class="card-text" x="1625" y="292">
+    <tspan x="1625" dy="0">1. `packages/api/src/config.js` 看桥接点</tspan>
+    <tspan x="1625" dy="28">2. `packages/api/src/apis/**` 看“我要请求什么”</tspan>
+    <tspan x="1625" dy="28">3. `sites/web/src/utils/request.js` / `sites/uniapp/src/utils/request.js` 看“怎么请求”</tspan>
+    <tspan x="1625" dy="28">4. `main.js` 看初始化时机；改鉴权头来源再回头看 store / Storage</tspan>
+  </text>
+
+  <rect class="section" x="30" y="510" width="2700" height="1340"/>
+  <text class="group-title" x="60" y="555">Architecture And Runtime Chain</text>
+
+  <rect class="card card-orange" x="80" y="1020" width="310" height="210"/>
+  <text class="card-title" x="105" y="1055">页面 / store 调用 API</text>
+  <text class="card-text small" x="105" y="1092">
+    <tspan x="105" dy="0">触发入口</tspan>
+    <tspan x="105" dy="26">- 页面或 store 调用</tspan>
+    <tspan x="105" dy="26">- 不关心 axios / uni.request</tspan>
+    <tspan x="105" dy="26">- 只拿统一 API 函数</tspan>
+  </text>
+
+  <rect class="card card-orange" x="1470" y="620" width="320" height="140"/>
+  <text class="card-title" x="1495" y="655">web main.js</text>
+  <text class="card-text small" x="1495" y="690">
+    <tspan x="1495" dy="0">App 启动先导入</tspan>
+    <tspan x="1495" dy="24">`@/utils/request.js`</tspan>
+  </text>
+
+  <rect class="card card-orange" x="1470" y="1105" width="320" height="140"/>
+  <text class="card-title" x="1495" y="1140">uniapp main.js</text>
+  <text class="card-text small" x="1495" y="1175">
+    <tspan x="1495" dy="0">App 启动先导入</tspan>
+    <tspan x="1495" dy="24">`@/utils/request.js`</tspan>
+  </text>
+
+  <rect class="card card-orange" x="500" y="1000" width="370" height="250"/>
+  <text class="card-title" x="525" y="1035">packages/api/src/apis/**</text>
+  <text class="card-text small" x="525" y="1072">
+    <tspan x="525" dy="0">共享业务服务层</tspan>
+    <tspan x="525" dy="26">- 描述 url / method / data</tspan>
+    <tspan x="525" dy="26">- 调用 `RequestClient(config)`</tspan>
+    <tspan x="525" dy="26">- 不关心 token / 跳登录 / 底层库</tspan>
+  </text>
+
+  <rect class="card card-orange" x="970" y="970" width="390" height="310"/>
+  <text class="card-title" x="995" y="1005">packages/api/src/config.js</text>
+  <text class="card-text small" x="995" y="1042">
+    <tspan x="995" dy="0">共享运行时桥</tspan>
+    <tspan x="995" dy="26">- 持有 `RequestClient` 引用</tspan>
+    <tspan x="995" dy="26">- 接收 `setRequestClient(client)`</tspan>
+    <tspan x="995" dy="26">- 决定后续 API 落到哪个平台实现</tspan>
+    <tspan x="995" dy="26">- 这里传的是“运行时控制权”</tspan>
+  </text>
+
+  <rect class="card card-blue" x="1460" y="780" width="450" height="290"/>
+  <text class="card-title" x="1485" y="815">sites/web/src/utils/request.js</text>
+  <text class="card-text small" x="1485" y="852">
+    <tspan x="1485" dy="0">web 端运行时适配层</tspan>
+    <tspan x="1485" dy="26">- `axios.create`</tspan>
+    <tspan x="1485" dy="26">- `useAccountStore()` 读 token</tspan>
+    <tspan x="1485" dy="26">- 统一处理 200 / 401 / 403 / 500 / timeout</tspan>
+    <tspan x="1485" dy="26">- `setRequestClient(requestFn)`</tspan>
+  </text>
+
+  <rect class="card card-blue" x="1460" y="1285" width="450" height="320"/>
+  <text class="card-title" x="1485" y="1320">sites/uniapp/src/utils/request.js</text>
+  <text class="card-text small" x="1485" y="1357">
+    <tspan x="1485" dy="0">uniapp 端运行时适配层</tspan>
+    <tspan x="1485" dy="26">- `uni.request`</tspan>
+    <tspan x="1485" dy="26">- `getStorageSync` 读鉴权 key</tspan>
+    <tspan x="1485" dy="26">- 登录失效时 `uni.reLaunch()`</tspan>
+    <tspan x="1485" dy="26">- `setRequestClient(request)`</tspan>
+  </text>
+
+  <rect class="card card-purple" x="1980" y="810" width="340" height="200"/>
+  <text class="card-title" x="2005" y="845">web account store</text>
+  <text class="card-text small" x="2005" y="882">
+    <tspan x="2005" dy="0">source of truth:</tspan>
+    <tspan x="2005" dy="26">- `token`</tspan>
+    <tspan x="2005" dy="26">- `accountId`</tspan>
+    <tspan x="2005" dy="26">请求前由 web request 直接读取</tspan>
+  </text>
+
+  <rect class="card card-purple" x="1980" y="1315" width="350" height="220"/>
+  <text class="card-title" x="2005" y="1350">uniapp account store</text>
+  <text class="card-text small" x="2005" y="1387">
+    <tspan x="2005" dy="0">登录态流程节点</tspan>
+    <tspan x="2005" dy="26">- 登录成功后同步关键字段</tspan>
+    <tspan x="2005" dy="26">- 写入 token / accountId 到 Storage</tspan>
+    <tspan x="2005" dy="26">- 退出登录时清理</tspan>
+  </text>
+
+  <rect class="card card-purple" x="2380" y="1315" width="280" height="220"/>
+  <text class="card-title" x="2405" y="1350">Uniapp Storage</text>
+  <text class="card-text small" x="2405" y="1387">
+    <tspan x="2405" dy="0">Keys:</tspan>
+    <tspan x="2405" dy="26">- `AUTHORIZATION`</tspan>
+    <tspan x="2405" dy="26">- `AUTHORIZATIONID`</tspan>
+    <tspan x="2405" dy="26">- `ACCOUNT_SOURCE`</tspan>
+    <tspan x="2405" dy="26">- `loginInfo`</tspan>
+  </text>
+
+  <path class="arrow" d="M 390 1125 L 500 1125"/>
+  <text class="card-text tiny" x="420" y="1102">调用业务函数</text>
+
+  <path class="arrow" d="M 870 1125 L 970 1125"/>
+  <text class="card-text tiny" x="896" y="1102">RequestClient(config)</text>
+
+  <path class="arrow" d="M 1360 1125 L 1460 930"/>
+  <text class="card-text tiny" x="1340" y="1000">web 已注册时走 requestFn</text>
+
+  <path class="arrow" d="M 1360 1125 L 1460 1445"/>
+  <text class="card-text tiny" x="1312" y="1302">uniapp 已注册时走 request</text>
+
+  <path class="arrow" d="M 1630 760 L 1630 780"/>
+  <text class="card-text tiny" x="1670" y="775">副作用导入</text>
+
+  <path class="arrow" d="M 1630 1245 L 1630 1285"/>
+  <text class="card-text tiny" x="1670" y="1278">副作用导入</text>
+
+  <path class="arrow" d="M 1980 910 L 1910 910"/>
+  <text class="card-text tiny" x="1930" y="885">headers: token/accountId</text>
+
+  <path class="arrow" d="M 2330 1425 L 2380 1425"/>
+  <text class="card-text tiny" x="2310" y="1400">写入鉴权 key</text>
+
+  <path class="arrow" d="M 2380 1470 L 1910 1470"/>
+  <text class="card-text tiny" x="2070" y="1450">getStorageSync 读取</text>
+
+  <path class="arrow dash" d="M 1460 935 L 1360 1125"/>
+  <text class="card-text tiny" x="1390" y="920">setRequestClient(requestFn)</text>
+
+  <path class="arrow dash" d="M 1460 1445 L 1360 1125"/>
+  <text class="card-text tiny" x="1380" y="1500">setRequestClient(request)</text>
+
+  <rect class="section" x="2770" y="510" width="1100" height="1340"/>
+  <text class="group-title" x="2800" y="555">Key And Difficult Points</text>
+
+  <rect class="card card-red" x="2820" y="620" width="470" height="250"/>
+  <text class="card-title" x="2845" y="655">难点 1: 导入顺序就是初始化顺序</text>
+  <text class="card-text small" x="2845" y="692">
+    <tspan x="2845" dy="0">`main.js` 里的 `import '@/utils/request.js'`</tspan>
+    <tspan x="2845" dy="26">不是普通工具导入，而是副作用初始化。</tspan>
+    <tspan x="2845" dy="26">如果先调 API 再导入 request，</tspan>
+    <tspan x="2845" dy="26">`RequestClient` 还没注册就会出问题。</tspan>
+  </text>
+
+  <rect class="card card-red" x="2820" y="930" width="470" height="270"/>
+  <text class="card-title" x="2845" y="965">难点 2: config.js 很短但最关键</text>
+  <text class="card-text small" x="2845" y="1002">
+    <tspan x="2845" dy="0">它看起来只有几行，</tspan>
+    <tspan x="2845" dy="26">但实际上隔离了 API 层和平台层。</tspan>
+    <tspan x="2845" dy="26">要把它理解成“共享桥”，</tspan>
+    <tspan x="2845" dy="26">不是“真正发请求的人”。</tspan>
+  </text>
+
+  <rect class="card card-red" x="3330" y="620" width="490" height="270"/>
+  <text class="card-title" x="3355" y="655">难点 3: 这里传的不是 props，而是控制权</text>
+  <text class="card-text small" x="3355" y="692">
+    <tspan x="3355" dy="0">不是值传递，不是 emit，</tspan>
+    <tspan x="3355" dy="26">而是“平台请求能力”的运行时注入。</tspan>
+    <tspan x="3355" dy="26">这样 API 层只管“请求什么”，</tspan>
+    <tspan x="3355" dy="26">request 层只管“怎么请求”。</tspan>
+  </text>
+
+  <rect class="card card-red" x="3330" y="930" width="490" height="300"/>
+  <text class="card-title" x="3355" y="965">难点 4: 两端 source of truth 不同</text>
+  <text class="card-text small" x="3355" y="1002">
+    <tspan x="3355" dy="0">web 请求前直接读 store。</tspan>
+    <tspan x="3355" dy="26">uniapp 请求前直接读 Storage。</tspan>
+    <tspan x="3355" dy="26">所以改 token 字段、同步时机、</tspan>
+    <tspan x="3355" dy="26">或退出登录清理逻辑时，两端都要分别检查。</tspan>
+  </text>
+
+  <rect class="section" x="30" y="1890" width="3840" height="560"/>
+  <text class="group-title" x="60" y="1935">Flow Explanation</text>
+
+  <rect class="card card-green" x="70" y="1995" width="880" height="380"/>
+  <text class="card-title" x="95" y="2030">Main Flow: 启动注册</text>
+  <text class="card-text small" x="95" y="2067">
+    <tspan x="95" dy="0">Trigger: App 启动执行 `main.js`</tspan>
+    <tspan x="95" dy="26">Steps:</tspan>
+    <tspan x="95" dy="26">1. `main.js` 先导入 `@/utils/request.js`</tspan>
+    <tspan x="95" dy="26">2. 平台 `request.js` 调用 `setRequestClient(...)`</tspan>
+    <tspan x="95" dy="26">3. `config.js` 保存当前平台请求实现</tspan>
+    <tspan x="95" dy="26">4. 后续 `apis/**` 自动拿到已注册入口</tspan>
+    <tspan x="95" dy="26">Result: 运行时初始化完成，页面可以安全调用 API</tspan>
+  </text>
+
+  <rect class="card card-green" x="990" y="1995" width="880" height="380"/>
+  <text class="card-title" x="1015" y="2030">Main Flow: 业务 API 调用</text>
+  <text class="card-text small" x="1015" y="2067">
+    <tspan x="1015" dy="0">Trigger: 页面或 store 调用 `@travel/api` 某个函数</tspan>
+    <tspan x="1015" dy="26">Steps:</tspan>
+    <tspan x="1015" dy="26">1. `apis/**` 组装 `{ url, method, data, params, loading }`</tspan>
+    <tspan x="1015" dy="26">2. 调用 `RequestClient(config)`</tspan>
+    <tspan x="1015" dy="26">3. 当前平台注册的 request 实现真正发请求</tspan>
+    <tspan x="1015" dy="26">4. 统一结果返回给页面或 store</tspan>
+    <tspan x="1015" dy="26">Result: 调用方始终拿到统一数据结构</tspan>
+  </text>
+
+  <rect class="card card-green" x="1910" y="1995" width="880" height="380"/>
+  <text class="card-title" x="1935" y="2030">Branch Flow: web 鉴权链</text>
+  <text class="card-text small" x="1935" y="2067">
+    <tspan x="1935" dy="0">Condition: web 环境，或响应 401 / 403</tspan>
+    <tspan x="1935" dy="26">Steps:</tspan>
+    <tspan x="1935" dy="26">1. 从 `account store` 读取 `token / accountId`</tspan>
+    <tspan x="1935" dy="26">2. 写入请求头</tspan>
+    <tspan x="1935" dy="26">3. 命中鉴权异常时触发 `logout()`</tspan>
+    <tspan x="1935" dy="26">4. `router` 跳回登录页</tspan>
+    <tspan x="1935" dy="26">Result: source of truth 在 store，失效后走路由回流</tspan>
+  </text>
+
+  <rect class="card card-green" x="2830" y="1995" width="980" height="380"/>
+  <text class="card-title" x="2855" y="2030">Branch Flow: uniapp 鉴权链</text>
+  <text class="card-text small" x="2855" y="2067">
+    <tspan x="2855" dy="0">Condition: uniapp 环境，或响应登录失效</tspan>
+    <tspan x="2855" dy="26">Steps:</tspan>
+    <tspan x="2855" dy="26">1. `account store` 登录后把关键字段写入 Storage</tspan>
+    <tspan x="2855" dy="26">2. `request.js` 通过 `getStorageSync` 读取</tspan>
+    <tspan x="2855" dy="26">3. 写入请求头并发请求</tspan>
+    <tspan x="2855" dy="26">4. 失效时清理状态并 `uni.reLaunch()`</tspan>
+    <tspan x="2855" dy="26">Result: source of truth 落在 Storage，适合移动端恢复链路</tspan>
+  </text>
+</svg>
