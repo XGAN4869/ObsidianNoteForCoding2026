@@ -8,7 +8,7 @@
 		{"id":"da01000000000001","type":"group","x":-120,"y":-1200,"width":660,"height":640,"color":"4","label":"阅读入口"},
 		{"id":"db01000000000008","type":"text","text":"## runtime 层\n\n`locationReporterRuntime.js`\n\n中文意思：定位运行时桥接层\n\n关键函数：\n- `setLocationReporterEntityId`\n- `startLocationReporter`\n- `stopLocationReporter`\n- `shouldResumeLocationReporter`","x":3000,"y":-1040,"width":260,"height":380,"color":"6"},
 		{"id":"db01000000000009","type":"text","text":"## reporter 层\n\n`locationReporter.js`\n\n中文意思：底层定位上报引擎\n\n关键函数：\n- `flushPendingPayload`\n- `submitPayload`\n\n它负责真正定位、上报、失败补偿。","x":3690,"y":-1040,"width":260,"height":340,"color":"6"},
-		{"id":"db01000000000001","type":"file","file":"travelKnowledge/我的整理/Enhance Skill 整理/location/attendance enhance analysis.md","x":-100,"y":-1180,"width":620,"height":280},
+		{"id":"db01000000000001","type":"file","file":"travelKnowledge/我的整理/Vue Components Communication 整理/location/attendance enhance analysis.md","x":-100,"y":-1180,"width":620,"height":280},
 		{"id":"db01000000000002","type":"text","text":"# 读图顺序\n\n1. 先看“父子组件 + store/service”怎么分层。\n2. 再看关键变量和 Storage 的中文意思。\n3. 再按时间顺序看“开始用车”和“恢复/停止”。\n4. 最后看“改代码先看哪里”。","x":-100,"y":-860,"width":620,"height":260,"color":"4"},
 		{"id":"db0100000000000a","type":"text","text":"## 最重要一句\n\n平时主链：\n子组件 -> 父组件 -> runtime -> reporter\n\n恢复主链：\nApp -> store -> runtime -> reporter","x":3200,"y":-420,"width":490,"height":220,"color":"4"},
 		{"id":"db01000000000005","type":"text","text":"## 父子通信\n\n父 -> 子：`props`\n- `selectedVehicle`\n- `vehicleActive`\n- `approvalStatus`\n- `submitting`\n- `personalName`\n- `isTempWorker`\n\n子 -> 父：`emit`\n- `submitVehicle`\n- `closeVehicle`","x":2110,"y":-560,"width":300,"height":400,"color":"2"},

@@ -1,7 +1,7 @@
 {
 	"nodes":[
 		{"id":"a1e4c0905b7d11f2","type":"group","x":0,"y":0,"width":3880,"height":360,"label":"Project Reading Entry","color":"4"},
-		{"id":"b22f91d3ac4e6701","type":"file","x":80,"y":60,"width":420,"height":220,"file":"travelKnowledge/我的整理/Enhance Skill 整理/登录，路由，权限/request.js、api、config.js、web request.js 关系分析.md"},
+		{"id":"b22f91d3ac4e6701","type":"file","x":80,"y":60,"width":420,"height":220,"file":"travelKnowledge/我的整理/Vue Components Communication 整理/登录，路由，权限/request.js、api、config.js、web request.js 关系分析.md"},
 		{"id":"c3381a5e7d9f204b","type":"text","x":560,"y":60,"width":930,"height":220,"color":"2","text":"## 核心结论\n\n共享 API 包只依赖 `RequestClient` 这个抽象入口。\n`web` 和 `uniapp` 在各自启动时，把自己的真实请求实现注册进去。\n\n这不是“共用同一个 axios 实例”，而是：\n- 共用同一套 API 函数定义\n- 共用同一份请求描述格式\n- 由不同平台注入自己的执行器"},
 		{"id":"d449be0182ac73f4","type":"text","x":1560,"y":60,"width":1160,"height":220,"color":"5","text":"## 推荐阅读顺序\n\n1. 先看这份关系分析笔记\n2. 再看 `packages/api/src/config.js`\n3. 接着看 `packages/api/src/apis/**`\n4. 然后分开看 `sites/web/src/utils/request.js` 和 `sites/uniapp/src/utils/request.js`\n5. 最后补 `main.js` 与登录态来源\n\n如果要改：\n- 改接口定义，先看 `apis/**`\n- 改底层请求行为，先看各端 `request.js`\n- 改初始化时机，先看 `main.js`"},
 		{"id":"e55c07a91db34e20","type":"group","x":0,"y":420,"width":2720,"height":1380,"label":"Architecture And Runtime Chain","color":"5"},
