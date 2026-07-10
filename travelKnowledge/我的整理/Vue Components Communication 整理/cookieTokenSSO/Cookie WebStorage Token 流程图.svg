@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1720" viewBox="0 0 2200 1720" role="img" aria-labelledby="title desc">
+  <title id="title">Cookie / WebStorage / Token 认证机制流程图</title>
+  <desc id="desc">从浏览器存储到 Session、JWT、双 Token、Pinia 持久化和路由守卫的结构化流程图。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <filter id="softShadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <style>
+    .canvas { fill: #f8fafc; }
+    .title { font: 700 36px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #0f172a; }
+    .subtitle { font: 400 18px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #475569; }
+    .laneTitle { font: 700 22px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #0f172a; }
+    .laneHint { font: 400 15px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #64748b; }
+    .box { stroke-width: 2.5; rx: 16; filter: url(#softShadow); }
+    .nodeTitle { font: 700 17px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #0f172a; }
+    .nodeText { font: 400 14px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #334155; }
+    .smallText { font: 400 13px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #475569; }
+    .edge { stroke: #334155; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+    .edgeLight { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .label { font: 600 13px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #334155; }
+    .runtime { fill: #e2e8f0; stroke: #64748b; }
+    .client { fill: #dbeafe; stroke: #2563eb; }
+    .storage { fill: #dcfce7; stroke: #16a34a; }
+    .auth { fill: #ede9fe; stroke: #7c3aed; }
+    .server { fill: #fef3c7; stroke: #ca8a04; }
+    .resource { fill: #cffafe; stroke: #0891b2; }
+    .token { fill: #fee2e2; stroke: #dc2626; }
+    .refresh { fill: #ffedd5; stroke: #ea580c; }
+    .risk { fill: #ffe4e6; stroke: #e11d48; }
+    .sectionLine { stroke: #cbd5e1; stroke-width: 1.5; }
+  </style>
+
+  <rect class="canvas" x="0" y="0" width="2200" height="1720"/>
+  <text class="title" x="80" y="70">Cookie / WebStorage / Token 认证机制流程图</text>
+  <text class="subtitle" x="80" y="104">阅读顺序：先看总览，再看 Cookie 自动携带的域限制、Token 后端验签、双 Token 两种刷新时机、Vue 状态恢复和路由守卫。</text>
+
+  <line class="sectionLine" x1="80" y1="128" x2="2120" y2="128"/>
+
+  <text class="laneTitle" x="80" y="170">1. 总览：HTTP 无状态需要状态载体</text>
+  <text class="laneHint" x="80" y="196">Cookie、localStorage、sessionStorage 是存储能力；Session、Token、双 Token 是认证机制。</text>
+  <rect class="box runtime" x="90" y="225" width="250" height="92"/>
+  <text class="nodeTitle" x="115" y="260">HTTP 无状态</text>
+  <text class="nodeText" x="115" y="286">每次请求天然互不认识</text>
+  <rect class="box storage" x="460" y="210" width="300" height="122"/>
+  <text class="nodeTitle" x="485" y="246">浏览器存储载体</text>
+  <text class="nodeText" x="485" y="273">Cookie：可自动携带</text>
+  <text class="nodeText" x="485" y="296">localStorage：JS 手动读取</text>
+  <text class="nodeText" x="485" y="319">sessionStorage：标签页级</text>
+  <rect class="box auth" x="880" y="210" width="300" height="122"/>
+  <text class="nodeTitle" x="905" y="246">认证机制</text>
+  <text class="nodeText" x="905" y="273">Session：服务端有状态</text>
+  <text class="nodeText" x="905" y="296">JWT：客户端持有、服务端验签</text>
+  <text class="nodeText" x="905" y="319">双 Token：可刷新、可吊销</text>
+  <rect class="box resource" x="1300" y="225" width="260" height="92"/>
+  <text class="nodeTitle" x="1325" y="260">受保护资源</text>
+  <text class="nodeText" x="1325" y="286">验证通过后返回业务数据</text>
+  <path class="edge" d="M340 271 H460"/>
+  <text class="label" x="370" y="253">需要载体</text>
+  <path class="edge" d="M760 271 H880"/>
+  <text class="label" x="790" y="253">构建登录态</text>
+  <path class="edge" d="M1180 271 H1300"/>
+  <text class="label" x="1210" y="253">放行访问</text>
+
+  <line class="sectionLine" x1="80" y1="376" x2="2120" y2="376"/>
+
+  <text class="laneTitle" x="80" y="420">2. Session + Cookie SSO：浏览器自动携带 sid，但受 Cookie 域限制</text>
+  <rect class="box client" x="90" y="455" width="210" height="92"/>
+  <text class="nodeTitle" x="115" y="491">用户 / 浏览器</text>
+  <text class="nodeText" x="115" y="517">提交用户名密码</text>
+  <rect class="box auth" x="390" y="455" width="260" height="92"/>
+  <text class="nodeTitle" x="415" y="491">认证中心 /auth/login</text>
+  <text class="nodeText" x="415" y="517">校验后签发 sid</text>
+  <rect class="box storage" x="740" y="430" width="250" height="82"/>
+  <text class="nodeTitle" x="765" y="463">Cookie: sid</text>
+  <text class="nodeText" x="765" y="489">Set-Cookie 写入浏览器</text>
+  <rect class="box server" x="740" y="540" width="250" height="82"/>
+  <text class="nodeTitle" x="765" y="573">Session 存储</text>
+  <text class="nodeText" x="765" y="599">sid -&gt; user</text>
+  <rect class="box resource" x="1080" y="455" width="250" height="92"/>
+  <text class="nodeTitle" x="1105" y="491">子系统 A / B</text>
+  <text class="nodeText" x="1105" y="517">同主域可读取请求中的 sid</text>
+  <rect class="box auth" x="1420" y="455" width="270" height="92"/>
+  <text class="nodeTitle" x="1445" y="491">认证中心 /auth/verify</text>
+  <text class="nodeText" x="1445" y="517">查询 sid 是否有效</text>
+  <rect class="box resource" x="1780" y="455" width="250" height="92"/>
+  <text class="nodeTitle" x="1805" y="491">受保护资源</text>
+  <text class="nodeText" x="1805" y="517">valid/user 后返回数据</text>
+  <path class="edge" d="M300 501 H390"/>
+  <text class="label" x="318" y="483">登录</text>
+  <path class="edge" d="M650 481 H740"/>
+  <text class="label" x="663" y="463">Set-Cookie</text>
+  <path class="edge" d="M650 521 C690 521 700 581 740 581"/>
+  <text class="label" x="665" y="553">写入 Session</text>
+  <path class="edge" d="M990 471 C1030 471 1040 501 1080 501"/>
+  <text class="label" x="1000" y="453">自动携带 sid</text>
+  <path class="edge" d="M1330 501 H1420"/>
+  <text class="label" x="1348" y="483">验证 sid</text>
+  <path class="edgeLight" d="M1555 547 C1555 590 1040 650 865 622"/>
+  <text class="label" x="1220" y="638">读取 Session</text>
+  <path class="edge" d="M1690 501 H1780"/>
+  <text class="label" x="1708" y="483">放行</text>
+  <rect class="box risk" x="1080" y="580" width="610" height="86"/>
+  <text class="nodeTitle" x="1105" y="608">跨主域限制</text>
+  <text class="nodeText" x="1105" y="633">auth.com 与 app-a.com 不天然共享 Cookie；常用重定向 Ticket/Token 后各域写 Cookie。</text>
+  <text class="nodeText" x="1105" y="655">或配合 X-CSRF / withCredentials / CORS 凭证配置。</text>
+
+  <line class="sectionLine" x1="80" y1="675" x2="2120" y2="675"/>
+
+  <text class="laneTitle" x="80" y="720">3. Token / JWT SSO：前端手动携带 Authorization</text>
+  <rect class="box client" x="90" y="755" width="220" height="92"/>
+  <text class="nodeTitle" x="115" y="791">前端 login()</text>
+  <text class="nodeText" x="115" y="817">提交用户名密码</text>
+  <rect class="box auth" x="400" y="755" width="240" height="92"/>
+  <text class="nodeTitle" x="425" y="791">认证中心 /login</text>
+  <text class="nodeText" x="425" y="817">签名生成 JWT</text>
+  <rect class="box token" x="730" y="755" width="250" height="92"/>
+  <text class="nodeTitle" x="755" y="791">JWT</text>
+  <text class="nodeText" x="755" y="817">header.payload.signature</text>
+  <text class="nodeText" x="755" y="839">前端可 decode，不做 verify</text>
+  <rect class="box storage" x="1070" y="755" width="250" height="92"/>
+  <text class="nodeTitle" x="1095" y="791">localStorage: token</text>
+  <text class="nodeText" x="1095" y="817">前端保存和读取</text>
+  <rect class="box client" x="1410" y="755" width="250" height="92"/>
+  <text class="nodeTitle" x="1435" y="791">axios / fetch 请求层</text>
+  <text class="nodeText" x="1435" y="817">注入 Authorization</text>
+  <rect class="box resource" x="1750" y="755" width="290" height="92"/>
+  <text class="nodeTitle" x="1775" y="791">后端子系统 jwt.verify</text>
+  <text class="nodeText" x="1775" y="817">后端用密钥/公钥验签并返回资源</text>
+  <path class="edge" d="M310 801 H400"/>
+  <text class="label" x="327" y="783">登录</text>
+  <path class="edge" d="M640 801 H730"/>
+  <text class="label" x="657" y="783">签发</text>
+  <path class="edge" d="M980 801 H1070"/>
+  <text class="label" x="997" y="783">写入</text>
+  <path class="edge" d="M1320 801 H1410"/>
+  <text class="label" x="1337" y="783">读取</text>
+  <path class="edge" d="M1660 801 H1750"/>
+  <text class="label" x="1668" y="783">手动携带</text>
+
+  <line class="sectionLine" x1="80" y1="952" x2="2120" y2="952"/>
+
+  <text class="laneTitle" x="80" y="996">4. 双 Token：短 token 访问资源，刷新可被动拦截或主动预测</text>
+  <rect class="box token" x="90" y="1030" width="230" height="92"/>
+  <text class="nodeTitle" x="115" y="1066">Access Token</text>
+  <text class="nodeText" x="115" y="1092">短有效期，高频访问资源</text>
+  <rect class="box resource" x="410" y="1030" width="240" height="92"/>
+  <text class="nodeTitle" x="435" y="1066">子系统资源服务</text>
+  <text class="nodeText" x="435" y="1092">本地验签和检查过期</text>
+  <rect class="box runtime" x="740" y="1030" width="250" height="92"/>
+  <text class="nodeTitle" x="765" y="1066">Access 状态判断</text>
+  <text class="nodeText" x="765" y="1090">被动：401 后刷新</text>
+  <text class="nodeText" x="765" y="1112">主动：快过期先刷新</text>
+  <rect class="box refresh" x="740" y="1154" width="250" height="82"/>
+  <text class="nodeTitle" x="765" y="1187">Refresh Token</text>
+  <text class="nodeText" x="765" y="1213">长有效期，可吊销</text>
+  <rect class="box auth" x="1080" y="1030" width="250" height="92"/>
+  <text class="nodeTitle" x="1105" y="1066">认证中心 /refresh</text>
+  <text class="nodeText" x="1105" y="1092">拦截器携带 Refresh Token</text>
+  <rect class="box server" x="1420" y="1030" width="260" height="92"/>
+  <text class="nodeTitle" x="1445" y="1066">Refresh 状态存储</text>
+  <text class="nodeText" x="1445" y="1092">用户归属、吊销、轮换</text>
+  <rect class="box runtime" x="1770" y="1030" width="260" height="92"/>
+  <text class="nodeTitle" x="1795" y="1066">Refresh 是否有效</text>
+  <text class="nodeText" x="1795" y="1092">有效换新，无效重新登录</text>
+  <path class="edge" d="M320 1076 H410"/>
+  <text class="label" x="337" y="1058">访问资源</text>
+  <path class="edge" d="M650 1076 H740"/>
+  <text class="label" x="667" y="1058">判断</text>
+  <path class="edge" d="M990 1076 H1080"/>
+  <text class="label" x="1000" y="1058">需要刷新</text>
+  <path class="edgeLight" d="M990 1195 C1035 1195 1035 1076 1080 1076"/>
+  <text class="label" x="1010" y="1168">提交长 token</text>
+  <path class="edge" d="M1330 1076 H1420"/>
+  <text class="label" x="1348" y="1058">验证状态</text>
+  <path class="edge" d="M1680 1076 H1770"/>
+  <text class="label" x="1700" y="1058">返回状态</text>
+  <path class="edgeLight" d="M1900 1122 C1900 1270 160 1270 160 1122"/>
+  <text class="label" x="950" y="1285">有效：签发新 Access Token 并回到资源访问</text>
+
+  <line class="sectionLine" x1="80" y1="1325" x2="2120" y2="1325"/>
+
+  <text class="laneTitle" x="80" y="1368">5. Vue 项目状态恢复：store 是业务状态持有者，Storage 是持久化层</text>
+  <rect class="box client" x="90" y="1402" width="210" height="92"/>
+  <text class="nodeTitle" x="115" y="1438">createApp(App)</text>
+  <text class="nodeText" x="115" y="1464">应用启动入口</text>
+  <rect class="box client" x="380" y="1402" width="210" height="92"/>
+  <text class="nodeTitle" x="405" y="1438">createPinia()</text>
+  <text class="nodeText" x="405" y="1464">创建状态容器</text>
+  <rect class="box client" x="670" y="1402" width="230" height="92"/>
+  <text class="nodeTitle" x="695" y="1438">useCartStore</text>
+  <text class="nodeText" x="695" y="1464">cartList / selectedIds</text>
+  <rect class="box client" x="980" y="1402" width="220" height="92"/>
+  <text class="nodeTitle" x="1005" y="1438">loadState()</text>
+  <text class="nodeText" x="1005" y="1464">初始化读取缓存</text>
+  <rect class="box storage" x="1280" y="1402" width="260" height="92"/>
+  <text class="nodeTitle" x="1305" y="1438">localStorage: cart-store</text>
+  <text class="nodeText" x="1305" y="1464">刷新恢复，变更写回</text>
+  <rect class="box client" x="670" y="1538" width="230" height="82"/>
+  <text class="nodeTitle" x="695" y="1571">store actions</text>
+  <text class="nodeText" x="695" y="1597">add / remove / clear</text>
+  <rect class="box client" x="980" y="1538" width="220" height="82"/>
+  <text class="nodeTitle" x="1005" y="1571">cartStore.$subscribe</text>
+  <text class="nodeText" x="1005" y="1597">监听变更并持久化</text>
+  <rect class="box runtime" x="1650" y="1402" width="300" height="92"/>
+  <text class="nodeTitle" x="1675" y="1438">路由守卫触发</text>
+  <text class="nodeText" x="1675" y="1464">URL 变化先走全局守卫</text>
+  <rect class="box runtime" x="1650" y="1538" width="300" height="82"/>
+  <text class="nodeTitle" x="1675" y="1571">组件是否复用</text>
+  <text class="nodeText" x="1675" y="1597">复用：beforeRouteUpdate</text>
+  <path class="edge" d="M300 1448 H380"/>
+  <text class="label" x="315" y="1430">初始化</text>
+  <path class="edge" d="M590 1448 H670"/>
+  <text class="label" x="605" y="1430">创建 store</text>
+  <path class="edge" d="M900 1448 H980"/>
+  <text class="label" x="915" y="1430">读初始 state</text>
+  <path class="edge" d="M1200 1448 H1280"/>
+  <text class="label" x="1215" y="1430">getItem</text>
+  <path class="edgeLight" d="M900 1579 H980"/>
+  <text class="label" x="910" y="1561">变更通知</text>
+  <path class="edgeLight" d="M1200 1579 C1240 1579 1240 1448 1280 1448"/>
+  <text class="label" x="1218" y="1558">setItem</text>
+  <path class="edgeLight" d="M785 1538 V1494"/>
+  <text class="label" x="805" y="1524">更新真实状态</text>
+  <path class="edge" d="M1800 1494 V1538"/>
+  <text class="label" x="1820" y="1522">判断匹配结果</text>
+
+  <rect class="box risk" x="80" y="1640" width="2040" height="48"/>
+  <text class="nodeTitle" x="110" y="1671">关键区分：Cookie 的核心是浏览器自动携带；localStorage / Token 的核心是前端手动读取并注入请求；Pinia store 持有业务状态，localStorage 只做恢复和持久化。</text>
+</svg>

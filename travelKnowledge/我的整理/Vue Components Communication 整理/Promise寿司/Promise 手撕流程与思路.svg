@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1880" viewBox="0 0 2200 1880" role="img" aria-labelledby="title desc">
+  <title id="title">Promise 手撕流程与思路</title>
+  <desc id="desc">从手撕顺序、一次 then 的运行流程、resolvePromise 决策树、分支流和重难点理解 MyPromise。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fbff"/>
+      <stop offset="100%" stop-color="#f3f0ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#243b53" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3973d6"/>
+    </marker>
+    <marker id="arrowYellow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c58a14"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#d64545"/>
+    </marker>
+    <style>
+      .title { font: 700 48px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #16213e; }
+      .subtitle { font: 400 22px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #52667a; }
+      .lane-title { font: 700 26px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #20344a; }
+      .box-title { font: 700 21px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #18324b; }
+      .box-text { font: 400 17px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #41566c; }
+      .small { font: 400 15px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #52667a; }
+      .code { font: 600 16px Consolas,'Microsoft YaHei',monospace; fill: #24415c; }
+      .step { font: 700 15px 'Microsoft YaHei','PingFang SC',sans-serif; fill: #ffffff; }
+      .tag { font: 700 16px 'Microsoft YaHei','PingFang SC',sans-serif; }
+      .arrow { fill: none; stroke: #3973d6; stroke-width: 3; marker-end: url(#arrowBlue); }
+      .arrow-yellow { fill: none; stroke: #c58a14; stroke-width: 3; marker-end: url(#arrowYellow); }
+      .arrow-red { fill: none; stroke: #d64545; stroke-width: 3; marker-end: url(#arrowRed); }
+      .lane { fill: #ffffff; stroke: #dbe5ef; stroke-width: 2; rx: 24; filter: url(#shadow); }
+      .blue { fill: #eaf3ff; stroke: #79a8e8; stroke-width: 2; rx: 18; }
+      .cyan { fill: #e9fbfa; stroke: #65bdb7; stroke-width: 2; rx: 18; }
+      .purple { fill: #f1edff; stroke: #9a84de; stroke-width: 2; rx: 18; }
+      .yellow { fill: #fff7db; stroke: #e1b74f; stroke-width: 2; rx: 18; }
+      .red { fill: #fff0f0; stroke: #df7b7b; stroke-width: 2; rx: 18; }
+      .green { fill: #ecf9ef; stroke: #73b985; stroke-width: 2; rx: 18; }
+      .neutral { fill: #f5f7fa; stroke: #aab8c5; stroke-width: 2; rx: 18; }
+    </style>
+  </defs>
+
+  <rect width="2200" height="1880" fill="url(#bg)"/>
+  <circle cx="2045" cy="85" r="150" fill="#dfe9ff" opacity="0.55"/>
+  <circle cx="125" cy="1780" r="190" fill="#e8ddff" opacity="0.45"/>
+
+  <text x="80" y="76" class="title">Promise 手撕流程与思路</text>
+  <text x="82" y="116" class="subtitle">核心心智模型：旧 Promise 给结果 → 回调做加工 → resolvePromise 解析 → 新 Promise 接结果</text>
+  <rect x="1760" y="52" width="340" height="52" rx="26" fill="#273c75"/>
+  <text x="1930" y="85" text-anchor="middle" class="step">先跑通主链，再补规范边界</text>
+
+  <!-- Lane 1: handwrite order -->
+  <rect x="55" y="155" width="2090" height="315" class="lane"/>
+  <text x="85" y="200" class="lane-title">① 手撕顺序：按照职责逐层搭建</text>
+  <rect x="85" y="225" width="220" height="190" class="purple"/>
+  <circle cx="110" cy="250" r="15" fill="#7659c9"/><text x="110" y="256" text-anchor="middle" class="step">1</text>
+  <text x="195" y="260" text-anchor="middle" class="box-title">状态与字段</text>
+  <text x="105" y="298" class="code"><tspan x="105">pending / fulfilled</tspan><tspan x="105" dy="25">rejected</tspan></text>
+  <text x="105" y="360" class="box-text"><tspan x="105">state、value</tspan><tspan x="105" dy="24">成功 / 失败队列</tspan></text>
+
+  <rect x="345" y="225" width="220" height="190" class="cyan"/>
+  <circle cx="370" cy="250" r="15" fill="#2f9f98"/><text x="370" y="256" text-anchor="middle" class="step">2</text>
+  <text x="455" y="260" text-anchor="middle" class="box-title">constructor</text>
+  <text x="365" y="302" class="box-text"><tspan x="365">创建 resolve / reject</tspan><tspan x="365" dy="26">立即执行 executor</tspan><tspan x="365" dy="26">同步抛错 → reject</tspan></text>
+
+  <rect x="605" y="225" width="220" height="190" class="blue"/>
+  <circle cx="630" cy="250" r="15" fill="#3973d6"/><text x="630" y="256" text-anchor="middle" class="step">3</text>
+  <text x="715" y="260" text-anchor="middle" class="box-title">resolve / reject</text>
+  <text x="625" y="302" class="box-text"><tspan x="625">接收 value / reason</tspan><tspan x="625" dy="26">选择目标状态和队列</tspan><tspan x="625" dy="26">交给 transition</tspan></text>
+
+  <rect x="865" y="225" width="220" height="190" class="purple"/>
+  <circle cx="890" cy="250" r="15" fill="#7659c9"/><text x="890" y="256" text-anchor="middle" class="step">4</text>
+  <text x="975" y="260" text-anchor="middle" class="box-title">#transition</text>
+  <text x="885" y="302" class="box-text"><tspan x="885">只允许 pending 改一次</tspan><tspan x="885" dy="26">保存 state + value</tspan><tspan x="885" dy="26">刷新对应队列</tspan></text>
+
+  <rect x="1125" y="225" width="220" height="190" class="cyan"/>
+  <circle cx="1150" cy="250" r="15" fill="#2f9f98"/><text x="1150" y="256" text-anchor="middle" class="step">5</text>
+  <text x="1235" y="260" text-anchor="middle" class="box-title">then 外壳</text>
+  <text x="1145" y="302" class="box-text"><tspan x="1145">标准化两个回调</tspan><tspan x="1145" dy="26">创建 nextPromise</tspan><tspan x="1145" dy="26">保证穿透和链式</tspan></text>
+
+  <rect x="1385" y="225" width="220" height="190" class="blue"/>
+  <circle cx="1410" cy="250" r="15" fill="#3973d6"/><text x="1410" y="256" text-anchor="middle" class="step">6</text>
+  <text x="1495" y="260" text-anchor="middle" class="box-title">按状态分流</text>
+  <text x="1405" y="302" class="box-text"><tspan x="1405">pending → 入队</tspan><tspan x="1405" dy="26">fulfilled → 成功处理</tspan><tspan x="1405" dy="26">rejected → 失败处理</tspan></text>
+
+  <rect x="1645" y="225" width="220" height="190" class="cyan"/>
+  <circle cx="1670" cy="250" r="15" fill="#2f9f98"/><text x="1670" y="256" text-anchor="middle" class="step">7</text>
+  <text x="1755" y="260" text-anchor="middle" class="box-title">两个 handler</text>
+  <text x="1665" y="302" class="box-text"><tspan x="1665">微任务执行回调</tspan><tspan x="1665" dy="26">得到 result</tspan><tspan x="1665" dy="26">异常 → reject</tspan></text>
+
+  <rect x="1905" y="225" width="210" height="190" class="yellow"/>
+  <circle cx="1930" cy="250" r="15" fill="#c58a14"/><text x="1930" y="256" text-anchor="middle" class="step">8</text>
+  <text x="2010" y="260" text-anchor="middle" class="box-title">resolvePromise</text>
+  <text x="1925" y="302" class="box-text"><tspan x="1925">解析 result</tspan><tspan x="1925" dy="26">决定 nextPromise</tspan><tspan x="1925" dy="26">最后补 catch / static</tspan></text>
+
+  <path d="M305 320 H345" class="arrow"/><path d="M565 320 H605" class="arrow"/>
+  <path d="M825 320 H865" class="arrow"/><path d="M1085 320 H1125" class="arrow"/>
+  <path d="M1345 320 H1385" class="arrow"/><path d="M1605 320 H1645" class="arrow"/>
+  <path d="M1865 320 H1905" class="arrow-yellow"/>
+
+  <!-- Lane 2: runtime -->
+  <rect x="55" y="500" width="2090" height="330" class="lane"/>
+  <text x="85" y="545" class="lane-title">② 一次 then 的真实运行：状态如何回流</text>
+  <rect x="85" y="575" width="220" height="190" class="blue"/>
+  <text x="195" y="616" text-anchor="middle" class="box-title">new MyPromise</text>
+  <text x="105" y="654" class="box-text"><tspan x="105">初始化 pending</tspan><tspan x="105" dy="27">两个空队列</tspan><tspan x="105" dy="27">立即进入 constructor</tspan></text>
+
+  <rect x="345" y="575" width="220" height="190" class="cyan"/>
+  <text x="455" y="616" text-anchor="middle" class="box-title">executor</text>
+  <text x="365" y="654" class="box-text"><tspan x="365">拿到 resolve / reject</tspan><tspan x="365" dy="27">开始外部异步任务</tspan><tspan x="365" dy="27">稍后回写结果</tspan></text>
+
+  <rect x="605" y="575" width="220" height="190" class="purple"/>
+  <text x="715" y="616" text-anchor="middle" class="box-title">pending.then()</text>
+  <text x="625" y="654" class="box-text"><tspan x="625">创建 nextPromise</tspan><tspan x="625" dy="27">两个 handler 入队</tspan><tspan x="625" dy="27">暂不执行用户回调</tspan></text>
+
+  <rect x="865" y="575" width="220" height="190" class="blue"/>
+  <text x="975" y="616" text-anchor="middle" class="box-title">resolve / reject</text>
+  <text x="885" y="654" class="box-text"><tspan x="885">外部结果回到当前实例</tspan><tspan x="885" dy="27">成功值或失败原因</tspan><tspan x="885" dy="27">交给 transition</tspan></text>
+
+  <rect x="1125" y="575" width="220" height="190" class="purple"/>
+  <text x="1235" y="616" text-anchor="middle" class="box-title">状态落定</text>
+  <text x="1145" y="654" class="box-text"><tspan x="1145">pending → 最终状态</tspan><tspan x="1145" dy="27">保存 #value</tspan><tspan x="1145" dy="27">选择一条队列</tspan></text>
+
+  <rect x="1385" y="575" width="220" height="190" class="cyan"/>
+  <text x="1495" y="616" text-anchor="middle" class="box-title">执行 handler</text>
+  <text x="1405" y="654" class="box-text"><tspan x="1405">handler(#value)</tspan><tspan x="1405" dy="27">用户回调加工旧值</tspan><tspan x="1405" dy="27">得到 result</tspan></text>
+
+  <rect x="1645" y="575" width="220" height="190" class="yellow"/>
+  <text x="1755" y="616" text-anchor="middle" class="box-title">解析 result</text>
+  <text x="1665" y="654" class="box-text"><tspan x="1665">普通值直接成功</tspan><tspan x="1665" dy="27">thenable 继续等待</tspan><tspan x="1665" dy="27">异常变成失败</tspan></text>
+
+  <rect x="1905" y="575" width="210" height="190" class="green"/>
+  <text x="2010" y="616" text-anchor="middle" class="box-title">nextPromise</text>
+  <text x="1925" y="654" class="box-text"><tspan x="1925">拥有独立状态</tspan><tspan x="1925" dy="27">承接加工后结果</tspan><tspan x="1925" dy="27">继续下一个 then</tspan></text>
+
+  <path d="M305 670 H345" class="arrow"/><path d="M565 670 H605" class="arrow"/>
+  <path d="M825 670 H865" class="arrow"/><path d="M1085 670 H1125" class="arrow"/>
+  <path d="M1345 670 H1385" class="arrow"/><path d="M1605 670 H1645" class="arrow-yellow"/>
+  <path d="M1865 670 H1905" class="arrow"/>
+
+  <!-- Lane 3: resolution procedure -->
+  <rect x="55" y="860" width="2090" height="470" class="lane"/>
+  <text x="85" y="905" class="lane-title">③ resolvePromise 决策树：按固定顺序判断，不靠临场发挥</text>
+  <rect x="85" y="940" width="230" height="180" class="yellow"/>
+  <text x="200" y="980" text-anchor="middle" class="box-title">输入 x</text>
+  <text x="105" y="1018" class="box-text"><tspan x="105">x = then 回调返回值</tspan><tspan x="105" dy="27">目标：决定 nextPromise</tspan><tspan x="105" dy="27">如何成功或失败</tspan></text>
+
+  <rect x="365" y="940" width="230" height="180" class="red"/>
+  <text x="480" y="980" text-anchor="middle" class="box-title">① 循环引用？</text>
+  <text x="385" y="1020" class="code"><tspan x="385">x === targetPromise</tspan></text>
+  <text x="385" y="1063" class="box-text"><tspan x="385">是 → reject TypeError</tspan><tspan x="385" dy="26">否 → 继续判断</tspan></text>
+
+  <rect x="645" y="940" width="230" height="180" class="green"/>
+  <text x="760" y="980" text-anchor="middle" class="box-title">② 普通值？</text>
+  <text x="665" y="1018" class="box-text"><tspan x="665">非对象且非函数</tspan><tspan x="665" dy="27">→ res(x)</tspan><tspan x="665" dy="27">新 Promise 成功</tspan></text>
+
+  <rect x="925" y="940" width="230" height="180" class="yellow"/>
+  <text x="1040" y="980" text-anchor="middle" class="box-title">③ 读取 x.then</text>
+  <text x="945" y="1018" class="box-text"><tspan x="945">必须放进 try...catch</tspan><tspan x="945" dy="27">getter 本身可能抛错</tspan><tspan x="945" dy="27">异常 → reject</tspan></text>
+
+  <rect x="1205" y="940" width="230" height="180" class="green"/>
+  <text x="1320" y="980" text-anchor="middle" class="box-title">④ then 是函数？</text>
+  <text x="1225" y="1018" class="box-text"><tspan x="1225">否 → 把 x 当普通对象</tspan><tspan x="1225" dy="27">是 → 视作 thenable</tspan><tspan x="1225" dy="27">交出完成控制权</tspan></text>
+
+  <rect x="1485" y="940" width="230" height="180" class="cyan"/>
+  <text x="1600" y="980" text-anchor="middle" class="box-title">⑤ then.call</text>
+  <text x="1505" y="1018" class="box-text"><tspan x="1505">绑定 this = x</tspan><tspan x="1505" dy="27">成功得到 y</tspan><tspan x="1505" dy="27">失败直接 rej(reason)</tspan></text>
+
+  <rect x="1765" y="940" width="350" height="180" class="blue"/>
+  <text x="1940" y="980" text-anchor="middle" class="box-title">⑥ 成功值 y 递归解析</text>
+  <text x="1785" y="1018" class="box-text"><tspan x="1785">y 仍可能是另一个 thenable</tspan><tspan x="1785" dy="27">继续 resolvePromise(..., y, ...)</tspan><tspan x="1785" dy="27">直到找到最终普通值或失败</tspan></text>
+
+  <path d="M315 1030 H365" class="arrow-yellow"/><path d="M595 1030 H645" class="arrow-yellow"/>
+  <path d="M875 1030 H925" class="arrow-yellow"/><path d="M1155 1030 H1205" class="arrow-yellow"/>
+  <path d="M1435 1030 H1485" class="arrow-yellow"/><path d="M1715 1030 H1765" class="arrow-yellow"/>
+
+  <rect x="365" y="1165" width="430" height="105" class="red"/>
+  <text x="580" y="1200" text-anchor="middle" class="box-title">两道安全锁</text>
+  <text x="390" y="1235" class="box-text"><tspan x="390">#transition：实例只落定一次</tspan><tspan x="390" dy="25">called：thenable 解析只接受第一次回调</tspan></text>
+  <rect x="895" y="1165" width="510" height="105" class="neutral"/>
+  <text x="1150" y="1200" text-anchor="middle" class="box-title">决策口诀</text>
+  <text x="920" y="1237" class="small">同一个拒绝 → 普通值成功 → 取 then → call → 成功值递归</text>
+  <rect x="1505" y="1165" width="610" height="105" class="red"/>
+  <text x="1810" y="1200" text-anchor="middle" class="box-title">异常处理</text>
+  <text x="1530" y="1235" class="box-text"><tspan x="1530">读取 then / 调用 then 抛错：未落定就 reject，已 called 就忽略</tspan></text>
+
+  <!-- Lane 4: branches and risks -->
+  <rect x="55" y="1360" width="2090" height="435" class="lane"/>
+  <text x="85" y="1405" class="lane-title">④ 三条分支流 + 手撕时最容易忘的点</text>
+  <rect x="85" y="1440" width="610" height="250" class="green"/>
+  <rect x="110" y="1460" width="112" height="34" rx="17" fill="#3e9b59"/>
+  <text x="166" y="1483" text-anchor="middle" class="step">值穿透</text>
+  <text x="110" y="1530" class="box-title">没传成功回调，也不能丢值</text>
+  <text x="110" y="1570" class="box-text"><tspan x="110">默认回调：value → value</tspan><tspan x="110" dy="28">原值经过 resolvePromise 落到 nextPromise</tspan><tspan x="110" dy="28">每层 Promise 独立，但值保持不变</tspan></text>
+  <text x="110" y="1660" class="code">resolve(42).then().then() → 42</text>
+
+  <rect x="795" y="1440" width="610" height="250" class="red"/>
+  <rect x="820" y="1460" width="132" height="34" rx="17" fill="#c94c4c"/>
+  <text x="886" y="1483" text-anchor="middle" class="step">错误穿透</text>
+  <text x="820" y="1530" class="box-title">没传失败回调，就继续抛给下一层</text>
+  <text x="820" y="1570" class="box-text"><tspan x="820">默认回调：reason → throw reason</tspan><tspan x="820" dy="28">handler 捕获后让 nextPromise rejected</tspan><tspan x="820" dy="28">catch 返回普通值，可以把链恢复为成功</tspan></text>
+  <text x="820" y="1660" class="code">reject(err).then().catch(recover)</text>
+
+  <rect x="1505" y="1440" width="610" height="250" class="yellow"/>
+  <rect x="1530" y="1460" width="150" height="34" rx="17" fill="#bf861c"/>
+  <text x="1605" y="1483" text-anchor="middle" class="step">thenable 等待</text>
+  <text x="1530" y="1530" class="box-title">返回 Promise 时，nextPromise 先保持 pending</text>
+  <text x="1530" y="1570" class="box-text"><tspan x="1530">调用返回对象自己的 then</tspan><tspan x="1530" dy="28">等待其最终完成，再把结果回流</tspan><tspan x="1530" dy="28">成功值仍要递归解析，失败原因直接 reject</tspan></text>
+  <text x="1530" y="1660" class="code">return promise / thenable → wait</text>
+
+  <rect x="85" y="1720" width="2030" height="105" rx="20" fill="#273c75"/>
+  <text x="1100" y="1760" text-anchor="middle" style="font:700 22px 'Microsoft YaHei','PingFang SC',sans-serif;fill:#ffffff;">30 秒复述</text>
+  <text x="1100" y="1796" text-anchor="middle" style="font:400 17px 'Microsoft YaHei','PingFang SC',sans-serif;fill:#e8efff;">当前实例存状态、值和队列；executor 回写结果；transition 只落定一次；then 创建新 Promise；handler 加工旧值；resolvePromise 统一解析返回值。</text>
+
+  <text x="80" y="1855" class="small">复习建议：第一遍只写状态机；第二遍补 then 与队列；第三遍独立默写 resolvePromise；最后用异步、链式、穿透、异常、循环引用五类测试验证。</text>
+</svg>
