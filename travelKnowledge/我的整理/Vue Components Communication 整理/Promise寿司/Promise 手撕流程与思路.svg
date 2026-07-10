@@ -68,7 +68,7 @@
 
   <rect x="605" y="225" width="220" height="190" class="blue"/>
   <circle cx="630" cy="250" r="15" fill="#3973d6"/><text x="630" y="256" text-anchor="middle" class="step">3</text>
-  <text x="715" y="260" text-anchor="middle" class="box-title">resolve / reject</text>
+  <text x="665" y="260" text-anchor="start" style="font:700 18px 'Microsoft YaHei','PingFang SC',sans-serif;fill:#18324b;">resolve / reject</text>
   <text x="625" y="302" class="box-text"><tspan x="625">接收 value / reason</tspan><tspan x="625" dy="26">选择目标状态和队列</tspan><tspan x="625" dy="26">交给 transition</tspan></text>
 
   <rect x="865" y="225" width="220" height="190" class="purple"/>
@@ -93,7 +93,7 @@
 
   <rect x="1905" y="225" width="210" height="190" class="yellow"/>
   <circle cx="1930" cy="250" r="15" fill="#c58a14"/><text x="1930" y="256" text-anchor="middle" class="step">8</text>
-  <text x="2010" y="260" text-anchor="middle" class="box-title">resolvePromise</text>
+  <text x="1965" y="260" text-anchor="start" style="font:700 18px 'Microsoft YaHei','PingFang SC',sans-serif;fill:#18324b;">resolvePromise</text>
   <text x="1925" y="302" class="box-text"><tspan x="1925">解析 result</tspan><tspan x="1925" dy="26">决定 nextPromise</tspan><tspan x="1925" dy="26">最后补 catch / static</tspan></text>
 
   <path d="M305 320 H345" class="arrow"/><path d="M565 320 H605" class="arrow"/>
