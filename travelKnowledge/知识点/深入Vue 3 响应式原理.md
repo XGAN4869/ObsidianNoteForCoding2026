@@ -16,13 +16,15 @@ const state = reactive({
     A0:1,
     A1:2,
 })
-
+//------------------------Effect 写法一---------------------------------
 //A0 和 A1 是"依赖" dep
 //update() 是 "订阅者"/ "副作用" effect
 function update() {
   A2 = state.A0 + state.A1
 }
+whenDepsChange(update)
 
+//------------------------Effect 写法二---------------------------------
 // but，如何监听到 A0 和 A1？
 /* 
 0 因此需要一个魔法函数 whenDepsChange(update) 是这个东西把 update 副作用 启动的
@@ -35,11 +37,13 @@ function update() {
 */
 
 function render() {
-  return `页面内容：${state.A1}`
+  return createVNode(`页面内容：${state.A1}`)
 }
 //vue 会 将其作为副作用执行 
 // effect(render)，和底下这个写法是一样的
 whenDepsChange(render)
+
+//------------------------Effect 写法三---------------------------------
 
 /**
  * 除了模板字符串以外，会被自动传入 whenDepsChange 这个函数的还有 
