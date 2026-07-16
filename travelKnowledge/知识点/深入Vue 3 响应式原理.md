@@ -60,6 +60,12 @@ const total = computed(() => {
   return state.price * state.count
 })
 
+watch(
+  () => state.A1,
+  (newValue) => {
+    console.log('A1 变化了', newValue)
+  }
+)
 
 function whenDepsChange(update) {
   const effect = () => {
