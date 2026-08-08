@@ -1,3 +1,4 @@
+https://www.bilibili.com/video/BV1z9AGeKEk1/?spm_id_from=333.1387.favlist.content.click&vd_source=b3479b2ba968d0397b7a47be1896335d
 ## 理解 SSE
  `axios.post`，是**“等外卖全部做好再一起吃”**浏览器缓存完所有数据，一次性返回给你**。
 数据还在网络上传输，浏览器收到一口（**一个 chunk**），就立刻给你一口
@@ -42,3 +43,6 @@
 	```
 	`res.body` 在**HTTP 响应头回来之后就立刻可用，不需要等待全部响应下载完毕**。
 	你可以一点点读字节流，就是你 SSE 代码里的 `reader.read()` 循环。
+
+## SSE 的基本思路
+![[Pasted image 20260808202853.png]]**Note**：这是通过 `fetch POST` 读取 SSE 格式响应，不是浏览器原生 `EventSource`。`EventSource` 主要用于 GET，也不方便携带 JSON 请求体，因此 AI 对话一般用 `fetch + ReadableStream`。
