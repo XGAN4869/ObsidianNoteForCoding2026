@@ -1,5 +1,7 @@
 https://www.bilibili.com/video/BV1z9AGeKEk1/?spm_id_from=333.1387.favlist.content.click&vd_source=b3479b2ba968d0397b7a47be1896335d
-## 理解 SSE
+## SSE 使用场景
+**大模型流式输出**（如 ChatGPT 的逐字生成）首选 SSE ；
+# 理解 SSE
  `axios.post`，是**“等外卖全部做好再一起吃”**浏览器缓存完所有数据，一次性返回给你**。
 数据还在网络上传输，浏览器收到一口（**一个 chunk**），就立刻给你一口
 ## 对比axios.get/post 写法
@@ -46,3 +48,6 @@ https://www.bilibili.com/video/BV1z9AGeKEk1/?spm_id_from=333.1387.favlist.conten
 
 ## SSE 的基本思路
 ![[Pasted image 20260808202853.png]]**Note**：这是通过 `fetch POST` 读取 SSE 格式响应，不是浏览器原生 `EventSource`。`EventSource` 主要用于 GET，也不方便携带 JSON 请求体，因此 AI 对话一般用 `fetch + ReadableStream`。
+
+
+
