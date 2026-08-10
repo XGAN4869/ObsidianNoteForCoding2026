@@ -1,3 +1,6 @@
+效果：
+非持久化存储 loginInfo 的信息在 localStorage 中，每次刷新页面都会调用 loginInfo，这种方式是比较安全的，因为信息不会持久化在本地，如果用持久化插件，会存在信息泄露的风险。
+
 ```js
 import router from './index.js'
 import { useAccountStore } from '@/store/index.js'
