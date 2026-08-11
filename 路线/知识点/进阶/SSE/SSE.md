@@ -1,4 +1,4 @@
-https://www.bilibili.com/video/BV1z9AGeKEk1/?spm_id_from=333.1387.favlist.content.click&vd_source=b3479b2ba968d0397b7a47be1896335d
+https://blog.csdn.net/meilindehuzi_a/article/details/163000680?fromshare=blogdetail&sharetype=blogdetail&sharerId=163000680&sharerefer=PC&sharesource=&sharefrom=from_link
 ## SSE 使用场景
 **大模型流式输出**（如 ChatGPT 的逐字生成）首选 SSE ；
 # 理解 SSE
@@ -19,6 +19,7 @@ https://www.bilibili.com/video/BV1z9AGeKEk1/?spm_id_from=333.1387.favlist.conten
 	规则 3：`Connection: keep-alive`
 
 ## fetch
+
 [使用可读流 - Web API | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Streams_API/Using_readable_streams)
 原生 `fetch` vs  `axios`
 - 差异点
@@ -46,6 +47,10 @@ https://www.bilibili.com/video/BV1z9AGeKEk1/?spm_id_from=333.1387.favlist.conten
 	`res.body` 在**HTTP 响应头回来之后就立刻可用，不需要等待全部响应下载完毕**。
 	你可以一点点读字节流，就是你 SSE 代码里的 `reader.read()` 循环。
 
+- 读取方式[Fetch API 教程 - 阮一峰的网络日志](https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html)
+	1. .json() 异步，一次性读完
+	2. `await res.text()` → 把全部响应读完拿大字符串，流关闭
+	3. `res.body.getReader()` → 一点点分片读（SSE 流式聊天就用这个）
 ## SSE 的基本思路
 ![[Pasted image 20260808202853.png]]**Note**：这是通过 `fetch POST` 读取 SSE 格式响应，不是浏览器原生 `EventSource`。`EventSource` 主要用于 GET，也不方便携带 JSON 请求体，因此 AI 对话一般用 `fetch + ReadableStream`。
 
