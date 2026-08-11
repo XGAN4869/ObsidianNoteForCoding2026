@@ -1,3 +1,4 @@
+没打字效果的版本👇
 https://blog.csdn.net/meilindehuzi_a/article/details/163000680?fromshare=blogdetail&sharetype=blogdetail&sharerId=163000680&sharerefer=PC&sharesource=&sharefrom=from_link
 ## SSE 使用场景
 **大模型流式输出**（如 ChatGPT 的逐字生成）首选 SSE ；
