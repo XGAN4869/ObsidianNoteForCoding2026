@@ -34,6 +34,7 @@ https://blog.csdn.net/meilindehuzi_a/article/details/163000680?fromshare=blogdet
       Accept: 'text/event-stream'   // 👈 告诉后端：我要流式数据，别一次性给我
     },
     body: JSON.stringify(MessageList.value) // 把整个对话历史发给后端
+    signal:controller.value.signal
   })
 ```
 - 补充: 请求头Content-type：
@@ -52,6 +53,8 @@ https://blog.csdn.net/meilindehuzi_a/article/details/163000680?fromshare=blogdet
 	1. .json() 异步，一次性读完
 	2. `await res.text()` → 把全部响应读完拿大字符串，流关闭
 	3. `res.body.getReader()` → 一点点分片读（SSE 流式聊天就用这个）
+- abort 一旦用了就不能再用来发请求了
+	https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal
 ## SSE 的基本思路
 ![[Pasted image 20260808202853.png]]**Note**：这是通过 `fetch POST` 读取 SSE 格式响应，不是浏览器原生 `EventSource`。`EventSource` 主要用于 GET，也不方便携带 JSON 请求体，因此 AI 对话一般用 `fetch + ReadableStream`。
 
