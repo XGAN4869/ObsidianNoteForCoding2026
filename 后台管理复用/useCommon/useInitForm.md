@@ -18,10 +18,14 @@ export default function useInitForm(opt = {}) {
     Object.assign(formData, createEmptyForm())  
   }  
   //2. 重置局部表单, 考虑数组的情况  
-  const resetSingleForm = async (field) => {  
+  const resetSingleForm = (field, defaultValue = '') => {  
     formData[field] = ''  
+    //TODO:如果你想，可以分个类，来重置不同类型的字段  
+    typeof defaultValue === 'function' ? defaultValue() : defaultValue  
   }  
   
+  //TODO: 这个不要了，之后让组件自己传递 props，因为跨组件调用方法了，导致你不得不把 rowId 放在全局  
+  //TODO: 每次调用方法都是一个新的实例对象  
   const open = (key, id) => {  
     rowId.value = id ?? null  
     modalState[key] = true  
@@ -31,6 +35,8 @@ export default function useInitForm(opt = {}) {
   
   //TODO: 回显数据， return 的时候会自动包一个 Promise !!! 记得用 watch 配合 async 接收  
   async function fetchFormData(id) {  
+    //TODO: 少了一些兜底  
+  
     try {  
       loadingDialog.value = true  
       const res = await opt.getInfo(id)  
@@ -71,20 +77,20 @@ export default function useInitForm(opt = {}) {
       return  
     }  
     //校验  
-    const valid = await formRef.value.validate() // 返回 Promise，永远 ≠ true    if (valid !== true) {  
+    const valid = await formRef?.value?.validate() // 返回 Promise，永远 ≠ true    if (valid !== true) {  
       return  
     }  
     submitLoading.value = true  
     try {  
       let res = null  
-      //处理前置逻辑  
+      //TODO: 处理前置逻辑，这部分之后换一种写法，处理参数即可，不要重调整个函数  
       if (typeof opt.transformParams === 'function' && opt.transformParams) {  
         res = await opt.submitForm(opt.transformParams()) // 调接口  
       } else {  
         res = await opt.submitForm(formData) // 调接口  
       }  
       if (opt.onSuccess && typeof opt.onSuccess === 'function') {  
-        opt.onSuccess(res)  
+        //TODO: 这里有概率成功后用户还需要调用接口，所以需要 await       await opt.onSuccess(res)  
       }  
       resetForm()  
     } catch (err) {  
