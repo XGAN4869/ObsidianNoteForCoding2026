@@ -1,53 +1,212 @@
-## npm i ts-node -g
-可以**直接运行 .ts 源码，不需要先 tsc 编译成 js**
-## npm init -y 生 package.json
-项目说明书，记录：项目名字、版本、你装了哪些依赖包、脚本命令。
+# TS2：运行工具与基础类型
 
-没有这个文件，npm 安装本地包会报错。
-## npm i '@types/node' -D 控制台 ts-node index.ts 即可运行，不用事先编译
-nodejs 的**类型声明文件**
->Node 本身是 JS 写的，没有 TS 类型。ts/ts-node 不知道 node 内置 API（`fs`、`path`、`process`）是什么类型，会报一堆红色类型报错。装这个包，TS 就认识 node 自带 API。
+## 开篇速记卡：能具体就具体，不确定就 `unknown`
 
->[!NOTE]
->`-D` 等价于 `--save-dev`：**开发依赖**只在你写代码、编译阶段需要；打包上线运行的时候不需要这个包。
-安装完会写到 package.json 的 `devDependencies`。
+> **类型写得越具体，编辑器提示越准确；`any` 越多，TypeScript 越接近普通 JavaScript。**
 
+### 类型选择口诀
 
-## 类型
-先把你列的梳理修正一遍，你的顺序有点小问题，**TS 类型由宽到窄（从可以装一切 → 什么都装不了）**
+```text
+已经知道是什么     → string / number / boolean / 具体对象
+只允许几个固定值   → 字面量联合类型
+暂时不知道是什么   → unknown，判断后再使用
+不关心函数返回值   → void
+函数不能正常结束   → never
+实在无法描述       → 最后才考虑 any
+```
 
-> 1. top‑type（顶级类型）：`any`、`unknown` → 能接收几乎所有值
-> 
-> 2. Object /object
-> 
-> 3. 包装对象类型：`Number` `String` `Boolean`（大写，JS 构造函数）
-> 
-> 4. 原始类型：`number` `string` `boolean`（小写，日常用）
-> 
-> 5. 字面量类型：`1` `"Zora"` `false`（具体某一个值）
-> 
-> 6. bottom‑type（底类型）：`never`，什么值都装不下
+### 高频类型速查
 
->[!HINT]
->7. `any`：来者不拒，随便瞎操作；
->8. `unknown`：来者不拒，但你要先判断是什么类型才能操作。
->	1. unknown 类型只能赋值自身 or any 类型
->	2. unknown 类型没有办法读取任何属性，包括自身的方法
->9. 综上， unknown 类型比 any 类型更加安全，当你遇到一个变量你不知道它是啥类型，优先用 unknown，其次选 any
+| 场景   | 写法                       | 记忆点              |
+| ---- | ------------------------ | ---------------- |
+| 字符串  | `string`                 | 使用小写，不用 `String` |
+| 数字数组 | `number[]`               | 每一项都是数字          |
+| 普通对象 | `interface User { ... }` | 直接描述结构           |
+| 固定状态 | `'idle' \| 'loading'`    | 只能从规定值中选择        |
+| 未知数据 | `unknown`                | 先判断，后使用          |
+| 跳过检查 | `any`                    | 能不用就不用           |
+| 永不返回 | `never`                  | 抛错、死循环、不可能分支     |
 
-## Object包装对象类型 object原始类型模式 {}字面量模式
-### ① `Object`（大写 O）
+### 最容易混淆的三个结论
 
-代表**所有可以调用 `Object.prototype` 方法的值**。
-### ② `object`（小写 o，TS 专属）
+1. `unknown` 比 `any` 安全，因为它会强制你先判断类型。
+2. `{}` 不是“空对象”，它表示任意非 `null`、非 `undefined` 的值。
+3. 描述业务对象时，不要用宽泛的 `Object`，应写明确属性或使用 `interface`。
 
-代表**非原始类型**：只能是对象、数组、函数；**不能放 number/string/boolean**
+## 分类索引
 
-### ③ `{}` 空对象类型 即为 new Object
+- [[#一、直接运行 TypeScript|直接运行 TypeScript]]
+- [[#二、为什么需要 @types/node|Node.js 类型声明]]
+- [[#三、常用基础类型|常用基础类型]]
+- [[#四、any、unknown 与 never|特殊类型]]
+- [[#五、Object、object 与空对象类型|对象相关类型]]
+- [[#六、类型推断与字面量类型|类型推断与字面量类型]]
 
-和大写`Object`行为几乎一样，可以赋值除了 null、undefined 的任意值。
->[!HINT]
->```js
-let a:{} = {name:1}
-无法对上面的a 进行修改
+## 一、直接运行 TypeScript
 
+`ts-node` 可以在开发阶段直接运行 `.ts` 文件，省去手动执行“编译 TS → 运行 JS”两个命令的过程。
+
+### 1. 安装
+
+```bash
+npm install --save-dev ts-node typescript
+```
+
+### 2. 运行
+
+```bash
+npx ts-node index.ts
+```
+
+> [!NOTE]
+> `ts-node` 适合学习、脚本和开发调试；正式构建仍应根据项目配置执行 `tsc` 或项目构建工具。
+
+## 二、为什么需要 `@types/node`
+
+安装 Node.js 的类型声明：
+
+```bash
+npm install --save-dev @types/node
+```
+
+Node.js 的运行时 API 是 JavaScript 实现的。`@types/node` 为 `fs`、`path`、`process` 等 API 提供 TypeScript 类型，让编辑器和编译器知道它们有哪些属性与方法。
+
+`-D` 等价于 `--save-dev`，表示这是开发依赖，会记录在 `package.json` 的 `devDependencies` 中。
+
+## 三、常用基础类型
+
+### 1. 原始类型
+
+```ts
+const username: string = 'Zora'
+const age: number = 23
+const isAdmin: boolean = false
+const empty: null = null
+const missing: undefined = undefined
+const id: symbol = Symbol('id')
+const bigNumber: bigint = 100n
+```
+
+日常开发应使用小写的 `string`、`number`、`boolean`，不要使用包装对象类型 `String`、`Number`、`Boolean`。
+
+### 2. 数组与对象
+
+```ts
+const scores: number[] = [80, 90, 100]
+
+const user: { name: string; age: number } = {
+  name: 'Zora',
+  age: 23,
+}
+```
+
+### 3. `void`
+
+`void` 常用于表示函数不关心返回值：
+
+```ts
+function logMessage(message: string): void {
+  console.log(message)
+}
+```
+
+## 四、`any`、`unknown` 与 `never`
+
+这三种类型不能简单地排成一条“由宽到窄”的直线：`unknown` 是安全的顶层类型，`never` 是底层类型，而 `any` 会绕过大部分类型检查。
+
+### 1. `any`：关闭类型检查
+
+```ts
+let value: any = 'hello'
+value.notExists() // 编译器通常不阻止，但运行时可能报错
+```
+
+只有在迁移旧项目或确实无法确定类型时才使用 `any`。
+
+### 2. `unknown`：先检查，再使用
+
+```ts
+function printLength(value: unknown): void {
+  if (typeof value === 'string') {
+    console.log(value.length)
+  }
+}
+```
+
+`unknown` 可以接收任意值，但未经类型缩小，不能直接访问属性、调用方法，也不能赋给更具体的类型。
+
+### 3. `never`：不可能出现的值
+
+```ts
+function throwError(message: string): never {
+  throw new Error(message)
+}
+```
+
+`never` 常见于永远抛错的函数、无限循环，以及联合类型的完整性检查。
+
+## 五、`Object`、`object` 与空对象类型
+
+### 1. `Object`（大写）
+
+`Object` 可以接收绝大多数非 `null`、非 `undefined` 的值，范围太宽，日常业务类型中通常不推荐使用。
+
+### 2. `object`（小写）
+
+`object` 表示非原始值，可以是普通对象、数组或函数，但不能是 `string`、`number`、`boolean` 等原始值。
+
+```ts
+let data: object
+data = { name: 'Zora' }
+data = [1, 2, 3]
+data = () => true
+// data = 123 // 错误：number 是原始类型
+```
+
+### 3. `{}` 不是“空对象专用类型”
+
+在 TypeScript 中，`{}` 表示任意非 `null`、非 `undefined` 的值，而不是“必须没有属性的对象”。
+
+```ts
+let value: {}
+value = 1
+value = 'hello'
+value = { name: 'Zora' }
+// value = null // 开启 strictNullChecks 时错误
+```
+
+如果需要描述具体对象，应明确写出属性，或使用 `interface` / `type`：
+
+```ts
+interface User {
+  name: string
+  age: number
+}
+```
+
+## 六、类型推断与字面量类型
+
+### 1. 类型推断
+
+能让 TypeScript 正确推断时，不必重复标注：
+
+```ts
+const count = 1 // 推断为 number
+let title = 'TypeScript' // 推断为 string
+```
+
+### 2. 字面量类型
+
+字面量类型只允许某个具体值，通常与联合类型一起使用：
+
+```ts
+type RequestStatus = 'idle' | 'loading' | 'success' | 'error'
+
+let requestStatus: RequestStatus = 'idle'
+requestStatus = 'loading'
+// requestStatus = 'done' // 错误：不在 RequestStatus 中
+```
+
+## 一句话总结
+
+> 类型未知时优先用 `unknown` 并先缩小类型；尽量避免 `any`；描述对象时写清楚结构，不要把 `Object` 或 `{}` 当成普通对象类型。

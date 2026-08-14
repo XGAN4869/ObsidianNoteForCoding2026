@@ -1,5 +1,52 @@
 # TypeScript 中的 `Obj`、对象方法与 `this`
 
+## 开篇速记卡：接口画图纸，对象盖房子，`this` 找调用者
+
+> **`interface` 规定对象长什么样，`obj` 创建真实对象；谁用“点”调用方法，方法里的 `this` 通常就指向谁。**
+
+```ts
+interface Obj {
+  user: number[]
+  add(this: Obj, num: number): void
+}
+
+const obj: Obj = {
+  user: [1, 2, 3],
+  add(num) {
+    this.user.push(num)
+  },
+}
+
+obj.add(4) // 点左边是 obj，所以 this 指向 obj
+```
+
+### 四句话记住全部关系
+
+1. `interface Obj` 是类型规则，不会生成对象和方法。
+2. `const obj: Obj = ...` 才是在创建符合规则的真实对象。
+3. `this: Obj` 只给 TypeScript 检查，编译后会消失，调用时不用传。
+4. 方法一旦脱离对象单独调用，原来的 `this` 可能丢失，需要考虑 `bind`。
+
+```ts
+const boundAdd = obj.add.bind(obj)
+boundAdd(5)
+```
+
+> [!TIP]
+> 最短口诀：**规则看接口，实现看对象，指向看调用，丢失用 bind。**
+
+## 分类索引
+
+- [[#一、原始代码|原始代码]]
+- [[#二、老师为什么要把 add 写两遍？|为什么 `add` 写两遍]]
+- [[#三、obj: Obj 到底表示什么？|`obj: Obj` 的含义]]
+- [[#四、重点：this: Obj 是什么？|显式 `this` 参数]]
+- [[#五、调用时 this 指向谁？|`this` 的指向]]
+- [[#六、为什么方法里要用 this.user？|为什么使用 `this.user`]]
+- [[#七、方法脱离对象时的注意事项|方法脱离对象]]
+- [[#八、这和 Vue 2、Vue 3 有什么关系？|与 Vue 的关系]]
+- [[#九、可以先这样简化理解|简化理解]]
+
 ## 一、原始代码
 
 ```ts
@@ -7,7 +54,7 @@ interface Obj {
   user: number[]
 
   // 调用 add 时，函数内部的 this 按 Obj 类型检查
-  add: (this: Obj, num: number) => void
+  add(this: Obj, num: number): void
 }
 
 const obj: Obj = {
@@ -38,7 +85,7 @@ console.log(obj.user) // [1, 2, 3, 4]
 ```ts
 interface Obj {
   user: number[]
-  add: (this: Obj, num: number) => void
+  add(this: Obj, num: number): void
 }
 ```
 
@@ -223,7 +270,29 @@ obj2.add(5) // 修改 obj2.user
 
 ---
 
-## 七、这和 Vue 2、Vue 3 有什么关系？
+## 七、方法脱离对象时的注意事项
+
+`this` 由调用方式决定。把方法单独取出来后再调用，可能会丢失原来的 `this`：
+
+```ts
+const standaloneAdd = obj.add
+// standaloneAdd(4)
+// 严格模式下，this 不再指向 obj，TypeScript 也会提示调用方式不正确
+```
+
+可以使用 `bind` 固定 `this`：
+
+```ts
+const boundAdd = obj.add.bind(obj)
+boundAdd(4)
+```
+
+> [!NOTE]
+> 箭头函数没有自己的 `this`，它会捕获外层的 `this`，因此不能使用 TypeScript 的显式 `this` 参数。
+
+---
+
+## 八、这和 Vue 2、Vue 3 有什么关系？
 
 这段代码本身不是 Vue 代码，而是普通 TypeScript 对象的例子。
 
@@ -271,7 +340,7 @@ function add(num: number) {
 
 ---
 
-## 八、可以先这样简化理解
+## 九、可以先这样简化理解
 
 ```ts
 interface Obj {
