@@ -34,7 +34,6 @@ interface User {
 // 3. 如果数据来自接口、接口返回什么暂时不知道，就用 `unknown`：
 const responseData: unknown = await fetchUser()
 
-
 // 4. role 只有这几个固定选项,字面量联合类型。
 type Role = 'admin' | 'user' | 'guest'
 
@@ -83,6 +82,15 @@ function printUser(user: User): void {
 	  }
 	}
 	```
+
+### 类型安全速记
+
+1. 能明确类型，就写明确类型。
+2. 类型未知，用 `unknown`，判断后再操作。
+3. 对象结构重复出现，用 `interface`。
+4. 多个固定选项，用字面量联合类型。
+5. 函数重点看“输入”和“输出”。
+6. `any` 不是万能类型，而是暂时放弃类型检查。
 
 ### 高频写法一屏速查
 
