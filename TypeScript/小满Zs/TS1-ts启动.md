@@ -11,12 +11,21 @@
 ### 平时最常用的 5 条命令
 
 ```bash
-npm install -D typescript  # 项目内安装 TypeScript
+npm install -D typescript ts-node 
+ # 项目内安装 TypeScript 和 ts-node
 npx tsc --init             # 生成 tsconfig.json
 npx tsc                    # 编译整个项目
 npx tsc -w                 # 保存后自动重新编译
-node index.js               # 运行编译后的 JavaScript
+ts-node index.ts           # 直接运行 TypeScript（已全局安装时）
 ```
+
+如果 `ts-node` 只安装在当前项目中，直接输入 `ts-node index.ts` 可能提示“找不到命令”。这时使用：
+
+```bash
+npx ts-node index.ts
+```
+
+也可以把命令写进 `package.json` 的 `scripts`，然后用 `npm run dev` 执行；npm 会自动找到项目内的 `ts-node`，不需要手动写 `npx`。
 
 ### 一眼判断该用哪个命令
 
@@ -24,11 +33,12 @@ node index.js               # 运行编译后的 JavaScript
 | ------------- | ---------------------- |
 | 正式检查、编译项目     | `npx tsc`              |
 | 边写边自动编译       | `npx tsc -w`           |
-| 学习时直接运行 `.ts` | `npx ts-node index.ts` |
+| 学习时直接运行 `.ts`（全局安装） | `ts-node index.ts` |
+| 学习时直接运行 `.ts`（项目内安装） | `npx ts-node index.ts` |
 | 执行编译结果        | `node index.js`        |
 
 > [!TIP]
-> 记忆口诀：**安装用 npm，调用本地工具用 npx，编译用 tsc，运行 JS 用 node。**
+> 记忆口诀：**项目内工具用 npx（或 npm script），全局安装可直接运行；编译用 tsc，运行 JS 用 node。**
 
 ## 分类索引
 
@@ -66,10 +76,10 @@ npm init -y
 ### 2. 安装 TypeScript
 
 ```bash
-npm install --save-dev typescript
+npm install --save-dev typescript ts-node
 ```
 
-推荐安装在当前项目中，避免不同项目因为全局 TypeScript 版本不同而产生差异。
+推荐安装在当前项目中，避免不同项目因为全局版本不同而产生差异。`ts-node` 用于开发阶段直接执行 `.ts` 文件。
 
 ### 3. 查看版本
 
@@ -86,7 +96,7 @@ npx tsc --init
 执行后会生成 `tsconfig.json`。它用于配置目标 JavaScript 版本、模块系统、严格检查和输出目录等内容。
 
 > [!TIP]
-> 教程中的 `npm install -g typescript` 也能使用，但项目开发更推荐本地安装后通过 `npx tsc` 调用。
+> 教程中的 `npm install -g typescript ts-node` 安装后，可以直接使用 `tsc` 和 `ts-node`。但项目开发更推荐本地安装，再通过 `npx` 或 `npm run` 调用，以保证团队使用同一版本。
 
 ## 三、编译并运行第一个 TS 文件
 
@@ -111,6 +121,20 @@ npx tsc index.ts
 node index.js
 ```
 
+### 3. 开发阶段直接运行 TypeScript
+
+已经全局安装 `ts-node` 时：
+
+```bash
+ts-node index.ts
+```
+
+只在项目内安装时：
+
+```bash
+npx ts-node index.ts
+```
+
 ## 四、监听模式
 
 ```bash
@@ -131,11 +155,14 @@ npx tsc -w
 |---|---|
 | 初始化 npm 项目 | `npm init -y` |
 | 安装 TypeScript | `npm install -D typescript` |
+| 安装 `ts-node` | `npm install -D ts-node` |
 | 查看 TypeScript 版本 | `npx tsc -v` |
 | 创建 `tsconfig.json` | `npx tsc --init` |
 | 编译单个文件 | `npx tsc index.ts` |
 | 按配置编译项目 | `npx tsc` |
 | 监听文件变化 | `npx tsc -w` |
+| 直接运行 TypeScript（全局安装） | `ts-node index.ts` |
+| 直接运行 TypeScript（项目内安装） | `npx ts-node index.ts` |
 | 执行编译后的文件 | `node index.js` |
 
 ## 参考资料

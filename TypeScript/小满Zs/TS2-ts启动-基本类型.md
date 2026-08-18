@@ -30,7 +30,7 @@
 ### 最容易混淆的三个结论
 
 1. `unknown` 比 `any` 安全，因为它会强制你先判断类型。
-2. `{}` 不是“空对象”，它表示任意非 `null`、非 `undefined` 的值。
+2. `{}`类型：可以是**任何不是 null、不是 undefined 的值**。
 3. 描述业务对象时，不要用宽泛的 `Object`，应写明确属性或使用 `interface`。
 
 ## 分类索引
@@ -131,9 +131,29 @@ function printLength(value: unknown): void {
     console.log(value.length)
   }
 }
+
+let data: unknown
+data = 123         // ✅直接赋值数字，没问题
+data = { name:'a' }// ✅直接赋值对象，没问题
+data = "hello"     // ✅字符串也可以
+
+// 上面只是把值丢给unknown变量，只是存起来，没有去使用它，不需要任何判断
+
+let data:unknown = {name:'tom'}
+
+// ❌报错，unknown不能直接点属性
+console.log(data.name)
+
+// ❌报错，不能直接把unknown赋值给User
+const user: User = data
 ```
 
-`unknown` 可以接收任意值，但未经类型缩小，不能直接访问属性、调用方法，也不能赋给更具体的类型。
+`unknown` 可以**接收**任意值，但未经类型缩小，不能直接**访问**属性、调用方法，也不能赋给更具体的类型。
+下面这些操作，TS 直接报错，**必须先判断收窄类型**：
+
+1. 访问属性 `data.name`
+2. 调用方法 `data.xxx()`
+3. 赋值给别的确定类型变量 `const u:User = data`
 
 ### 3. `never`：不可能出现的值
 

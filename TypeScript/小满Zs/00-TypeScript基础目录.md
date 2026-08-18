@@ -11,16 +11,78 @@
 对象必须有什么？  → interface / type
 函数接收什么、返回什么？ → 参数类型、返回值类型
 ```
+
 >[!HINT]
->补充：基础类型、数组(a series of 基础类型变量)、联合类型(允许多种类型, 用 | 隔开)
+>补充：
+>1. 基础/原始类型(小写的那个，大写的是对象包装类，几乎不拿出来当类型用)但是 Object 和 object：代表非原始类型, 只要是 普通对象 or 数组 都OK。（但是 object 太宽泛，描述具体的对象不要用 interface / type，他们内部可以定义属性）
+>2. 数组(a series of 基础类型变量)
+>3. 联合类型(允许多种类型, 用 | 隔开)
+
+```ts
+
+// 1. 能明确类型，就写明确类型
+const userName: string = 'Tom'
+const userAge: number = 18
+
+// 2. 用户对象结构会重复出现，所以定义 interface
+interface User {
+  id: number
+  name: string
+  role: Role
+}
+
+// 3. 如果数据来自接口、接口返回什么暂时不知道，就用 `unknown`：
+const responseData: unknown = await fetchUser()
 
 
-1. 能明确类型，就写明确类型。
-2. 类型未知，用 `unknown`，判断后再操作。
-3. 对象结构重复出现，用 `interface`。
-4. 多个固定选项，用字面量联合类型。
-5. 函数重点看“输入”和“输出”。
-6. `any` 不是万能类型，而是暂时放弃类型检查。
+// 4. role 只有这几个固定选项,字面量联合类型。
+type Role = 'admin' | 'user' | 'guest'
+
+// 5. 输入：User  输出：string
+function getUserName(user: User): string {
+  return user.name
+}
+//输入：User  输出：void，表示没有返回值
+function printUser(user: User): void {
+  console.log(user.name)
+}
+
+```
+
+>[!HINT]
+>2. resonseData 的数据得先判断是否是 User 的对象
+
++ 补充3
+	```js
+	type Role = "admin" | "user" | "guest"
+	
+	interface User {
+	  id: number
+	  name: string
+	  role: Role
+	}
+	
+	declare function fetchUser(): Promise<unknown>
+	
+	function isUser(obj: unknown): obj is User {
+	  if(typeof obj !== 'object' || obj === null) return false
+	  const o = obj as User
+	  return typeof o.id === 'number'
+	    && typeof o.name === 'string'
+	    && ['admin','user','guest'].includes(o.role)
+	}
+	
+	async function main(){
+	  const responseData: unknown = await fetchUser()
+	
+	  if(isUser(responseData)){
+	    // 类型收窄成功，responseData 变成 User
+	    console.log(responseData.name, responseData.role)
+	  }else{
+	    console.log("返回的数据不是合法用户对象")
+	  }
+	}
+	```
 
 ### 高频写法一屏速查
 
