@@ -1,4 +1,18 @@
 # TS9：Class、继承与简单的 Vue/Ref 模拟
+### 补充 extends 和 implement
+```js
+// extends：继承父类（拿父类真实的方法/属性，运行时生效）
+class Son extends Father {}
+
+// implements：接口约束（只做TS类型检查，编译后直接消失，JS运行时没有）
+class Son implements SomeInterface {}
+```
+||`extends 父类`|`implements 接口`|
+|---|---|---|
+|属于|JS 原生语法|TS 独有，编译消失|
+|作用|**拿到父类真实的属性 / 方法，复用逻辑**|**做类型约束，强制类要具备哪些成员，不给实现**|
+|数量限制|只能 extends **1 个父类**|可以 implements **N 个接口**|
+|super|需要 super ()|完全不需要 super|
 
 ## 开篇速记卡：类负责封装数据和行为
 
