@@ -150,7 +150,7 @@ const subtract: Calculator = (a, b) => a - b
 
 当变量已经标注了完整的函数类型时，函数实现中的参数类型可以由上下文推断。
 
-## 五、对象方法中的 `this`
+## 五、对象方法中的 `this` vue3 中用的少
 
 ```ts
 interface Counter {
@@ -177,7 +177,7 @@ console.log(counter.values) // [1, 2, 3, 4]
 - `this: Counter` 只用于类型检查，编译后会被删除，调用时不用传入。
 - `counter.add(4)` 使用“对象.方法()”的形式调用，所以方法中的 `this` 指向 `counter`。
 
-更详细的拆解见：[[TS5-function补充|TypeScript 中的 Obj、对象方法与 this]]。
+更详细的拆解见：[[TS6-函数重载|TypeScript 中的 Obj、对象方法与 this]]。
 
 ## 六、常见返回值类型
 

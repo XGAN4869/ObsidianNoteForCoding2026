@@ -152,8 +152,8 @@ function getUser(id: number): User {
 - [[TS5-function#三、对象作为参数|对象参数]]
 - [[TS5-function#四、函数类型|函数类型]]
 - [[TS5-function#五、对象方法中的 this|对象方法与 this]]
-- [[TS5-function补充#四、重点：this: Obj 是什么？|显式 this 参数详解]]
-- [[TS5-function补充#八、这和 Vue 2、Vue 3 有什么关系？|this 与 Vue 的关系]]
+- [[TS6-函数重载#四、重点：this: Obj 是什么？|显式 this 参数详解]]
+- [[TS6-函数重载#八、这和 Vue 2、Vue 3 有什么关系？|this 与 Vue 的关系]]
 
 ## 建议学习顺序
 

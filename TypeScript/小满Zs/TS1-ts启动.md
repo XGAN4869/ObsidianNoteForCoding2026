@@ -11,12 +11,29 @@
 ### 平时最常用的 5 条命令
 
 ```bash
-npm install -D typescript ts-node 
- # 项目内安装 TypeScript 和 ts-node
-npx tsc --init             # 生成 tsconfig.json
-npx tsc                    # 编译整个项目
-npx tsc -w                 # 保存后自动重新编译
-ts-node index.ts           # 直接运行 TypeScript（已全局安装时）
+### 1. 初始化项目
+npm init -y  
+npm i typescript -g
+  
+### 2. 创建 tsconfig.json
+npx tsc --init
+
+## 编译指定文件 -- 还是很重要的，这样才能出编译出 .js 文件， ts-node 只能直接运行
+tsc src/指定文件.ts --ignoreConfig
+# 实时监测文件的变化，让 ts 实时转化为 js
+tsc -w 
+
+### 3. 创建入口文件 创建 src/index.ts：
+
+### 4. 直接运行 TypeScript  -- 但是不会编译出 .js
+# 只有全局安装 ts-node 才能这样写  
+npm i ts-node -g
+npm i '@types/node' -D
+ts-node src/index.ts
+
+# 本地安装时  
+npx ts-node src/index.ts  
+
 ```
 
 如果 `ts-node` 只安装在当前项目中，直接输入 `ts-node index.ts` 可能提示“找不到命令”。这时使用：
