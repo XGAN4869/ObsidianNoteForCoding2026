@@ -7,6 +7,15 @@
 - `Vue` 示例：接口约束、类继承、`implements`、`super`、递归渲染。
 - `Ref` 示例：`get` / `set` 访问器如何拦截属性读取和赋值。
 
+## 学习目标
+
+这篇笔记包含两条互相关联、但不要混为一谈的学习线：
+
+1. **TypeScript 类模型**：接口约束、继承、`implements`、`super`、访问修饰符和递归数据结构。
+2. **运行时 JavaScript 行为**：DOM 创建、属性访问器、递归函数和浏览器挂载。
+
+读完后，应能解释“哪些内容只在编译期帮助检查，哪些内容会真正生成或操作 DOM”。
+
 ## 一、Vue 基
 
 ### 1. `el` 的含义
@@ -42,6 +51,9 @@ interface Options {
 
 `el` 支持两种值：CSS 选择器字符串，或已经获取到的 `HTMLElement`。
 
+> [!NOTE] 编译期约束与运行时对象
+> `Options` 和 `VueClass` 是 TypeScript 接口，主要用于编译期检查；接口本身不会在运行时生成一个可以 `new` 的对象。真正运行的是 `Vue`、`Dom` 和浏览器的 `document`。
+
 ### 2. `VueClass` 接口：约束类的形状
 
 ```js
@@ -68,6 +80,18 @@ interface Vnode {
 ```
 
 `children?: Vnode[]` 表示一个节点可以拥有多个同样结构的子节点，因此这里体现了递归类型。
+
+### 2. Vnode 是一棵树
+
+可以把这段数据结构读成：一个节点包含标签名、可选文本和可选子节点；子节点仍然是 `Vnode`，所以可以继续嵌套。
+
+```text
+Vnode(div)
+├─ Vnode(section, text)
+└─ Vnode(section, text)
+```
+
+这也是递归渲染能够工作的前提：数据的形状和函数的调用方式彼此对应。
 
 ## 四、编写 `Dom` 父类
 
@@ -105,6 +129,7 @@ class Dom {
             data.children.forEach(item=>{
                 //递归不停地渲染有child 的节点
                 let child = this.render(item)
+                // 把递归render返回出来的真实dom，挂到父root上
                 root.appendChild(child)
             })
         }else{
@@ -114,7 +139,7 @@ class Dom {
             }
         }
 
-        return root //FIXME 返回之后好像有递归的操作？
+        return root // 返回当前构建好的真实DOM节点
     }
 }
 ```
@@ -126,6 +151,17 @@ class Dom {
 **没有子节点时：**
 
 如果存在 `text`，就调用 `setText` 填入文本。
+
+### 4. `render` 的递归调用链
+
+```text
+render(div)
+  ├─ render(section 1) → 创建 section → 填充文本 → 返回 section
+  ├─ render(section 2) → 创建 section → 填充文本 → 返回 section
+  └─ appendChild 两个 section 到 div
+```
+
+递归函数的关键不是“调用自己”四个字，而是每一次调用都要有更小的子问题，并且最终返回当前层构建好的节点。
 
 ## 五、编写 `Vue` 子类
 
@@ -140,6 +176,11 @@ class Vue extends Dom implements VueClass{
 
 `extends Dom` 表示继承 `Dom` 的方法；`implements VueClass` 表示必须满足 `VueClass` 接口的结构。
 
+| 写法 | 解决的问题 | 运行时是否有直接效果 |
+|---|---|---|
+| `extends Dom` | 复用父类实例方法、建立原型继承 | 有，`Vue` 可以调用继承来的方法 |
+| `implements VueClass` | 检查类是否具备指定成员 | 接口本身会被擦除，不负责创建方法 |
+
 ### 2. 构造函数与 `super`
 
 ```js
@@ -151,6 +192,9 @@ class Vue extends Dom implements VueClass{
 ```
 
 子类构造函数中调用 `super()`，用于先完成父类部分的初始化，然后才能使用子类自己的 `this`。
+
+> [!IMPORTANT]
+> 派生类构造函数在使用 `this` 前必须调用 `super()`。`super()` 会调用父类构造函数；本例中的 `Dom` 没有显式构造函数，因此使用默认构造过程。
 
 ### 3. 准备虚拟 DOM 数据
 
@@ -183,6 +227,8 @@ class Vue extends Dom implements VueClass{
 
 这里使用 `typeof` 做类型收窄：字符串走选择器查询，元素对象则直接使用。
 
+另外，`document.querySelector` 的返回值可能是 `null`，所以后面的 `if (!app)` 既是运行时保护，也帮助 TypeScript 在后续代码中确认 `app` 已经存在。
+
 ### 5. 校验并挂载渲染结果
 
 ```js
@@ -197,6 +243,10 @@ class Vue extends Dom implements VueClass{
 ```
 
 先检查 `app` 是否存在，再调用继承来的 `render` 将虚拟 DOM 转为真实节点，最后追加到挂载元素中。
+
+### 6. 这一版“Vue”与真实 Vue 的差别
+
+当前代码演示的是一个教学用的最小模型：手动调用 `init`、把静态 `Vnode` 转成 DOM，并直接 `appendChild`。真实 Vue 还涉及模板编译、组件更新、响应式依赖追踪、生命周期和调度系统，因此不要把这段代码理解成 Vue 源码的完整实现。
 
 ## 六、创建并初始化 Vue 实例
 
@@ -241,7 +291,18 @@ appendChild 挂载到 #app
 
 可以在任何地方访问。未显式写修饰符时，类成员默认是 `public`。
 
-### 4. 其他知识点
+### 4. 修饰符的访问范围
+
+| 修饰符 | 当前类 | 子类 | 类外部 |
+|---|---:|---:|---:|
+| `private` | ✅ | ❌ | ❌ |
+| `protected` | ✅ | ✅ | ❌ |
+| `public` | ✅ | ✅ | ✅ |
+| `readonly` | 可读 | 可读 | 可读，但不能重新赋值 |
+
+`readonly` 约束的是赋值行为，不等于深层冻结；如果属性保存的是对象，嵌套对象是否可改还要单独判断。
+
+### 5. 其他知识点
 
 ```text
 readonly：属性初始化后不能重新赋值
@@ -287,6 +348,9 @@ class Ref {
 
 给 `ref.value` 赋值时，会自动执行 `set value(newValue)`，这里把新值加工后保存到 `_value`。
 
+> [!NOTE] 访问器不是普通方法调用
+> 代码写的是 `ref.value` 和 `ref.value = ...`，但 JavaScript 会分别自动进入 getter 和 setter。调用者不需要手动写 `get value()` 或 `set value(...)`。
+
 ### 4. 读取与修改 Ref
 
 ```js
@@ -307,6 +371,10 @@ console.log(ref.value)
 
 `ref.value = ...` 触发 `set value(...)`，新值会先经过 setter，再写入 `_value`。
 
+### 5. 访问器与真实响应式的差别
+
+这个 `Ref` 只是在读取和赋值时拼接字符串，并没有记录依赖、通知订阅者或触发组件更新。它适合用来学习 JavaScript 的 getter/setter 语法；真实 Vue `ref` 还需要响应式系统配合。
+
 ## 九、两个例子的对应关系
 
 | Vue 示例 | Ref 示例 |
@@ -314,6 +382,21 @@ console.log(ref.value)
 | 类封装 DOM 操作 | 类封装内部值 |
 | `extends` 复用父类方法 | `get` / `set` 拦截访问 |
 | `implements` 约束类结构 | 构造函数初始化数据 |
+
+## 复习练习
+
+1. 如果删除 `super()`，为什么在构造函数中使用 `this` 会出错？
+2. `Vnode` 为什么能用 `children?: Vnode[]` 描述任意层级的树？
+3. `implements VueClass` 为什么不会自动把 `init` 方法添加到 `Vue` 类中？
+4. 读取 `ref.value` 和直接读取 `ref._value` 有什么区别？
+
+## 参考资料
+
+- [TypeScript Handbook：Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html)
+- [TypeScript Handbook：Object Types](https://www.typescriptlang.org/docs/handbook/2/objects.html)
+- [MDN：getter](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get)
+- [MDN：setter](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/set)
+- [Vue：TypeScript 相关支持](https://vuejs.org/guide/typescript/overview.html)
 
 ## 一句话总结
 
