@@ -56,7 +56,7 @@ interface VueClass {
 
 ## 三、定义虚拟 DOM 的数据结构
 
-### 1. 使用递归接口描述节点
+### 1. “递归类型”，适合描述树形数据
 
 ```js
 // TODO extends: 继承

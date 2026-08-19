@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian 笔记分析"
+  short_description: "整理 Markdown 笔记层级，保留原文、代码与注释内容"
+  default_prompt: "Use $obsidian-note-analyse to reorganize my Markdown notes with clear level-one, level-two, and level-three headings while preserving the original content."

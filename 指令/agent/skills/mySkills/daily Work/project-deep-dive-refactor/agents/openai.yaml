@@ -1,4 +1,0 @@
-interface:
-  display_name: "Project Deep Dive Refactor"
-  short_description: "Project file analysis and conservative refactor notes"
-  default_prompt: "Use $project-deep-dive-refactor to analyze this frontend project file and produce a beginner-friendly refactor note."
