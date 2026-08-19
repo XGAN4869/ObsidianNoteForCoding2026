@@ -1,6 +1,20 @@
-### Vue 基
+# TS9：Class、继承与简单的 Vue/Ref 模拟
+
+## 开篇速记卡：类负责封装数据和行为
+
+本篇通过两个小例子理解 TypeScript 中的类：
+
+- `Vue` 示例：接口约束、类继承、`implements`、`super`、递归渲染。
+- `Ref` 示例：`get` / `set` 访问器如何拦截属性读取和赋值。
+
+## 一、Vue 基
+
+### 1. `el` 的含义
+
 - el = mount 挂载目标，告诉 Vue：把你的模板、数据、指令，渲染到页面哪一个 DOM 盒子里面去。
-### 简易 Vue el 挂载？
+
+### 2. 简易 Vue el 挂载？
+
 ```js
 //1. class 的基本用法 继承 和 类型约束 implements
 //2. class 的修饰符 readonly只能给属性用  private  protected public 
@@ -10,6 +24,13 @@
 //private 只能在内部使用
 //protected 给子类和内部去使用
 //public 哪里都能用
+```
+
+## 二、定义配置接口与类接口
+
+### 1. `Options` 接口：约束构造配置
+
+```js
 /**
  * Options接口：约束new Vue({ ... })传入的配置对象有哪些字段、什么类型
  * el: '#app' | el: document.getElementById('app')!
@@ -17,29 +38,66 @@
 interface Options {
     el:string | HTMLElement
 }
+```
 
+`el` 支持两种值：CSS 选择器字符串，或已经获取到的 `HTMLElement`。
+
+### 2. `VueClass` 接口：约束类的形状
+
+```js
 // VueClass接口：用来约束 class Vue 这个类必须具备哪些属性、哪些方法
 interface VueClass {
     options:Options;
     init():void;
 }
+```
 
+实现 `VueClass` 的类必须有 `options` 属性和 `init` 方法。
+
+## 三、定义虚拟 DOM 的数据结构
+
+### 1. 使用递归接口描述节点
+
+```js
 // TODO extends: 继承
 interface Vnode {
     tag:string //div section header
     text?:string //输入的文字
     children?:Vnode[] //子集？这里有递归的意味
 }
+```
+
+`children?: Vnode[]` 表示一个节点可以拥有多个同样结构的子节点，因此这里体现了递归类型。
+
+## 四、编写 `Dom` 父类
+
+### 1. 创建真实 DOM 节点
+
+```js
 //虚拟 DOM 简单版
 class Dom {
     //创建节点方法
     createElement(el:string){
         return document.createElement(el)
     }
+```
+
+`createElement` 对浏览器的 `document.createElement` 做了一层封装。
+
+### 2. 填充节点文本
+
+```js
     //填充文本方法
     setText(el:HTMLElement,text:string | null){
         el.textContent = text
     }
+```
+
+`textContent` 可以把文本写入真实的 HTML 元素。
+
+### 3. 递归渲染虚拟节点
+
+```js
     //渲染函数：为了让子类能够调取父类的 render 方法
     render(data:Vnode){
         let root = this.createElement(data.tag)
@@ -59,15 +117,44 @@ class Dom {
         return root //FIXME 返回之后好像有递归的操作？
     }
 }
+```
+
+**有子节点时：**
+
+先创建当前节点，再对每个 `children` 调用 `this.render(item)`，最后把子节点追加到父节点。
+
+**没有子节点时：**
+
+如果存在 `text`，就调用 `setText` 填入文本。
+
+## 五、编写 `Vue` 子类
+
+### 1. 继承父类并实现接口
+
+```js
 // class Vue implements VueCls
 // TODO implements：用于约束 class 类的 || 虽然我记得在 java 中是实现
 class Vue extends Dom implements VueClass{
     options:Options;
+```
+
+`extends Dom` 表示继承 `Dom` 的方法；`implements VueClass` 表示必须满足 `VueClass` 接口的结构。
+
+### 2. 构造函数与 `super`
+
+```js
     constructor(options:Options) {
         //FIXME ? 好像如果写了 extends 就要写 super？
         super()
         this.options = options;
     }
+```
+
+子类构造函数中调用 `super()`，用于先完成父类部分的初始化，然后才能使用子类自己的 `this`。
+
+### 3. 准备虚拟 DOM 数据
+
+```js
     init():void {
         //虚拟 dom 就是通过 js 去渲染真实 Dom
         let data:Vnode = {
@@ -83,8 +170,22 @@ class Vue extends Dom implements VueClass{
                 }
              ]
         }
+```
+
+这个对象表示一个 `div`，里面有两个 `section` 子节点。
+
+### 4. 根据 `el` 类型找到挂载元素
+
+```js
         //由于联合类型？所以要判断一下，不然会滥用
         let app = typeof this.options.el === 'string' ? document.querySelector(this.options.el) : (this.options.el)
+```
+
+这里使用 `typeof` 做类型收窄：字符串走选择器查询，元素对象则直接使用。
+
+### 5. 校验并挂载渲染结果
+
+```js
         //把真实的 Dom 节点塞进去即可
         // 如果选择器没有找到元素，提前给出明确错误
         if (!app) {
@@ -93,7 +194,13 @@ class Vue extends Dom implements VueClass{
         app.appendChild(this.render(data))
     }
 }
+```
 
+先检查 `app` 是否存在，再调用继承来的 `render` 将虚拟 DOM 转为真实节点，最后追加到挂载元素中。
+
+## 六、创建并初始化 Vue 实例
+
+```js
 // new Vue，传入配置对象，el:"#app"( 就是告诉Vue挂载到id=app的div )
 //TODO 然后底下的这个 el:xxx 就是 options
 const vm = new Vue({
@@ -104,23 +211,85 @@ vm.init();
 // 手动调用初始化，模拟Vue内部自动执行init
 ```
 
-### 简易 Ref？
+### 执行链路
+
+```text
+new Vue({ el: '#app' })
+  ↓
+保存 options
+  ↓
+vm.init()
+  ↓
+创建 Vnode 数据
+  ↓
+render 递归创建真实 DOM
+  ↓
+appendChild 挂载到 #app
+```
+
+## 七、Class 修饰符速查
+
+### 1. `private`
+
+只能在声明它的类内部访问。
+
+### 2. `protected`
+
+可以在当前类和子类中访问。
+
+### 3. `public`
+
+可以在任何地方访问。未显式写修饰符时，类成员默认是 `public`。
+
+### 4. 其他知识点
+
+```text
+readonly：属性初始化后不能重新赋值
+静态方法：属于类本身，而不是某个实例
+```
+
+## 八、简易 Ref？
+
+这个例子主要用来观察 `get` / `set` 访问器如何工作。
+
+### 1. 定义内部值
+
 ```js
 class Ref {
     _value:any //还没学泛型，按理说有多种类型都可以
     constructor(value:any) {
         this._value=value;
     }
+```
+
+`_value` 保存真正的数据，构造函数接收初始值。
+
+### 2. 定义 `get` 访问器
+
+```js
     //✅ 行为完全就是 get /set 访问器设计出来的效果，不是 bug。👇🔗
     //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/get
     get value() {
         return this._value + '拦截get'
     }
+```
+
+读取 `ref.value` 时，会自动执行 `get value()`，而不是直接读取 `_value`。
+
+### 3. 定义 `set` 访问器
+
+```js
     set value(newValue:any) {
         this._value = newValue + '拦截set\n'
     }
 }
+```
 
+给 `ref.value` 赋值时，会自动执行 `set value(newValue)`，这里把新值加工后保存到 `_value`。
+
+### 4. 读取与修改 Ref
+
+```js
 const ref = new Ref('666\n')
 
 //读取值操作被 get 方法拦截了
@@ -129,3 +298,23 @@ console.log(ref.value) //✅ 调用 get value()
 ref.value = '我要改了\n'
 console.log(ref.value)
 ```
+
+**读取流程：**
+
+`console.log(ref.value)` 触发 `get value()`，返回带有“拦截get”的字符串。
+
+**赋值流程：**
+
+`ref.value = ...` 触发 `set value(...)`，新值会先经过 setter，再写入 `_value`。
+
+## 九、两个例子的对应关系
+
+| Vue 示例 | Ref 示例 |
+|---|---|
+| 类封装 DOM 操作 | 类封装内部值 |
+| `extends` 复用父类方法 | `get` / `set` 拦截访问 |
+| `implements` 约束类结构 | 构造函数初始化数据 |
+
+## 一句话总结
+
+> `class` 把数据和方法封装在一起，`extends` 用于继承，`implements` 用于结构约束，`get` / `set` 用于控制属性读取和赋值。
