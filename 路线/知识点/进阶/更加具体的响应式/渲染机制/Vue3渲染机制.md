@@ -2,6 +2,8 @@
 
 > [!info] 本篇学习方式
 > 这一版先讲“发生了什么”和“为什么这样做”，不以源码函数名为主线。你可以先把流程讲通，再回头看源码。
+>
+> 需要查源码调用链时，再阅读：[[Vue3渲染机制-源码版]]。
 
 ## 学习目标
 
@@ -78,10 +80,29 @@ Vue 也记住：以后 count 改变，要通知这些使用者
 
 ### 第 2 步：准备“生成页面”的函数
 
-模板不会直接被浏览器执行。Vue 会把模板转换成一个 render 函数。
+```markdown
+template模板字符串
+  ↓ parse
+→ AST（普通JS对象树，编译阶段的数据结构)
+  ↓ transform（优化、处理v‑if/v‑for、patchFlag、静态提升）
+→ 转换后的AST
+  ↓ generate(codegen) 遍历转换后的 AST, 生成 JavaScript 源码字符串
+→ JavaScript源码字符串 [render函数字符串（纯文本字符串！不是可执行函数）
 
-可以把它想象成下面这样：
+⭐情况1: new Function 浏览器运行时编译
+  ↓ new Function() 后 
+→ ✅ 真正的 render 函数
 
+⭐情况2: .vue 文件构建时编译, 所以浏览器运行时主要执行已经生成的 render 函数
+  ↓ Vue 插件和构建工具处理
+  javascript 模块
+  ↓ 浏览器加载并执行
+  ✅ 真正的 render 函数
+```
+
+#### 补充重点👇
+- 模板不会直接被浏览器执行。Vue 会把模板转换成一个 render 函数。
+- 可以把它想象成下面这样：
 ```js
 // 这是帮助理解的简化写法，不是模板编译后的完整代码
 function render() {
@@ -92,16 +113,74 @@ function render() {
 }
 ```
 
-真实项目中，`.vue` 文件的模板通常在构建阶段就被转换好了，所以浏览器运行时主要执行已经生成的 render 函数。
+- 真实项目中，`.vue` 文件的模板通常在构建阶段就被转换好了，所以浏览器运行时主要执行已经生成的 render 函数。
+- AST 是编译阶段的数据结构。
+- VNode 是 render 执行后产生的运行时页面描述。
+- 构建时编译通常不在浏览器中调用 `new Function()`。
+- 运行时编译才会使用 `new Function()` 把代码字符串变成函数。
+
+#### 示例
+```vue
+<p>{{ message }}</p>
+```
+👆 生成 👇
+```js
+function render(_ctx, _cache) { //_ctx：组件上下文，可以访问 message
+  //render() 返回 VNode
+  return (
+    _openBlock(),
+    _createElementBlock(
+      'p',
+      null,
+      _toDisplayString(_ctx.message),
+      1 // TEXT：这里的文本是动态的
+    )
+  )
+}
+```
+
+>[!tip] 注意 
+到这里仅仅是“得到了 render 函数”，还没有 VNode，也没有真实 DOM。
 
 ### 第 3 步：执行 render，得到 VNode
 
-Vue 执行 render 函数：
+```
+Vue3 运行阶段：
+创建组件渲染副作用 ReactiveEffect，这是真正执行 render 函数 的地方
+创建组件
+  ↓
+创建组件渲染 ReactiveEffect
+  ↓
+ReactiveEffect 执行 render
+  ↓
+render 返回 VNode
+  ↓
+patch 把 VNode 变成真实 DOM
 
-```text
-render()
-  ↓ 读取 count.value
-得到一个 VNode
+→ effect.run()
+→ 执行 render
+→ 读取响应式数据并 track
+→ 返回 VNode
+→ patch 真实 DOM
+```
+
+1.准备好 render 函数 2. 执行 render 函数 3. 执行 render 函数时收集依赖
+```js
+2. 执行 render 函数：组件挂载时， Vue3 内部会调用 setupRenderEffect()
+```
+
+```js
+// 1. 工人：纯粹渲染逻辑，普通函数，不知道什么是响应式
+function componentUpdateFn() {
+  if (!instance.isMounted) {
+    // 首次挂载：执行render拿VNode，patch(null,subTree)
+  } else {
+    // 更新：重新render拿新VNode，patch(old,new)
+  }
+}
+
+// 2. ReactiveEffect 包装这个普通函数
+const effect = new ReactiveEffect(componentUpdateFn)
 ```
 
 这个 VNode 可以理解为一张“页面施工图”：
@@ -141,6 +220,17 @@ button.textContent = '0'
 这就是依赖收集。它的作用是：以后只要 `count` 改变，Vue 就知道应该重新执行这个组件的 render。
 
 ## 三、修改数据后：页面为什么会更新
+
+```
+数据变化：
+Proxy/ref setter
+→ trigger
+→ queueJob
+→ effect.run()
+→ 重新执行 render
+→ 新旧 VNode patch
+→ 更新真实 DOM
+```
 
 当我们点击按钮，执行：
 
