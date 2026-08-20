@@ -14,21 +14,6 @@ class Son implements SomeInterface {}
 |数量限制|只能 extends **1 个父类**|可以 implements **N 个接口**|
 |super|需要 super ()|完全不需要 super|
 
-## 开篇速记卡：类负责封装数据和行为
-
-本篇通过两个小例子理解 TypeScript 中的类：
-
-- `Vue` 示例：接口约束、类继承、`implements`、`super`、递归渲染。
-- `Ref` 示例：`get` / `set` 访问器如何拦截属性读取和赋值。
-
-## 学习目标
-
-这篇笔记包含两条互相关联、但不要混为一谈的学习线：
-
-1. **TypeScript 类模型**：接口约束、继承、`implements`、`super`、访问修饰符和递归数据结构。
-2. **运行时 JavaScript 行为**：DOM 创建、属性访问器、递归函数和浏览器挂载。
-
-读完后，应能解释“哪些内容只在编译期帮助检查，哪些内容会真正生成或操作 DOM”。
 
 ## 一、Vue 基
 
