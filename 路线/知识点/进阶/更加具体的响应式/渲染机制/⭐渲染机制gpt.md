@@ -402,22 +402,18 @@ setupRenderEffect(instance) 【外层组装函数，只做准备工作】
 	│ 开启当前响应式执行环境
 	│ 设置 activeEffect
 ↓ 设置当前活动 effect
-🌙componentUpdateFn() 
-	|	 真正执行组件渲染逻辑
-	├────首次:render  VNode  patch(null, VNode)
+🌙componentUpdateFn() 【真正的组件render patch 逻辑】
+	├────首次:render  VNode  patch(null, VNode) -- 直接把 VNode 转成 DOM
 	├────更新:render新 VNodepatch(I日 VNode,新 VNode)
 ↓
-renderComponentRoot(instance) 
-	|	 调用 instance.render 的包装工具
+renderComponentRoot(instance) 【调用 instance.render 的包装工具】
 	|	 instance.render.call(instance.proxy, ...)
 	|    ⭐render 执行期间，依赖 ReactiveEffect 的 activeEffect 环境，调用者是 
 	        renderComponentRoot
 	|	 真正执行 render，拿到组件产出的 VNode 树（subTree），返回给上层 `componentUpdateFn`
 ↓
-componentUpdateFn 调用 patch()
+componentUpdateFn 调用 patch() 【直接把 VNode 转成/更新成 真实DOM】
 	|	 diff 比较新旧 VNode
-↓
-创建或更新真实 DOM
 ```
 
 
