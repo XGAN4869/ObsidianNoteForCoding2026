@@ -1,5 +1,5 @@
 # TypeScript 基础目录
-
+✅**TS 专属的类型语法（interface、type、类型注解、泛型、as 断言）编译全部擦除，运行时不存在。**
 ## 开篇速记卡：TypeScript 到底在管什么
 
 > **JavaScript 决定代码怎么运行，TypeScript 提前检查这样运行安不安全。**
