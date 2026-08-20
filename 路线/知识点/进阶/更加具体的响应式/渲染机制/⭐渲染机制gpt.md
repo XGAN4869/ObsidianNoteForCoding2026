@@ -404,7 +404,7 @@ setupRenderEffect(instance) 【外层组装函数，只做准备工作】
 ↓ 设置当前活动 effect
 🌙componentUpdateFn() 【真正的组件render patch 逻辑】
 	├────首次:render  VNode  patch(null, VNode) -- 直接把 VNode 转成 DOM
-	├────更新:render新 VNodepatch(I日 VNode,新 VNode)
+	├────更新:render新 VNodepatch(旧VNode,新 VNode)
 ↓
 renderComponentRoot(instance) 【调用 instance.render 的包装工具】
 	|	 instance.render.call(instance.proxy, ...)
