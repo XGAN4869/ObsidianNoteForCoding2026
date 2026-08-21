@@ -19,9 +19,9 @@ npm i typescript -g
 npx tsc --init
 
 ## 编译指定文件 -- 还是很重要的，这样才能出编译出 .js 文件， ts-node 只能直接运行
-tsc src/指定文件.ts --ignoreConfig
-# 实时监测文件的变化，让 ts 实时转化为 js
-tsc -w 
+tsc src/指定文件.ts --ignoreConfig 【需要js文件】
+# 实时监测文件的变化，
+tsc -w  【让 ts 实时转化为 js】
 
 ### 3. 创建入口文件 创建 src/index.ts：
 
