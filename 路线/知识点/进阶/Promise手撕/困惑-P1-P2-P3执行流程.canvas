@@ -1,0 +1,515 @@
+{
+  "nodes": [
+    {
+      "id": "0a00000000000001",
+      "type": "group",
+      "x": 0,
+      "y": -650,
+      "width": 4560,
+      "height": 520,
+      "label": "阅读入口",
+      "color": "5"
+    },
+    {
+      "id": "0a00000000000002",
+      "type": "group",
+      "x": 0,
+      "y": 0,
+      "width": 1450,
+      "height": 650,
+      "label": "① 同步阶段",
+      "color": "2"
+    },
+    {
+      "id": "0a00000000000003",
+      "type": "group",
+      "x": 1530,
+      "y": 0,
+      "width": 1450,
+      "height": 650,
+      "label": "② 第一次微任务",
+      "color": "6"
+    },
+    {
+      "id": "0a00000000000004",
+      "type": "group",
+      "x": 3060,
+      "y": 0,
+      "width": 1500,
+      "height": 650,
+      "label": "③ 定时器与后续微任务",
+      "color": "4"
+    },
+    {
+      "id": "0a00000000000005",
+      "type": "group",
+      "x": 0,
+      "y": 750,
+      "width": 2600,
+      "height": 940,
+      "label": "回调返回值如何决定 P2",
+      "color": "3"
+    },
+    {
+      "id": "0a00000000000006",
+      "type": "group",
+      "x": 2700,
+      "y": 750,
+      "width": 1860,
+      "height": 940,
+      "label": "重难点",
+      "color": "1"
+    },
+    {
+      "id": "0a00000000000007",
+      "type": "group",
+      "x": 0,
+      "y": 1790,
+      "width": 4560,
+      "height": 800,
+      "label": "四句源码翻译",
+      "color": "5"
+    },
+    {
+      "id": "b100000000000001",
+      "type": "file",
+      "x": 2730,
+      "y": -560,
+      "width": 760,
+      "height": 330,
+      "file": "路线/知识点/进阶/Promise手撕/困惑.md"
+    },
+    {
+      "id": "b200000000000001",
+      "type": "text",
+      "x": 100,
+      "y": -560,
+      "width": 2450,
+      "height": 330,
+      "text": "# Promise `then`：P1、P2、P3 接力图\n\n**核心问题**\n\n- `then` 为什么一定返回一个新 Promise（P2）？\n- `resolveP2` 到底属于谁？\n- `P3.then(resolveP2, rejectP2)` 为什么能让 P2 跟随 P3？\n\n**阅读顺序**：先看上方 ①→②→③，再看返回值分支、重难点和底部四句翻译。",
+      "color": "5"
+    },
+    {
+      "id": "b200000000000002",
+      "type": "text",
+      "x": 3600,
+      "y": -560,
+      "width": 850,
+      "height": 330,
+      "text": "## 一句话主线\n\nP1 提供 `10`\n\n→ 回调返回 P3\n\n→ P3 得到 `20`\n\n→ P2 跟随 P3 得到 `20`\n\n→ 下一个 `then` 打印 `20`",
+      "color": "4"
+    },
+    {
+      "id": "b300000000000001",
+      "type": "text",
+      "x": 80,
+      "y": 100,
+      "width": 380,
+      "height": 440,
+      "text": "## 1. 创建 P1\n\n```js\nconst p1 = new MyPromise(resolveP1 => {\n  resolveP1(10)\n})\n```\n\n- `executor` 立即执行\n- `resolveP1` 只控制 P1\n- P1：`fulfilled`\n- P1.result：`10`",
+      "color": "4"
+    },
+    {
+      "id": "b300000000000002",
+      "type": "text",
+      "x": 540,
+      "y": 100,
+      "width": 400,
+      "height": 440,
+      "text": "## 2. 调用 P1.then\n\n```js\nconst p2 = p1.then(firstCallback)\n```\n\n`then` 内部马上创建并返回 P2：\n\n```js\nnew MyPromise((resolveP2, rejectP2) => {})\n```\n\n- P2 初始：`pending`\n- 回调被安排进微任务\n- `resolveP2 / rejectP2` 只控制 P2",
+      "color": "2"
+    },
+    {
+      "id": "b300000000000003",
+      "type": "text",
+      "x": 1020,
+      "y": 100,
+      "width": 350,
+      "height": 440,
+      "text": "## 3. 调用 P2.then\n\n```js\np2.then(secondCallback)\n```\n\n此时 P2 还没有结果：\n\n- P2.state：`pending`\n- `secondCallback` 暂存进 P2.callbacks\n- 保存的是“将来怎么处理”的函数，不是异步结果",
+      "color": "6"
+    },
+    {
+      "id": "b400000000000001",
+      "type": "text",
+      "x": 1610,
+      "y": 100,
+      "width": 370,
+      "height": 440,
+      "text": "## 4. 执行 firstCallback\n\n```js\nconst result = onFulfilled(P1.result)\n```\n\n等价于：\n\n```js\nconst result = onFulfilled(10)\n```\n\n第一次值传递：\n\n`P1.result → 回调参数 value`",
+      "color": "6"
+    },
+    {
+      "id": "b400000000000002",
+      "type": "text",
+      "x": 2060,
+      "y": 100,
+      "width": 370,
+      "height": 440,
+      "text": "## 5. 回调创建并返回 P3\n\n```js\nreturn new MyPromise(resolveP3 => {\n  setTimeout(() => {\n    resolveP3(value * 2)\n  }, 1000)\n})\n```\n\n- P3 的 executor 立即注册定时器\n- P3 当前：`pending`\n- 局部变量 `result === P3`",
+      "color": "2"
+    },
+    {
+      "id": "b400000000000003",
+      "type": "text",
+      "x": 2510,
+      "y": 100,
+      "width": 390,
+      "height": 440,
+      "text": "## 6. P2 把控制权交给 P3\n\n```js\nP3.then(resolveP2, rejectP2)\n```\n\n等价于：\n\n```js\nP3.then(\n  value => resolveP2(value),\n  reason => rejectP2(reason)\n)\n```\n\nP3 尚未完成，所以先保存这两个接力函数；P2 继续 `pending`。",
+      "color": "3"
+    },
+    {
+      "id": "b500000000000001",
+      "type": "text",
+      "x": 3140,
+      "y": 100,
+      "width": 370,
+      "height": 440,
+      "text": "## 7. 一秒后 P3 成功\n\n```js\nresolveP3(value * 2)\nresolveP3(20)\n```\n\n- P3.state：`fulfilled`\n- P3.result：`20`\n- 开始执行 P3 中保存的成功处理函数",
+      "color": "4"
+    },
+    {
+      "id": "b500000000000002",
+      "type": "text",
+      "x": 3590,
+      "y": 100,
+      "width": 370,
+      "height": 440,
+      "text": "## 8. P3 解决 P2\n\nP3 保存的成功回调就是 `resolveP2`：\n\n```js\nresolveP2(P3.result)\nresolveP2(20)\n```\n\n于是：\n\n- P2.state：`fulfilled`\n- P2.result：`20`",
+      "color": "4"
+    },
+    {
+      "id": "b500000000000003",
+      "type": "text",
+      "x": 4040,
+      "y": 100,
+      "width": 430,
+      "height": 440,
+      "text": "## 9. 执行第二个 then\n\nP2 成功后，执行先前暂存的回调：\n\n```js\nsecondCallback(P2.result)\nsecondCallback(20)\n```\n\n最终：\n\n```text\nconsole.log(20)\n```",
+      "color": "4"
+    },
+    {
+      "id": "b600000000000001",
+      "type": "text",
+      "x": 90,
+      "y": 870,
+      "width": 500,
+      "height": 680,
+      "text": "## 核心判断\n\n```js\nconst result = callback(this.result)\n\nif (result instanceof MyPromise) {\n  result.then(resolveP2, rejectP2)\n} else {\n  resolveP2(result)\n}\n```\n\n若回调抛异常：\n\n```js\ncatch (error) {\n  rejectP2(error)\n}\n```\n\n**不是 P1 直接决定 P2，而是用户回调的执行结果决定 P2。**",
+      "color": "3"
+    },
+    {
+      "id": "b600000000000002",
+      "type": "text",
+      "x": 760,
+      "y": 820,
+      "width": 760,
+      "height": 180,
+      "text": "## 返回普通值\n\n`return 20` → `resolveP2(20)` → P2 fulfilled，结果为 `20`",
+      "color": "4"
+    },
+    {
+      "id": "b600000000000003",
+      "type": "text",
+      "x": 760,
+      "y": 1040,
+      "width": 760,
+      "height": 180,
+      "text": "## 没有 return\n\n函数默认返回 `undefined` → `resolveP2(undefined)` → P2 fulfilled",
+      "color": "5"
+    },
+    {
+      "id": "b600000000000004",
+      "type": "text",
+      "x": 760,
+      "y": 1260,
+      "width": 760,
+      "height": 180,
+      "text": "## 抛出异常\n\n`throw error` → 被 `catch` 捕获 → `rejectP2(error)` → P2 rejected",
+      "color": "1"
+    },
+    {
+      "id": "b600000000000005",
+      "type": "text",
+      "x": 760,
+      "y": 1480,
+      "width": 760,
+      "height": 160,
+      "text": "## 返回 P3\n\n`P3.then(resolveP2, rejectP2)`：P3 成功/失败/等待，P2 就跟着成功/失败/等待",
+      "color": "6"
+    },
+    {
+      "id": "b600000000000006",
+      "type": "text",
+      "x": 1650,
+      "y": 910,
+      "width": 830,
+      "height": 600,
+      "text": "## P3 分支结果\n\n**P3 成功**\n\n`resolveP3(20)` → 调用 `resolveP2(20)` → P2 fulfilled\n\n**P3 失败**\n\n`rejectP3(error)` → 调用 `rejectP2(error)` → P2 rejected\n\n**P3 永远 pending**\n\nP2 也一直 pending，后面的 `then` 不执行\n\n> 接力的本质：把控制 P2 的两个函数，作为 P3 的成功/失败回调传进去。",
+      "color": "6"
+    },
+    {
+      "id": "b700000000000001",
+      "type": "text",
+      "x": 2780,
+      "y": 850,
+      "width": 520,
+      "height": 230,
+      "text": "## 1. 三个 resolve 不是同一个函数\n\n- `resolveP1` 控制 P1\n- `resolveP2` 控制 P2\n- `resolveP3` 控制 P3\n\n名字相同不代表身份相同；看它由哪个 Promise 的 executor 接收到。",
+      "color": "1"
+    },
+    {
+      "id": "b700000000000002",
+      "type": "text",
+      "x": 3370,
+      "y": 850,
+      "width": 520,
+      "height": 230,
+      "text": "## 2. 两次值传递\n\n第一次：`P1.result → callback(value)`\n\n第二次：`callback 的返回值 result → P2.result`\n\n不要误认为旧 Promise 的结果会直接变成新 Promise 的结果。",
+      "color": "1"
+    },
+    {
+      "id": "b700000000000003",
+      "type": "text",
+      "x": 3960,
+      "y": 850,
+      "width": 520,
+      "height": 230,
+      "text": "## 3. executor 与 then 回调\n\n- `new MyPromise(executor)`：executor 立即执行\n- `then` 的用户回调：由 `queueMicrotask` 安排，稍后执行\n\n创建 P2 是同步的，执行 firstCallback 是异步微任务。",
+      "color": "1"
+    },
+    {
+      "id": "b700000000000004",
+      "type": "text",
+      "x": 2780,
+      "y": 1160,
+      "width": 520,
+      "height": 310,
+      "text": "## 4. pending 为什么保存 callbacks\n\nPromise 还没有真实结果，也不知道会成功还是失败，只能先登记：\n\n- 成功后做什么\n- 失败后做什么\n\n`callbacks` 保存函数；真实值最终放在 `this.result`。",
+      "color": "1"
+    },
+    {
+      "id": "b700000000000005",
+      "type": "text",
+      "x": 3370,
+      "y": 1160,
+      "width": 520,
+      "height": 310,
+      "text": "## 5. this 指向调用 then 的 Promise\n\n第一次：\n\n`P1.then(...)` → `this === P1`\n\n接力时：\n\n`P3.then(...)` → `this === P3`\n\n内部箭头函数沿用外层 `then` 的 `this`。",
+      "color": "1"
+    },
+    {
+      "id": "b700000000000006",
+      "type": "text",
+      "x": 3960,
+      "y": 1160,
+      "width": 520,
+      "height": 390,
+      "text": "## 6. 教学版实现的边界\n\n当前 `resolve` 只是简单保存值，所以不能指望 `resolveP2(P3)` 自动等待 P3，才手动写：\n\n`P3.then(resolveP2, rejectP2)`\n\n完整 Promise 解析还要处理：\n\n- thenable\n- 循环引用\n- 多层嵌套\n- 原生 Promise 兼容",
+      "color": "1"
+    },
+    {
+      "id": "b800000000000001",
+      "type": "text",
+      "x": 80,
+      "y": 1890,
+      "width": 980,
+      "height": 370,
+      "text": "## ① 创建 P2\n\n```js\nreturn new MyPromise((resolve, reject) => {})\n```\n\n翻译：创建并返回 P2；这里的 `resolve`、`reject` 专门控制 P2。",
+      "color": "5"
+    },
+    {
+      "id": "b800000000000002",
+      "type": "text",
+      "x": 1150,
+      "y": 1890,
+      "width": 980,
+      "height": 370,
+      "text": "## ② 执行回调\n\n```js\nconst result = callback(this.result)\n```\n\n翻译：把旧 Promise 的结果传给用户回调，并接住用户回调的返回值。",
+      "color": "5"
+    },
+    {
+      "id": "b800000000000003",
+      "type": "text",
+      "x": 2220,
+      "y": 1890,
+      "width": 980,
+      "height": 370,
+      "text": "## ③ 普通值解决 P2\n\n```js\nresolve(result)\n```\n\n翻译：用户回调返回普通值，就用这个值让 P2 成功。",
+      "color": "5"
+    },
+    {
+      "id": "b800000000000004",
+      "type": "text",
+      "x": 3290,
+      "y": 1890,
+      "width": 1180,
+      "height": 370,
+      "text": "## ④ P3 接管 P2\n\n```js\nresult.then(resolve, reject)\n```\n\n翻译：若 `result` 是 P3，就让 P3 成功时调用 `resolveP2`、失败时调用 `rejectP2`，因此 P2 跟随 P3。",
+      "color": "6"
+    },
+    {
+      "id": "b800000000000005",
+      "type": "text",
+      "x": 850,
+      "y": 2320,
+      "width": 2860,
+      "height": 180,
+      "text": "# 最终记忆\n\n`then` 先把 P1 的结果交给用户回调；普通返回值直接解决 P2，返回 P3 就让 P3 通过 `resolveP2 / rejectP2` 决定 P2。",
+      "color": "4"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e100000000000001",
+      "fromNode": "b100000000000001",
+      "fromSide": "left",
+      "toNode": "b200000000000001",
+      "toSide": "right",
+      "toEnd": "arrow",
+      "label": "原笔记"
+    },
+    {
+      "id": "e300000000000001",
+      "fromNode": "b300000000000001",
+      "fromSide": "right",
+      "toNode": "b300000000000002",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "P1 fulfilled"
+    },
+    {
+      "id": "e300000000000002",
+      "fromNode": "b300000000000002",
+      "fromSide": "right",
+      "toNode": "b300000000000003",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "P2 仍 pending"
+    },
+    {
+      "id": "e300000000000003",
+      "fromNode": "b300000000000003",
+      "fromSide": "right",
+      "toNode": "b400000000000001",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "同步代码结束后"
+    },
+    {
+      "id": "e400000000000001",
+      "fromNode": "b400000000000001",
+      "fromSide": "right",
+      "toNode": "b400000000000002",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "回调返回 P3"
+    },
+    {
+      "id": "e400000000000002",
+      "fromNode": "b400000000000002",
+      "fromSide": "right",
+      "toNode": "b400000000000003",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "result === P3"
+    },
+    {
+      "id": "e400000000000003",
+      "fromNode": "b400000000000003",
+      "fromSide": "right",
+      "toNode": "b500000000000001",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "等待 1 秒"
+    },
+    {
+      "id": "e500000000000001",
+      "fromNode": "b500000000000001",
+      "fromSide": "right",
+      "toNode": "b500000000000002",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "调用 resolveP2(20)"
+    },
+    {
+      "id": "e500000000000002",
+      "fromNode": "b500000000000002",
+      "fromSide": "right",
+      "toNode": "b500000000000003",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "触发已保存回调"
+    },
+    {
+      "id": "e600000000000001",
+      "fromNode": "b600000000000001",
+      "fromSide": "right",
+      "toNode": "b600000000000002",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "普通值"
+    },
+    {
+      "id": "e600000000000002",
+      "fromNode": "b600000000000001",
+      "fromSide": "right",
+      "toNode": "b600000000000003",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "undefined"
+    },
+    {
+      "id": "e600000000000003",
+      "fromNode": "b600000000000001",
+      "fromSide": "right",
+      "toNode": "b600000000000004",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "throw"
+    },
+    {
+      "id": "e600000000000004",
+      "fromNode": "b600000000000001",
+      "fromSide": "right",
+      "toNode": "b600000000000005",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "P3"
+    },
+    {
+      "id": "e600000000000005",
+      "fromNode": "b600000000000005",
+      "fromSide": "right",
+      "toNode": "b600000000000006",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "label": "状态跟随"
+    },
+    {
+      "id": "e800000000000001",
+      "fromNode": "b800000000000001",
+      "fromSide": "right",
+      "toNode": "b800000000000002",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e800000000000002",
+      "fromNode": "b800000000000002",
+      "fromSide": "right",
+      "toNode": "b800000000000003",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e800000000000003",
+      "fromNode": "b800000000000003",
+      "fromSide": "right",
+      "toNode": "b800000000000004",
+      "toSide": "left",
+      "toEnd": "arrow"
+    }
+  ]
+}
