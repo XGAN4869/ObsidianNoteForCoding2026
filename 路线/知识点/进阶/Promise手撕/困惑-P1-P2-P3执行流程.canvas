@@ -7,7 +7,7 @@
 		{"id":"0a00000000000005","type":"group","x":0,"y":750,"width":2600,"height":940,"label":"回调返回值如何决定 P2","color":"3"},
 		{"id":"0a00000000000006","type":"group","x":2700,"y":750,"width":1860,"height":940,"label":"重难点","color":"1"},
 		{"id":"0a00000000000007","type":"group","x":0,"y":1790,"width":4560,"height":800,"label":"四句源码翻译","color":"5"},
-		{"id":"b100000000000001","type":"file","x":2730,"y":-560,"width":760,"height":330,"file":"路线/知识点/进阶/Promise手撕/困惑.md"},
+		{"id":"b100000000000001","type":"file","x":2730,"y":-560,"width":760,"height":330,"file":"路线/知识点/进阶/Promise手撕/Promise 手撕思路.md"},
 		{"id":"b200000000000001","type":"text","x":100,"y":-560,"width":2450,"height":330,"text":"# Promise `then`：P1、P2、P3 接力图\n\n**核心问题**\n\n- `then` 为什么一定返回一个新 Promise（P2）？\n- `resolveP2` 到底属于谁？\n- `P3.then(resolveP2, rejectP2)` 为什么能让 P2 跟随 P3？\n\n**阅读顺序**：先看上方 ①→②→③，再看返回值分支、重难点和底部四句翻译。","color":"5"},
 		{"id":"b200000000000002","type":"text","x":3600,"y":-560,"width":850,"height":330,"text":"## 一句话主线\n\nP1 提供 `10`\n\n→ 回调返回 P3\n\n→ P3 得到 `20`\n\n→ P2 跟随 P3 得到 `20`\n\n→ 下一个 `then` 打印 `20`","color":"4"},
 		{"id":"b300000000000001","type":"text","x":80,"y":100,"width":380,"height":440,"text":"## 1. 创建 P1\n\n```js\nconst p1 = new MyPromise(resolveP1 => {\n  resolveP1(10)\n})\n```\n\n- `executor` 立即执行\n- `resolveP1` 只控制 P1\n- P1：`fulfilled`\n- P1.result：`10`","color":"4"},
