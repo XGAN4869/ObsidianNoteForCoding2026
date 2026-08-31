@@ -998,22 +998,22 @@ Vue Router 状态恢复
 
 ### 官方技术资料
 
-| 资料 | 本文参考用途 |
-|---|---|
-| [Vue 性能优化](https://vuejs.org/guide/best-practices/performance.html) | 大列表、响应式开销、按需加载和性能测量思路 |
-| [Vue 高级响应式 API](https://vuejs.org/api/reactivity-advanced.html) | `shallowRef`、`markRaw` 等非深度响应式能力 |
-| [Vue Router 导航守卫](https://router.vuejs.org/guide/advanced/navigation-guards.html) | 登录守卫、未保存离开提醒和路由恢复 |
-| [Pinia 官方文档](https://pinia.vuejs.org/) | 全局业务状态与页面状态的职责划分 |
-| [Element Plus Form](https://element-plus.org/en-US/component/form.html) | 动态表单、校验规则和表单组件行为 |
-| [AntV G6](https://g6.antv.antgroup.com/) | 拓扑图、节点、边、布局和交互能力 |
-| [xterm.js 文档](https://xtermjs.org/docs/) | 浏览器终端、插件、输入输出和尺寸适配 |
-| [MDN WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) | 浏览器 WebSocket 生命周期和能力边界 |
-| [MDN IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) | 大文件上传会话的浏览器持久化 |
-| [MDN Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) | 分片 Hash、图数据预处理等主线程减负方案 |
-| [MDN HTTP Range Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests) | 下载断点续传与 `206 Partial Content` |
-| [MDN Page Visibility API](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API) | 页面隐藏时降低非关键刷新频率 |
-| [tus 断点续传协议](https://tus.io/protocols/resumable-upload) | 标准化分片上传与断点续传设计 |
-| [Axios Interceptors](https://axios-http.com/docs/interceptors) | 统一处理认证、HTTP 错误和业务请求 |
+| 资料                                                                                              | 本文参考用途                           |
+| ----------------------------------------------------------------------------------------------- | -------------------------------- |
+| [Vue 性能优化](https://vuejs.org/guide/best-practices/performance.html)                             | 大列表、响应式开销、按需加载和性能测量思路            |
+| [Vue 高级响应式 API](https://vuejs.org/api/reactivity-advanced.html)                                 | `shallowRef`、`markRaw` 等非深度响应式能力 |
+| [Vue Router 导航守卫](https://router.vuejs.org/guide/advanced/navigation-guards.html)               | 登录守卫、未保存离开提醒和路由恢复                |
+| [Pinia 官方文档](https://pinia.vuejs.org/)                                                          | 全局业务状态与页面状态的职责划分                 |
+| [Element Plus Form](https://element-plus.org/en-US/component/form.html)                         | 动态表单、校验规则和表单组件行为                 |
+| [AntV G6](https://g6.antv.antgroup.com/)                                                        | 拓扑图、节点、边、布局和交互能力                 |
+| [xterm.js 文档](https://xtermjs.org/docs/)                                                        | 浏览器终端、插件、输入输出和尺寸适配               |
+| [MDN WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)                     | 浏览器 WebSocket 生命周期和能力边界          |
+| [MDN IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)                 | 大文件上传会话的浏览器持久化                   |
+| [MDN Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)             | 分片 Hash、图数据预处理等主线程减负方案           |
+| [MDN HTTP Range Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests)     | 下载断点续传与 `206 Partial Content`    |
+| [MDN Page Visibility API](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API) | 页面隐藏时降低非关键刷新频率                   |
+| [tus 断点续传协议](https://tus.io/protocols/resumable-upload)                                         | 标准化分片上传与断点续传设计                   |
+| [Axios Interceptors](https://axios-http.com/docs/interceptors)                                  | 统一处理认证、HTTP 错误和业务请求              |
 
 ### 来源披露
 
