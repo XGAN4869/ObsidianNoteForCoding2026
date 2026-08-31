@@ -35,14 +35,10 @@ ts-node src/index.ts
 npx ts-node src/index.ts  
 
 ```
-
-如果 `ts-node` 只安装在当前项目中，直接输入 `ts-node index.ts` 可能提示“找不到命令”。这时使用：
-
+如果报错估计是版本不对，一条命令解决
 ```bash
-npx ts-node index.ts
+npm install -D typescript@5.9.3 ts-node@10.9.2 @types/node@24
 ```
-
-也可以把命令写进 `package.json` 的 `scripts`，然后用 `npm run dev` 执行；npm 会自动找到项目内的 `ts-node`，不需要手动写 `npx`。
 
 ### 一眼判断该用哪个命令
 
