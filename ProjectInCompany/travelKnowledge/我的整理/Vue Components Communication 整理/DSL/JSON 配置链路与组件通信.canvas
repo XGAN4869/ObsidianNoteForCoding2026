@@ -7,7 +7,7 @@
 		{"id":"a000000000000004","type":"group","x":740,"y":-760,"width":2000,"height":660,"color":"6","label":"State / Store / API / Storage"},
 		{"id":"a000000000000001","type":"group","x":-360,"y":-760,"width":1070,"height":990,"color":"4","label":"Project Reading Entry / 阅读入口"},
 		{"id":"a000000000000005","type":"group","x":-1280,"y":-760,"width":560,"height":1320,"color":"1","label":"Key / Difficult Points"},
-		{"id":"b000000000000001","type":"file","file":"travelKnowledge/我的整理/Vue Components Communication 整理/DSL/JSON.md","x":-320,"y":-700,"width":300,"height":480,"color":"5"},
+		{"id":"b000000000000001","type":"file","file":"ProjectInCompany/travelKnowledge/我的整理/Vue Components Communication 整理/DSL/JSON.md","x":-320,"y":-700,"width":300,"height":480,"color":"5"},
 		{"id":"b000000000000002","type":"text","text":"## 一句话结论\n\napproval 模块不是单纯 props 传值，而是：\n\n配置驱动渲染 + 页面容器编排 + 弹窗局部表单 + 详情二次拉取。\n\n读图时先看主流程，再看通信方式。","x":260,"y":-700,"width":340,"height":480,"color":"4"},
 		{"id":"b000000000000003","type":"text","text":"## 推荐阅读顺序\n\n1. 主流程：接口事实如何经过 JSON 配置变成页面\n2. web：父容器如何编排弹窗和详情\n3. uniapp：路由页如何用 query + 事件回流\n4. 难点：配置不是状态、撤回重提、详情二次拉取","x":-320,"y":-160,"width":920,"height":265,"color":"4"},
 		{"id":"e000000000000001","type":"text","text":"## 配置不是状态\n\n不是 source of truth：\n- approvalBizTypeConfig\n- detailApiMap\n- bizTypeTitleMap\n- bizTypeIconMap\n- statusUiMap/searchStatusMap\n- buildApprovalDetailFields 返回值\n- buildApprovalFlows 返回值\n\n它们只回答：怎么展示、怎么映射、怎么派生。","x":800,"y":-700,"width":360,"height":435,"color":"3"},

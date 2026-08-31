@@ -6,7 +6,7 @@
 		{"id":"1000000000000004","type":"group","x":-100,"y":3100,"width":7100,"height":1500,"label":"④ resolvePromise 决策树：手撕 Promise 最难的一关","color":"3"},
 		{"id":"1000000000000005","type":"group","x":-100,"y":4750,"width":7100,"height":1150,"label":"⑤ 三条分支流：值穿透、错误穿透、thenable 等待","color":"6"},
 		{"id":"1000000000000006","type":"group","x":-100,"y":6050,"width":7100,"height":1300,"label":"⑥ 重难点、验证清单与面试复述","color":"1"},
-		{"id":"2000000000000001","type":"file","x":0,"y":20,"width":500,"height":430,"file":"travelKnowledge/我的整理/Vue Components Communication 整理/Promise寿司/Promise 手撕完整复习版.md"},
+		{"id":"2000000000000001","type":"file","x":0,"y":20,"width":500,"height":430,"file":"ProjectInCompany/travelKnowledge/我的整理/Vue Components Communication 整理/Promise寿司/Promise 手撕完整复习版.md"},
 		{"id":"2000000000000002","type":"text","x":800,"y":20,"width":650,"height":360,"color":"4","text":"# 一句话总纲\n\n`MyPromise` 是一个可追踪的异步状态机。\n\n- 当前实例保存自己的状态和值\n- `executor` 通过 `resolve / reject` 回写结果\n- `then` 给旧 Promise 注册后续动作\n- 每次 `then` 创建 `nextPromise` 承接新结果\n- `resolvePromise` 决定新 Promise 最终成功还是失败"},
 		{"id":"2000000000000003","type":"text","x":1750,"y":20,"width":750,"height":430,"color":"5","text":"# 推荐阅读顺序\n\n1. 先看手撕顺序主线，只记代码骨架\n2. 再看一次 `then` 的运行流程，理解数据怎么走\n3. 单独练 `resolvePromise` 决策树\n4. 最后用三条分支流理解穿透与等待\n5. 关掉原笔记，按验证清单默写\n\n不要一开始死磕全部边界；先让主链跑通，再补规范细节。"},
 		{"id":"2000000000000004","type":"text","x":2850,"y":20,"width":800,"height":430,"color":"2","text":"# 必须先讲清的 4 句话\n\n1. 状态只能从 `pending` 改变一次。\n2. `then` 必须返回一个新的 Promise。\n3. 回调返回值必须交给 Promise Resolution Procedure。\n4. 成功、失败、普通返回值和异常都要继续向后传。\n\n这 4 句就是整份代码的设计约束。"},
