@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1320" viewBox="0 0 2200 1320">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#38526f"/>
+    </marker>
+    <style>
+      .title { font: 700 34px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #18324a; }
+      .subtitle { font: 400 18px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #5f7182; }
+      .lane { font: 700 21px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #29465f; }
+      .box-title { font: 700 19px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #18324a; }
+      .box-text { font: 400 16px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #29465f; }
+      .edge-label { font: 400 14px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #38526f; }
+      .small { font: 400 15px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #425a70; }
+    </style>
+  </defs>
+
+  <rect width="2200" height="1320" fill="#f7fafc"/>
+  <text x="80" y="62" class="title">账单查询模块：组件通信与执行顺序</text>
+  <text x="80" y="95" class="subtitle">速览图（证据来自 photo.md；主链路优先，支线与风险单独放置）</text>
+
+  <!-- Lane 1: component communication -->
+  <text x="80" y="145" class="lane">组件通信（谁持有状态，谁触发动作）</text>
+  <rect x="80" y="170" width="300" height="112" rx="14" fill="#d7eef3" stroke="#4b9aaa" stroke-width="2"/>
+  <text x="105" y="204" class="box-title">bill.vue</text>
+  <text x="105" y="230" class="box-text">页面 / 容器组件</text>
+  <text x="105" y="254" class="box-text">持有 searchFormParams、快照</text>
+
+  <rect x="520" y="170" width="300" height="112" rx="14" fill="#d7eef3" stroke="#4b9aaa" stroke-width="2"/>
+  <text x="545" y="204" class="box-title">searchForm.vue</text>
+  <text x="545" y="230" class="box-text">搜索业务区块</text>
+  <text x="545" y="254" class="box-text">编辑控件值，emit search/reset</text>
+
+  <rect x="960" y="170" width="300" height="112" rx="14" fill="#e7f4ec" stroke="#55a574" stroke-width="2"/>
+  <text x="985" y="204" class="box-title">chartTop / chartBottom</text>
+  <text x="985" y="230" class="box-text">图表业务包装</text>
+  <text x="985" y="254" class="box-text">只接收已确认查询快照</text>
+
+  <rect x="1400" y="170" width="300" height="112" rx="14" fill="#e7f4ec" stroke="#55a574" stroke-width="2"/>
+  <text x="1425" y="204" class="box-title">useCharts（两个实例）</text>
+  <text x="1425" y="230" class="box-text">请求适配 + ECharts runtime</text>
+  <text x="1425" y="254" class="box-text">watch 快照后 getData()</text>
+
+  <line x1="380" y1="226" x2="520" y2="226" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="405" y="213" class="edge-label">props / v-model</text>
+  <line x1="820" y1="226" x2="960" y2="226" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="838" y="213" class="edge-label">props: searchform</text>
+  <line x1="1260" y1="226" x2="1400" y2="226" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="1281" y="213" class="edge-label">getter + lifecycle</text>
+
+  <!-- Lane 2: main execution flow -->
+  <text x="80" y="350" class="lane">主流程（默认成功路径，左 → 右）</text>
+  <rect x="80" y="378" width="230" height="130" rx="14" fill="#dcecff" stroke="#5b86bd" stroke-width="2"/>
+  <text x="105" y="414" class="box-title">1. 用户操作</text>
+  <text x="105" y="442" class="box-text">修改条件 / 点击查询</text>
+  <text x="105" y="468" class="box-text">Enter、blur、onChange</text>
+
+  <rect x="390" y="378" width="230" height="130" rx="14" fill="#dcecff" stroke="#5b86bd" stroke-width="2"/>
+  <text x="415" y="414" class="box-title">2. handleSearchForm</text>
+  <text x="415" y="442" class="box-text">合并参数并去重触发</text>
+  <text x="415" y="468" class="box-text">替换 appliedSearchParams</text>
+
+  <rect x="700" y="378" width="230" height="130" rx="14" fill="#dcecff" stroke="#5b86bd" stroke-width="2"/>
+  <text x="725" y="414" class="box-title">3. useInitTable</text>
+  <text x="725" y="442" class="box-text">页码重置，延迟 300ms</text>
+  <text x="725" y="468" class="box-text">fetchTableData()</text>
+
+  <rect x="1010" y="378" width="230" height="130" rx="14" fill="#fff1c9" stroke="#c59a3d" stroke-width="2"/>
+  <text x="1035" y="414" class="box-title">4. billingDetailList</text>
+  <text x="1035" y="442" class="box-text">transformParams(body)</text>
+  <text x="1035" y="468" class="box-text">+ pagination 请求</text>
+
+  <rect x="1320" y="378" width="230" height="130" rx="14" fill="#e3f2e8" stroke="#55a574" stroke-width="2"/>
+  <text x="1345" y="414" class="box-title">5. 表格状态</text>
+  <text x="1345" y="442" class="box-text">tableData / pagination</text>
+  <text x="1345" y="468" class="box-text">loading 收尾后渲染 t-table</text>
+
+  <rect x="1630" y="378" width="230" height="130" rx="14" fill="#e3f2e8" stroke="#55a574" stroke-width="2"/>
+  <text x="1655" y="414" class="box-title">6. 图表 watch</text>
+  <text x="1655" y="442" class="box-text">快照引用变化触发</text>
+  <text x="1655" y="468" class="box-text">两个实例各自 getData()</text>
+
+  <rect x="1940" y="378" width="180" height="130" rx="14" fill="#fff1c9" stroke="#c59a3d" stroke-width="2"/>
+  <text x="1965" y="414" class="box-title">7. 统计图</text>
+  <text x="1965" y="442" class="box-text">billChartStatics</text>
+  <text x="1965" y="468" class="box-text">→ ECharts 重绘</text>
+
+  <line x1="310" y1="443" x2="390" y2="443" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="620" y1="443" x2="700" y2="443" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="930" y1="443" x2="1010" y2="443" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="1240" y1="443" x2="1320" y2="443" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="1550" y1="443" x2="1630" y2="443" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="1860" y1="443" x2="1940" y2="443" stroke="#38526f" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Lane 3: branches -->
+  <text x="80" y="590" class="lane">分支与平行链路</text>
+  <rect x="80" y="620" width="430" height="142" rx="14" fill="#eef3f7" stroke="#8aa0b2" stroke-width="2"/>
+  <text x="105" y="655" class="box-title">重置分支</text>
+  <text x="105" y="683" class="box-text">reset → 生成按小时默认时间范围</text>
+  <text x="105" y="709" class="box-text">Object.assign(searchFormParams)</text>
+  <text x="105" y="735" class="box-text">复用 handleSearchForm，回到主流程</text>
+
+  <rect x="560" y="620" width="430" height="142" rx="14" fill="#eef3f7" stroke="#8aa0b2" stroke-width="2"/>
+  <text x="585" y="655" class="box-title">分页分支</text>
+  <text x="585" y="683" class="box-text">t-table page-change → handlePageChange</text>
+  <text x="585" y="709" class="box-text">只更新表格 pagination / tableData</text>
+  <text x="585" y="735" class="box-text">不替换快照，因此不刷新图表</text>
+
+  <rect x="1040" y="620" width="430" height="142" rx="14" fill="#eef3f7" stroke="#8aa0b2" stroke-width="2"/>
+  <text x="1065" y="655" class="box-title">导出与初始化</text>
+  <text x="1065" y="683" class="box-text">onMounted：getModelTypes、userList、首查</text>
+  <text x="1065" y="709" class="box-text">导出：billingDetailExport(transformParams(...))</text>
+  <text x="1065" y="735" class="box-text">不改变图表快照的主逻辑</text>
+
+  <rect x="1520" y="620" width="600" height="142" rx="14" fill="#eef3f7" stroke="#8aa0b2" stroke-width="2"/>
+  <text x="1545" y="655" class="box-title">独立弹窗表单支线</text>
+  <text x="1545" y="683" class="box-text">useInitForm.js → modalState / formData / rowId → getInfo / submitForm</text>
+  <text x="1545" y="709" class="box-text">服务用户管理等 CRUD；与账单查询仅共享“组合函数基础设施”</text>
+  <text x="1545" y="735" class="box-text">不应与 searchForm 或 useCharts 直接连线</text>
+
+  <!-- Lane 4: risks -->
+  <text x="80" y="850" class="lane">重难点 / 修改前先确认</text>
+  <rect x="80" y="880" width="620" height="178" rx="14" fill="#ffe4e1" stroke="#c56b63" stroke-width="2"/>
+  <text x="105" y="915" class="box-title">参数快照与浅层 watch</text>
+  <text x="105" y="945" class="box-text">图表依赖 appliedSearchParams 的“引用替换”触发 watch。</text>
+  <text x="105" y="972" class="box-text">若改成深层 mutation，需 deep watch 或显式替换引用。</text>
+  <text x="105" y="1003" class="small">风险：输入过程不会直接刷新图表，只有确认查询才刷新。</text>
+
+  <rect x="750" y="880" width="620" height="178" rx="14" fill="#ffe4e1" stroke="#c56b63" stroke-width="2"/>
+  <text x="775" y="915" class="box-title">图表参数口径不同</text>
+  <text x="775" y="945" class="box-text">chartTop 不含 modelTypes；chartBottom 使用完整 transformParams。</text>
+  <text x="775" y="972" class="box-text">需确认这是“总览 / 模型类型”产品设计，还是潜在不一致。</text>
+  <text x="775" y="1003" class="small">修改入口：chartTop.vue、chartBottom.vue 的 getParams。</text>
+
+  <rect x="1420" y="880" width="700" height="178" rx="14" fill="#ffe4e1" stroke="#c56b63" stroke-width="2"/>
+  <text x="1445" y="915" class="box-title">局部实现风险</text>
+  <text x="1445" y="945" class="box-text">label="item.label" 可能是字面量；debouncedReset 未真正防抖。</text>
+  <text x="1445" y="972" class="box-text">useCharts 先 setOption 再 clear + notMerge setOption，存在重复更新。</text>
+  <text x="1445" y="1003" class="box-text">useInitForm.js 的 rowId 在函数外，多个实例可能共享 ID。</text>
+
+  <rect x="80" y="1130" width="2040" height="105" rx="14" fill="#e9eef3" stroke="#9eacb8" stroke-width="1.5"/>
+  <text x="110" y="1165" class="box-title">一句话记忆</text>
+  <text x="285" y="1165" class="box-text">bill.vue 持有真实查询状态 → searchForm.vue 通过 v-model 编辑、emit 表达动作 → useInitTable 查表 → 快照变化驱动两个 useCharts 请求并重绘。</text>
+  <text x="285" y="1195" class="small">当前链路没有 store、Storage 或 App 恢复逻辑；通信主类型是 value + action + control authority。</text>
+</svg>
