@@ -63,12 +63,20 @@ npm install lint-staged --save-dev
 # 1. 安装依赖
 npm install -D typescript@~6.0.3 eslint prettier @eslint/js typescript-eslint eslint-plugin-vue globals eslint-config-prettier
 
+npm i husky lint-staged -D
+
+-- git init
+
 # 2. 生成 Husky 内部文件
 npm run prepare
 
 # 3. 创建 .husky/pre-commit
 # 内容写：
+
 npm run lint:lint-staged
+
+//不要写 npm run lint 项目大了跑起来很慢，lint-staged 只检测本次 git add . 过的 commit
+// 👆适合跑 CI 流水线
 
 # 4. 配置 eslint.config.mjs 和 Prettier 配置文件
 
@@ -83,8 +91,11 @@ git commit -m "configure lint tools"
 ```
 {
   "scripts": {
+    "type-check": "vue-tsc --noEmit",
+    "lint": "run-s \"lint:*\"", //总脚本，这个开头都会执行
+    "lint:lint-eslint": "eslint . --cache",
+    "lint:fix": "eslint . --fix",
     "prepare": "husky",
-    "lint:lint-eslint": "eslint .",
     "lint:lint-prettier": "prettier --check .",
     "lint:lint-staged": "lint-staged"
   },
@@ -93,11 +104,32 @@ git commit -m "configure lint tools"
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
 }
 ```
 
-
+如果你要用 commitlint 来规范提交的前置内容，也要 npm i 
+```js
+npm install -D @commitlint/cli @commitlint/config-conventional
+```
+新建 commitlint.config.mjs 目录
+```js
+// commit-lint config
+export default {
+  extends: [ '@commitlint/config-conventional' ],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      [ 'build', 'chore', 'ci', 'docs', 'feat', 'fix', 'perf', 'refactor', 'revert', 'style', 'test', 'types' ],
+    ],
+  }
+};
+```
+在 .husky/ 下创建 commit-msg
+```js
+npx --no -- commitlint --edit "$1"
+```
 #### 补充：执行 npm run prepare做了什么？
 让 husky 执行 package.json 中的 prepare: husky，然后 husky 会自动做两件事
 1. 写入 git 配置：core.hooksPath=.husky/_
