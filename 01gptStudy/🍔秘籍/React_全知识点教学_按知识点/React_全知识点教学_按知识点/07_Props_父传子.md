@@ -122,7 +122,7 @@ function UserCard({ user }) {
 
 ## 7.7 子组件通知父组件
 
-React 没有 Vue 的 emit。React 常用“父传回调函数”。
+React 没有 Vue 的 emit。**React 常用“父传回调函数”。**
 
 ```jsx
 function DeleteButton({ id, onDelete }) {
