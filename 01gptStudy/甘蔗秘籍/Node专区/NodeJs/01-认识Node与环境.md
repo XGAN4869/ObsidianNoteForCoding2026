@@ -11,6 +11,15 @@ Node.js 是一个**在浏览器外运行 JavaScript 的运行时**。它把 V8 J
 
 Node.js 不是数据库，也不是前端框架。浏览器里的 `window`、`document` 在 Node.js 中通常不存在；Node.js 提供的是 `process`、`fs`、`http` 等服务器能力。
 
+非阻塞 I/O：不会因为 IO 任务卡住后面的访问数据库/发送网络请求
+事件驱动
+👆Node.js 特别适合处理高并发的场景（实时聊天应用、在线游戏服务器
+
+⚪其他开发场景：命令行工具开发：npm、后端 API 开发：RESTful API、Web 服务器开发：配合 Express、Koa 等框架、前端工具开发：如 Webpack、Babel、
+ESLint ，vscode,Electron等都是基于 Node.js 开发的
+
+⚪优缺点
+单线程： CPU 密集型任务性能差务（如复杂的数学计算、图像处理）
 ## 2. 安装与检查
 
 从 Node.js 官网选择 LTS 版本安装。安装后重新打开终端，再执行：

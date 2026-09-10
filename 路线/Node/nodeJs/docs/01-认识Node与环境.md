@@ -1,9 +1,26 @@
 # 01 认识 Node.js 与准备环境
 
-## 1. Node.js 是什么
+## 1. Node.js 直接用了 Chrome 的 V8 引擎
 
 Node.js 是一个**在浏览器外运行 JavaScript 的运行时**。它把 V8 JavaScript 引擎、libuv 和一组系统 API 组合在一起，所以 JavaScript 可以读文件、开网络服务、访问数据库。
-Chrome = Blink (渲染) + V8 (跑 JS) + 网络栈 + 多进程管理等其他模块
+
+⭐ V8 是 JS 引擎，JS 代码跑在哪里取决于 who 把 V8 嵌入
+- Chrome 把 V8 嵌进去 → JS 跑在浏览器里。
+    
+- Node.js 把 V8 嵌进去 → JS 跑在服务器/本机里。
+
+```plainText
+Chrome
+├─ Browser Process        主控进程
+├─ Renderer Process       渲染进程：【Blink + V8 + DOM/CSSOM/JS】
+├─ GPU Process            GPU 加速、合成、WebGL
+├─ Network Service        网络服务进程【HTTP、DNS、TLS、缓存】
+├─ Storage Service        存储服务：【IndexedDB、CacheStorage 等】-- 不反复请求 Nginx
+├─ Utility Process        工具进程：音频、视频、PDF、打印、解码等
+├─ Extension Process      扩展进程
+├─ Crashpad Handler       崩溃处理
+└─ Zygote                 Linux/macOS 上用于 fork 和沙箱
+```
 - JavaScript：编程语言。
 - **V8（JavaScript 引擎）**：**只负责执行 JS 代码**，**可以脱离浏览器单独拿出来用**。
 - Node.js：让 JavaScript 可以在操作系统上运行的环境。
