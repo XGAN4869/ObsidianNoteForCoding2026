@@ -1,8 +1,8 @@
 # 01 认识 Node.js 与准备环境
 
-## 1. Node.js 是什么
+## 1. Node.js **不是一门编程语言，而是一个“运行环境”（更准确地说，是 JavaScript 的运行时环境）**
 
-Node.js 是一个**在浏览器外运行 JavaScript 的运行时**。它把 V8 JavaScript 引擎、libuv 和一组系统 API 组合在一起，所以 JavaScript 可以读文件、开网络服务、访问数据库。
+Node.js 是一个**在浏览器外运行 JavaScript 的运行时**。它把 V8 JavaScript 引擎、libuv 和一组系统 API 组合在一起，所以 JavaScript 可以读文件、开网络服务、访问数据库，**这些行为得益于 chrome 的V8 引擎，让 node 脱离浏览器也能跑在服务端**
 
 - JavaScript：编程语言。
 - V8：执行 JavaScript 的引擎，Chrome 也使用它。
