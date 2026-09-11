@@ -52,86 +52,87 @@ Chrome
 └── GPU 进程
     └── 图层合成和图形相关工作
 
+### 操作系统启动 chrome 浏览器
+#### 一、 建立阶段（图中前6步）：只画图纸，不搬砖
 
+图中说的：
+
+> 建立虚拟内存地图\
+> ↓\
+> 映射代码、动态库、堆和栈
+
+这就是我们上一步聊的**第1步：初始化默认建立的“虚拟地址空间布局（VMA）”**。
+
+- **建立虚拟内存地图**：操作系统会为 Chrome 进程画一张“大饼”，规定好：
+  - 从 `0x400000` 开始是代码区（可读可执行）；
+  - 往下是数据区；
+  - 中间一大块空白是堆（可读写）；
+  - 高地址是栈（可读写）；
+  - 还有一块区域留给动态库（如 `libchrome.so`）。
+- **映射代码、动态库、堆和栈**：这里用的词是“映射”，而不是“加载”。
+  - 操作系统只是在 VMA 结构体里记录：“这块虚拟地址对应磁盘上的 `/opt/google/chrome/chrome` 这个文件，偏移量是多少，权限是 `r-x`”。
+  - **此时，Chrome 的代码和数据绝大部分都还在磁盘的 SSD/硬盘里，并没有被读进 RAM。** 物理内存里只是建了一些内核数据结构（VMA、页表雏形）。
+- **分配 PID、创建主线程、放入就绪队列**：这时候进程只是一个“空壳”，有了身份证（PID）和干活的工人（主线程），但这个工人还不知道要干什么，因为代码还没进内存。
+
+#### 二、 执行阶段（图中最后两步）：触发缺页，按需搬砖
+
+图中说的：
+
+> 操作系统调度器选择它\
+> ↓\
+> CPU 开始执行 Chrome 的机器指令
+
+这里就是**真正触发“按需加载”的魔法时刻**！
+
+1. **CPU 开始执行**：调度器选中 Chrome 主线程，CPU 把 `RIP` 寄存器指向 Chrome 的入口虚拟地址（比如 `0x400000`）。
+2. **MMU 查表**：CPU 拿着虚拟地址去问 MMU，MMU 去查页表。
+3. **触发缺页异常**：因为刚才只建了 VMA（图纸），没填页表（物理映射），MMU 发现“这一页不存在”。
+4. **内核介入**：操作系统接管，根据出错的虚拟地址，找到刚才建的 VMA，知道它对应磁盘上的哪个文件。
+5. **文件进 RAM**：内核去 Page Cache 找，如果没有，就从磁盘把这段代码**读进 RAM**。
+6. **填页表**：内核在页表里填上“虚拟页 `0x400` -> 物理页帧 `0x12345`”。
+7. **重新执行**：CPU 再次执行刚才的指令，这次 MMU 翻译成功，CPU 从 RAM/缓存取出指令，放进寄存器执行。
+
+
+#### mermaid
 ```mermaid
-flowchart TB
-    User["用户点击 Chrome 图标"]
-    Shell["桌面程序 / 文件管理器"]
-    User --> Shell
-    Shell -->|"系统调用：请启动程序"| Kernel
+flowchart TD
+    A["点击 Chrome 图标"]
+    --> B["桌面程序请求操作系统启动 Chrome"]
 
-    subgraph OS["操作系统（Windows / Linux / macOS）"]
-        direction TB
+    B --> C["操作系统创建 Chrome 进程"]
 
-        Kernel["操作系统内核"]
+    C --> D["分配 PID"]
 
-        Process["进程管理<br/>创建 PID、进程、线程"]
-        Memory["内存管理<br/>虚拟内存、页表、代码区、动态库、堆、栈"]
-        Loader["程序加载器<br/>读取 chrome.exe / 可执行文件"]
-        Scheduler["CPU 调度器<br/>决定哪个线程现在运行"]
-        Driver["设备驱动与网络栈<br/>硬盘、网卡、显卡"]
-        Ready["就绪队列<br/>Chrome、音乐软件、聊天软件等线程"]
+    D --> E["建立虚拟内存地图"]
 
-        Kernel --> Process
-        Kernel --> Memory
-        Kernel --> Loader
-        Kernel --> Scheduler
-        Kernel --> Driver
+    E --> F["映射代码、动态库、堆和栈<br/>只登记 VMA<br/>暂时不加载全部内容"]
 
-        Process --> Ready
-        Scheduler -->|"从就绪队列挑一个线程"| CPU
-    end
+    F --> G["创建 Chrome 的主线程"]
 
-    Loader -->|"创建并装入"| BrowserProcess
+    G --> H["把主线程放入就绪队列"]
 
-    subgraph CH["Chrome / Chromium（应用程序）"]
-        direction TB
+    H --> I["操作系统调度器选择它"]
 
-        BrowserProcess["浏览器主进程<br/>窗口、地址栏、标签页管理"]
-        Renderer["渲染进程<br/>处理某个网页"]
-        Network["网络服务进程<br/>DNS、HTTP、TCP/TLS"]
-        GPU["GPU 进程<br/>图层合成、图形处理"]
+    I --> J["CPU 开始执行 Chrome 的机器指令"]
 
-        Blink["Blink 浏览器引擎<br/>HTML/CSS → DOM、布局、绘制"]
-        V8["V8 JavaScript 引擎<br/>执行 JavaScript"]
+    J --> K["CPU 从入口虚拟地址开始取指"]
 
-        BrowserProcess --> Renderer
-        BrowserProcess --> Network
-        BrowserProcess --> GPU
+    K --> L["MMU 查询页表"]
 
-        Renderer --> Blink
-        Renderer --> V8
-    end
+    L --> M{"代码页已在 RAM 中吗？"}
 
-    BrowserProcess -->|"包含主线程"| BrowserThread["Chrome 主线程"]
-    Renderer -->|"包含渲染线程"| RenderThread["渲染线程"]
-    Network -->|"包含网络线程"| NetworkThread["网络线程"]
-    GPU -->|"包含 GPU 相关线程"| GPUThread["GPU 线程"]
+    M -->|"是"| N["虚拟地址转换为物理地址<br/>CPU 从 RAM 取指并执行"]
 
-    BrowserThread --> Ready
-    RenderThread --> Ready
-    NetworkThread --> Ready
-    GPUThread --> Ready
+    M -->|"否"| O["触发缺页异常"]
 
-    CPU["CPU 核心<br/>真正执行机器指令"]
-    CPU -->|"执行被选中的线程"| ChromeCode["Chrome / Blink / V8 的机器指令"]
+    O --> P["操作系统根据 VMA<br/>找到磁盘文件中的对应位置"]
 
-    Network -->|"请求文件、发送网络数据"| Kernel
-    Kernel --> Driver
-    Driver --> Internet["网卡 / 互联网 / 服务器"]
+    P --> Q["从 Page Cache 获取<br/>如果没有，就从磁盘读入 RAM"]
 
-    Blink --> Pixels["网页画面"]
-    GPU --> Pixels
-    Pixels --> Screen["屏幕像素"]
+    Q --> R["更新页表<br/>虚拟页 → 物理页帧"]
 
-    classDef os fill:#e8f1ff,stroke:#3478c9,color:#111;
-    classDef chrome fill:#eaffea,stroke:#2e8b57,color:#111;
-    classDef cpu fill:#fff2cc,stroke:#c98a00,color:#111;
-    classDef result fill:#fce4ec,stroke:#c2185b,color:#111;
+    R --> S["CPU 重新执行刚才的取指操作"]
 
-    class Kernel,Process,Memory,Loader,Scheduler,Driver,Ready os;
-    class BrowserProcess,Renderer,Network,GPU,Blink,V8,BrowserThread,RenderThread,NetworkThread,GPUThread chrome;
-    class CPU,ChromeCode cpu;
-    class Pixels,Screen,Internet result;
+    S --> N
+
 ```
-
