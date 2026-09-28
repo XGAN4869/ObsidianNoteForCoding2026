@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vue Module README"
+  short_description: "把 Vue3 + TS 组件、Hooks 和工具函数写成新人可直接使用的 README"
+  default_prompt: "请使用 $vue-module-readme，把我提供的 Vue3 + TS 前端模块整理成一份完整、可直接复制使用的 README.md。"
