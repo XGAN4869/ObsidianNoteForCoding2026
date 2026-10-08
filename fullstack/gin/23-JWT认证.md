@@ -21,8 +21,8 @@ eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3MDUzMDAwMDB9.SflKxwRJSMeKKF2QT4
 
 分解：
 Header.Payload.Signature
-└─────┘ └──────────────┘ └──────────────────────────────────┘
-  算法      用户数据             签名（防篡改）
+└─────┘ └─────┘ └───────────┘
+  算法  用户数据  签名（防篡改）
 ```
 
 ---
