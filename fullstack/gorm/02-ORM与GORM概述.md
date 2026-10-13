@@ -85,16 +85,16 @@ db.First(&user, id)
 
 ## 2.2 手写 SQL vs ORM 对比
 
-| 维度 | 手写 SQL | ORM（GORM） |
-|------|---------|------------|
-| 开发速度 | 慢，每个操作都要写 SQL | 快，一行代码完成 CRUD |
-| 类型安全 | 差，SQL 字符串拼错编译不报错 | 好，操作结构体，编译期检查 |
-| 复杂查询 | 灵活，可以写任意复杂 SQL | 受限于 ORM API，需要学习成本 |
-| 性能 | 最优，精确定制每一条 SQL | 有轻微开销，生成的 SQL 可能不是最优 |
-| SQL 控制力 | 完全控制 | 大部分控制（也可用 Raw 原生 SQL） |
-| 可移植性 | 差，换数据库要重写 SQL | 好，换驱动即可 |
-| 学习成本 | 低（会 SQL 就行） | 中高（学 GORM API 相当于学一门新"语言"） |
-| 代码量 | 多，模板代码较多 | 少，大幅减少模板代码 |
+| 维度      | 手写 SQL           | ORM（GORM）                  |
+| ------- | ---------------- | -------------------------- |
+| 开发速度    | 慢，每个操作都要写 SQL    | 快，一行代码完成 CRUD              |
+| 类型安全    | 差，SQL 字符串拼错编译不报错 | 好，操作结构体，编译期检查              |
+| 复杂查询    | 灵活，可以写任意复杂 SQL   | 受限于 ORM API，需要学习成本         |
+| 性能      | 最优，精确定制每一条 SQL   | 有轻微开销，生成的 SQL 可能不是最优       |
+| SQL 控制力 | 完全控制             | 大部分控制（也可用 Raw 原生 SQL）      |
+| 可移植性    | 差，换数据库要重写 SQL    | 好，换驱动即可                    |
+| 学习成本    | 低（会 SQL 就行）      | 中高（学 GORM API 相当于学一门新"语言"） |
+| 代码量     | 多，模板代码较多         | 少，大幅减少模板代码                 |
 
 > **最佳实践**：80% 的场景（简单 CRUD）用 GORM，20% 的场景（复杂报表、性能敏感查询）用 GORM 的 `Raw()` 原生 SQL。**GORM 不是让你完全不写 SQL，而是让你只在必要时写 SQL。**
 
@@ -104,12 +104,12 @@ db.First(&user, id)
 
 Go 语言主流的数据库操作方案有四种：
 
-| 方案 | 类型 | 特点 | 适用场景 |
-|------|------|------|---------|
-| **GORM** | 全功能 ORM | 功能最全、社区最大、文档最丰富 | 大多数项目的首选 |
-| **ent** | 代码生成 ORM | Facebook 开源，Schema 驱动，类型极安全 | 大型项目、对类型安全要求极高 |
-| **sqlx** | SQL 增强库 | 在 `database/sql` 上做薄封装，贴近 SQL | 喜欢手写 SQL 但想减少模板代码 |
-| **sqlc** | 代码生成 | 从 SQL 文件生成 Go 代码，极其简单 | 强 SQL 能力团队、微服务 |
+| 方案       | 类型       | 特点                            | 适用场景              |
+| -------- | -------- | ----------------------------- | ----------------- |
+| **GORM** | 全功能 ORM  | 功能最全、社区最大、文档最丰富               | 大多数项目的首选          |
+| **ent**  | 代码生成 ORM | Facebook 开源，Schema 驱动，类型极安全   | 大型项目、对类型安全要求极高    |
+| **sqlx** | SQL 增强库  | 在 `database/sql` 上做薄封装，贴近 SQL | 喜欢手写 SQL 但想减少模板代码 |
+| **sqlc** | 代码生成     | 从 SQL 文件生成 Go 代码，极其简单         | 强 SQL 能力团队、微服务    |
 
 ### 为什么选 GORM
 
@@ -154,13 +154,13 @@ Go 语言主流的数据库操作方案有四种：
 
 GORM 遵循一套默认约定，你按约定来就不用多写配置：
 
-| 约定 | 说明 | 例子 |
-|------|------|------|
-| ID 字段 = 主键 | 结构体中名为 `ID` 的字段自动成为主键 | `ID uint` → 主键 |
-| CreatedAt/UpdatedAt | 自动管理创建时间和更新时间 | 创建时自动填入当前时间 |
-| 表名 = 结构体名复数蛇形 | `User` 结构体 → `users` 表 | `ProductCategory` → `product_categories` |
-| 列名 = 字段名蛇形 | `UserName` 字段 → `user_name` 列 | `CreatedAt` → `created_at` |
-| 外键 = 关联结构体名 + ID | `Company` 关联 → `CompanyID` 外键 | |
+| 约定                  | 说明                            | 例子                                       |
+| ------------------- | ----------------------------- | ---------------------------------------- |
+| ID 字段 = 主键          | 结构体中名为 `ID` 的字段自动成为主键         | `ID uint` → 主键                           |
+| CreatedAt/UpdatedAt | 自动管理创建时间和更新时间                 | 创建时自动填入当前时间                              |
+| 表名 = 结构体名复数蛇形       | `User` 结构体 → `users` 表        | `ProductCategory` → `product_categories` |
+| 列名 = 字段名蛇形          | `UserName` 字段 → `user_name` 列 | `CreatedAt` → `created_at`               |
+| 外键 = 关联结构体名 + ID    | `Company` 关联 → `CompanyID` 外键 |                                          |
 
 ### 2. 链式调用（Method Chaining）
 
@@ -243,16 +243,16 @@ db.First(&user)
 
 学习 GORM 之前，先在脑中建立这张映射表：
 
-| Go 世界 | 数据库世界 | 一句话说明 |
-|---------|-----------|-----------|
-| 结构体 `type User struct{}` | 表 `users` | 结构体定义了表的结构 |
-| 字段 `Name string` | 列 `name VARCHAR(255)` | 每个字段对应一列 |
-| 实例 `user := User{}` | 行 `(1, '张三', 25)` | 一个实例代表一行数据 |
-| 切片 `[]User{}` | 多行数据 | 切片代表查询结果集 |
-| `db.Create(&user)` | `INSERT INTO users ...` | C 操作 → Create |
-| `db.First(&user, 1)` | `SELECT * FROM users WHERE id = 1` | R 操作 → First/Find |
-| `db.Save(&user)` | `UPDATE users SET ...` | U 操作 → Save/Update |
-| `db.Delete(&user)` | `DELETE FROM users ...` | D 操作 → Delete |
+| Go 世界                    | 数据库世界                              | 一句话说明              |
+| ------------------------ | ---------------------------------- | ------------------ |
+| 结构体 `type User struct{}` | 表 `users`                          | 结构体定义了表的结构         |
+| 字段 `Name string`         | 列 `name VARCHAR(255)`              | 每个字段对应一列           |
+| 实例 `user := User{}`      | 行 `(1, '张三', 25)`                  | 一个实例代表一行数据         |
+| 切片 `[]User{}`            | 多行数据                               | 切片代表查询结果集          |
+| `db.Create(&user)`       | `INSERT INTO users ...`            | C 操作 → Create      |
+| `db.First(&user, 1)`     | `SELECT * FROM users WHERE id = 1` | R 操作 → First/Find  |
+| `db.Save(&user)`         | `UPDATE users SET ...`             | U 操作 → Save/Update |
+| `db.Delete(&user)`       | `DELETE FROM users ...`            | D 操作 → Delete      |
 
 **用一句话记住 GORM**：你把 Go 结构体交给 GORM，GORM 自动生成 SQL 发给数据库，然后把结果填回结构体。
 
