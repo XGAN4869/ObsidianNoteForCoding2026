@@ -68,20 +68,20 @@ curl -X DELETE http://localhost:8080/users/1      # 删
 
 状态码告诉客户端"结果怎么样"：
 
-| 状态码 | 分类 | 含义 | 示例 |
-|--------|------|------|------|
-| **200** | 2xx 成功 | OK，请求成功 | 查询成功 |
-| **201** | 2xx 成功 | Created，创建成功 | 注册成功 |
-| **204** | 2xx 成功 | No Content，成功但无返回体 | 删除成功 |
-| **301** | 3xx 重定向 | 永久重定向 | 旧URL搬到新URL |
-| **302** | 3xx 重定向 | 临时重定向 | 登录后跳转 |
-| **400** | 4xx 客户端错误 | Bad Request，请求参数有误 | 缺少必填字段 |
-| **401** | 4xx 客户端错误 | Unauthorized，未认证 | 没登录 |
-| **403** | 4xx 客户端错误 | Forbidden，无权限 | 权限不足 |
-| **404** | 4xx 客户端错误 | Not Found，资源不存在 | 查的用户不存在 |
-| **409** | 4xx 客户端错误 | Conflict，冲突 | 用户名已存在 |
-| **422** | 4xx 客户端错误 | Unprocessable Entity | 参数校验失败 |
-| **500** | 5xx 服务端错误 | Internal Server Error | 代码 panic |
+| 状态码     | 分类        | 含义                    | 示例         |
+| ------- | --------- | --------------------- | ---------- |
+| **200** | 2xx 成功    | OK，请求成功               | 查询成功       |
+| **201** | 2xx 成功    | Created，创建成功          | 注册成功       |
+| **204** | 2xx 成功    | No Content，成功但无返回体    | 删除成功       |
+| **301** | 3xx 重定向   | 永久重定向                 | 旧URL搬到新URL |
+| **302** | 3xx 重定向   | 临时重定向                 | 登录后跳转      |
+| **400** | 4xx 客户端错误 | Bad Request，请求参数有误    | 缺少必填字段     |
+| **401** | 4xx 客户端错误 | Unauthorized，未认证      | 没登录        |
+| **403** | 4xx 客户端错误 | Forbidden，无权限         | 权限不足       |
+| **404** | 4xx 客户端错误 | Not Found，资源不存在       | 查的用户不存在    |
+| **409** | 4xx 客户端错误 | Conflict，冲突           | 用户名已存在     |
+| **422** | 4xx 客户端错误 | Unprocessable Entity  | 参数校验失败     |
+| **500** | 5xx 服务端错误 | Internal Server Error | 代码 panic   |
 
 > 📌 记忆口诀：2 成功、3 跳转、4 你错了、5 我错了
 
@@ -106,13 +106,13 @@ https://api.example.com:8080/users/1?name=张三&age=25#section
 (scheme)  (host)    (port) (path)      (query)       (fragment)
 ```
 
-| 部分 | 说明 | 示例 |
-|------|------|------|
-| 协议 | http 或 https | `https://` |
-| 主机 | 域名或 IP | `localhost`、`api.example.com` |
-| 端口 | 服务端口（HTTP默认80，HTTPS默认443） | `:8080` |
-| 路径 | 资源位置 | `/users/1` |
-| 查询参数 | `key=value&key2=value2` | `?name=张三&age=25` |
+| 部分   | 说明                        | 示例                            |
+| ---- | ------------------------- | ----------------------------- |
+| 协议   | http 或 https              | `https://`                    |
+| 主机   | 域名或 IP                    | `localhost`、`api.example.com` |
+| 端口   | 服务端口（HTTP默认80，HTTPS默认443） | `:8080`                       |
+| 路径   | 资源位置                      | `/users/1`                    |
+| 查询参数 | `key=value&key2=value2`   | `?name=张三&age=25`             |
 
 在 Gin 中获取各部分：
 ```go
@@ -129,11 +129,11 @@ c.Query("name")      // "张三" （查询参数）
 
 Content-Type 告诉服务端"我发的是什么格式的数据"：
 
-| Content-Type | 场景 | Gin 获取方式 |
-|-------------|------|------------|
-| `application/json` | 前后端分离 API（最常见） | `c.ShouldBindJSON()` |
-| `application/x-www-form-urlencoded` | HTML 表单提交 | `c.PostForm()` |
-| `multipart/form-data` | 文件上传 | `c.FormFile()` |
+| Content-Type                        | 场景             | Gin 获取方式             |
+| ----------------------------------- | -------------- | -------------------- |
+| `application/json`                  | 前后端分离 API（最常见） | `c.ShouldBindJSON()` |
+| `application/x-www-form-urlencoded` | HTML 表单提交      | `c.PostForm()`       |
+| `multipart/form-data`               | 文件上传           | `c.FormFile()`       |
 
 ### JSON 请求示例
 

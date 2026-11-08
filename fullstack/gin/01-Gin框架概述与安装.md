@@ -168,7 +168,7 @@ r := gin.Default()
 ```go
 r.GET("/ping", func(c *gin.Context) { ... })
 ```
-注册一个 GET 路由，路径是 `/ping`。当浏览器或 curl 访问 `GET /ping` 时，执行后面的函数。
+注册一个 GET 路由，路径是 `/ping`。当浏览器或 curl 访问 `GET /ping` 时，执行后面的handler函数。
 
 ```go
 func(c *gin.Context)
@@ -200,10 +200,10 @@ r := gin.Default()
 r := gin.New()
 ```
 
-| 方法 | 中间件 | 何时使用 |
-|------|--------|---------|
-| `gin.Default()` | Logger + Recovery | 大多数场景（推荐） |
-| `gin.New()` | 无 | 需要完全自定义中间件时 |
+| 方法              | 中间件               | 何时使用        |
+| --------------- | ----------------- | ----------- |
+| `gin.Default()` | Logger + Recovery | 大多数场景（推荐）   |
+| `gin.New()`     | 无                 | 需要完全自定义中间件时 |
 
 > 📌 日常开发用 `gin.Default()` 就行。Recovery 能防止 panic 导致服务崩溃，Logger 帮你看到每个请求的日志。
 

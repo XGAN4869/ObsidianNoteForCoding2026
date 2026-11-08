@@ -33,27 +33,27 @@ type CreateUserRequest struct {
 
 ### 基础验证
 
-| 标签 | 含义 | 示例 |
-|------|------|------|
-| `required` | 必填（非零值） | `binding:"required"` |
-| `min=n` | 最小值/最小长度 | `binding:"min=3"` |
-| `max=n` | 最大值/最大长度 | `binding:"max=100"` |
-| `len=n` | 精确长度 | `binding:"len=11"` |
-| `eq=n` | 等于 | `binding:"eq=1"` |
-| `ne=n` | 不等于 | `binding:"ne=0"` |
-| `oneof` | 枚举值 | `binding:"oneof=active inactive"` |
+| 标签         | 含义       | 示例                                |
+| ---------- | -------- | --------------------------------- |
+| `required` | 必填（非零值）  | `binding:"required"`              |
+| `min=n`    | 最小值/最小长度 | `binding:"min=3"`                 |
+| `max=n`    | 最大值/最大长度 | `binding:"max=100"`               |
+| `len=n`    | 精确长度     | `binding:"len=11"`                |
+| `eq=n`     | 等于       | `binding:"eq=1"`                  |
+| `ne=n`     | 不等于      | `binding:"ne=0"`                  |
+| `oneof`    | 枚举值      | `binding:"oneof=active inactive"` |
 
 ### 字符串验证
 
-| 标签 | 含义 | 示例 |
-|------|------|------|
-| `email` | 邮箱格式 | `binding:"email"` |
-| `url` | URL 格式 | `binding:"url"` |
-| `alpha` | 只含字母 | `binding:"alpha"` |
-| `alphanum` | 字母+数字 | `binding:"alphanum"` |
-| `contains` | 包含子串 | `binding:"contains=admin"` |
-| `startswith` | 前缀 | `binding:"startswith=+"` |
-| `endswith` | 后缀 | `binding:"endswith=.com"` |
+| 标签           | 含义     | 示例                         |
+| ------------ | ------ | -------------------------- |
+| `email`      | 邮箱格式   | `binding:"email"`          |
+| `url`        | URL 格式 | `binding:"url"`            |
+| `alpha`      | 只含字母   | `binding:"alpha"`          |
+| `alphanum`   | 字母+数字  | `binding:"alphanum"`       |
+| `contains`   | 包含子串   | `binding:"contains=admin"` |
+| `startswith` | 前缀     | `binding:"startswith=+"`   |
+| `endswith`   | 后缀     | `binding:"endswith=.com"`  |
 
 ### 数字验证
 
@@ -66,19 +66,19 @@ type CreateUserRequest struct {
 
 ### 跨字段验证
 
-| 标签 | 含义 | 示例 |
-|------|------|------|
-| `eqfield=Field` | 等于另一个字段 | `binding:"eqfield=Password"` |
+| 标签              | 含义       | 示例                              |
+| --------------- | -------- | ------------------------------- |
+| `eqfield=Field` | 等于另一个字段  | `binding:"eqfield=Password"`    |
 | `nefield=Field` | 不等于另一个字段 | `binding:"nefield=OldPassword"` |
-| `gtfield=Field` | 大于另一个字段 | `binding:"gtfield=MinAge"` |
+| `gtfield=Field` | 大于另一个字段  | `binding:"gtfield=MinAge"`      |
 
 ### 其他
 
-| 标签 | 含义 |
-|------|------|
-| `omitempty` | 空值时不验证 |
-| `-` | 跳过验证 |
-| `dive` | 深入验证切片/数组元素 |
+| 标签          | 含义          |
+| ----------- | ----------- |
+| `omitempty` | 空值时不验证      |
+| `-`         | 跳过验证        |
+| `dive`      | 深入验证切片/数组元素 |
 
 ---
 

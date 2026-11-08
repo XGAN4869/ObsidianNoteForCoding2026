@@ -34,16 +34,17 @@ c.ShouldBindQuery(&query)
 
 ## 10.2 四大绑定方法
 
-| 方法 | 绑定来源 | 结构体标签 | 何时用 |
-|------|---------|----------|--------|
-| `ShouldBindJSON` | JSON Body | `json` | POST/PUT/PATCH 的 JSON 请求 |
-| `ShouldBindQuery` | 查询参数 | `form` | GET 请求的 `?key=value` |
-| `ShouldBindUri` | 路径参数 | `uri` | `/users/:id` 中的参数 |
-| `ShouldBind` | 自动选择 | 根据 Content-Type | 不想手动区分来源时 |
+| 方法                | 绑定来源      | 结构体标签           | 何时用                      |
+| ----------------- | --------- | --------------- | ------------------------ |
+| `ShouldBindJSON`  | JSON Body | `json`          | POST/PUT/PATCH 的 JSON 请求 |
+| `ShouldBindQuery` | 查询参数      | `form`          | GET 请求的 `?key=value`     |
+| `ShouldBindUri`   | 路径参数      | `uri`           | `/users/:id` 中的参数        |
+| `ShouldBind`      | 自动选择      | 根据 Content-Type | 不想手动区分来源时                |
 
 ---
 
 ## 10.3 ShouldBindJSON：绑定 JSON Body
+取请求体  `application/json` 的那段 JSON **填充到 `req`** 里。
 
 ```go
 type CreateUserRequest struct {
