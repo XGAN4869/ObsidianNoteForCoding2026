@@ -1,6 +1,90 @@
 # 首页双列瀑布流工程总结
 
-更新时间：2026-11-05。
+更新时间：2026-11-11。
+
+## 当前负责模块目录与边界
+
+当前负责范围收敛为两个主模块：**首页信息流**、**笔记详情与媒体**。发布、草稿、消息和个人页属于其他模块，不把它们的实现经验混入当前总结。
+
+```text
+src/
+├─pages/
+│ ├─index/                              # 首页信息流
+│ │ ├─index.vue                         # Tab、刷新、触底和滚动位置
+│ │ └─components/
+│ │   ├─HomeDiscoverFeed.vue             # 发现流
+│ │   ├─HomeFollowingFeed.vue            # 关注流
+│ │   ├─HomeFeedPager.vue                # 发现／关注横向切换
+│ │   ├─HomeFeedView.vue                 # 双列布局、窗口化渲染和状态展示
+│ │   ├─HomeFeedError.vue                # 信息流错误状态
+│ │   ├─HomeFeedPlaceholder.vue          # 加载占位
+│ │   └─HomeNoteCard.vue                 # 首页笔记卡片
+│ │
+│ └─note/                               # 笔记详情与媒体
+│   ├─index.vue                          # 详情读取、批次和异常状态
+│   ├─note.css
+│   └─components/
+│     ├─NoteNavbar.vue                   # 详情导航
+│     ├─NoteImageGallery.vue             # 图片画廊、全屏和缩放
+│     └─NoteVideo.vue                    # 视频播放和生命周期
+│
+├─composables/homepage/
+│ ├─useHomeFeed.ts                       # 首页分页、缓存和布局协调
+│ ├─useCursorFeed.ts                     # 游标、加载阶段、去重和重试
+│ ├─useCardMeasurement.ts                # 隐藏测量区和卡片尺寸读取
+│ ├─useWaterfall.ts                      # 最短列追加和位置记录
+│ ├─useSwipePager.ts                     # 首页横向切换
+│ ├─useNoteImageGallery.ts               # 图片尺寸和画廊状态
+│ └─useNoteImageGestures.ts              # 图片手势状态
+│
+├─api/
+│ ├─request.ts                           # 通用请求层
+│ └─modules/
+│   ├─feed.ts                            # 首页发现／关注接口
+│   └─note.ts                            # 笔记详情接口
+│
+├─types/
+│ ├─feed.ts                              # Feed 类型
+│ ├─note.ts                              # 笔记基础类型
+│ └─note-detail.ts                       # 详情类型
+│
+├─utils/
+│ ├─homePage/
+│ │ ├─feed-layout.ts                     # 首页布局计算
+│ │ ├─swipe-pager.ts                     # 横滑落点判断
+│ │ ├─image-gesture.ts                   # 图片几何计算
+│ │ └─note-detail.ts                     # 详情数据转换
+│ └─navigation.ts                        # 列表到详情的跳转
+│
+└─components/common/
+  ├─AppImage.vue                         # 图片渲染和失败重试
+  └─AppNavbar.vue                        # 公共导航
+```
+
+### 两个模块的数据链路
+
+```text
+首页：
+feed.ts
+→ useHomeFeed
+→ useCursorFeed / useCardMeasurement / useWaterfall
+→ HomeFeedView
+→ HomeNoteCard
+
+详情：
+note.ts
+→ pages/note/index.vue
+→ NoteImageGallery / NoteVideo
+→ useNoteImageGestures / image-gesture.ts
+```
+
+### 目录职责边界
+
+- `api/modules` 只负责接口调用和后端字段适配，页面不直接调用 `uni.request`。
+- `composables` 负责可复用状态和流程，不放页面模板、文案或 TDesign 结构。
+- `utils` 只放纯计算、格式化和平台无关转换；`feed-cache.ts` 负责快照读写与有效期校验，`feed-layout.ts` 负责测量结果转换和固定高度兜底。
+- `pages/*/components` 负责当前页面的展示结构；跨页面复用的展示组件放在 `components/common`。
+- `useNoteImageGallery.ts` 和 `useNoteImageGestures.ts` 当前物理位置在 `composables/homepage`，但业务归属是“详情与媒体”，后续整理目录时不能误认为首页状态。
 
 ## 刷新与布局总时序
 
