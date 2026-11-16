@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1110" height="1045" viewBox="0 0 1110 1045" role="img" aria-labelledby="title description">
+<title id="title">评论区组件通信 · 三层组件</title>
+<desc id="description">从上到下依次是父组件详情页、子组件一评论容器、子组件二评论区块。标出了各自的状态和关键函数，以及 props、emit 和 ref 的方向。</desc>
+<defs>
+  <marker id="down-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0 0 10 5 0 10Z" fill="#28647e"/>
+  </marker>
+  <marker id="up-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0 0 10 5 0 10Z" fill="#915922"/>
+  </marker>
+  <marker id="ref-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0 0 10 5 0 10Z" fill="#674c8c"/>
+  </marker>
+</defs>
+<style>
+  text { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif; }
+  .page { fill: #eff4f8; }
+  .heading { fill: #192f45; font-size: 38px; font-weight: 700; }
+  .subtitle { fill: #4b667c; font-size: 17px; }
+  .card { fill: #fff; stroke: #b7cddd; stroke-width: 1.5; }
+  .badge { fill: #244e69; }
+  .level { fill: #fff; font-size: 17px; font-weight: 700; }
+  .component { fill: #18354e; font-size: 26px; font-weight: 700; }
+  .filename { fill: #42637a; font-size: 18px; }
+  .caption { fill: #265872; font-size: 17px; font-weight: 700; }
+  .body { fill: #243f54; font-size: 17px; }
+  .divider { stroke: #dce7ee; stroke-width: 1; }
+  .arrow { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+  .props { stroke: #28647e; marker-end: url(#down-arrow); }
+  .emit { stroke: #915922; marker-end: url(#up-arrow); }
+  .ref { stroke: #674c8c; stroke-dasharray: 6 5; marker-end: url(#ref-arrow); }
+  .edge-title { font-size: 17px; font-weight: 700; }
+  .edge-note { fill: #405a71; font-size: 15px; }
+  .prop-label { fill: #28647e; }
+  .emit-label { fill: #815019; }
+  .ref-label { fill: #674c8c; }
+  .source { fill: #285971; font-size: 15px; text-decoration: underline; }
+</style>
+<rect width="1110" height="1045" class="page"/>
+<text x="72" y="62" class="heading">评论区组件通信</text>
+<text x="72" y="93" class="subtitle">按原文的嵌套关系，从上往下读三层组件。</text>
+
+<g id="level-parent" role="group" aria-label="父组件 详情页">
+  <rect x="72" y="126" width="966" height="140" rx="16" class="card"/>
+  <rect x="96" y="147" width="92" height="34" rx="7" class="badge"/>
+  <text x="142" y="170" text-anchor="middle" class="level">父组件</text>
+  <text x="207" y="173" class="component">详情页</text>
+  <text x="98" y="220" class="body">持有当前文章 ID，通过 articleId 指定评论容器要查哪篇文章。</text>
+  <text x="98" y="245" class="body">接收 shareFriend，交给详情页的 shareOthers() 处理转发。</text>
+</g>
+<g role="group" aria-label="详情页与评论容器之间的通信">
+  <path d="M 230 274 V 365" class="arrow props"/>
+  <text x="246" y="316" class="edge-title prop-label">props · articleId</text>
+  <text x="246" y="340" class="edge-note">详情页传入文章 ID</text>
+  <path d="M 668 365 V 274" class="arrow emit"/>
+  <text x="684" y="316" class="edge-title emit-label">emit · shareFriend</text>
+  <text x="684" y="340" class="edge-note">容器把转发意图交给详情页</text>
+</g>
+
+<g id="level-container" role="group" aria-label="子组件 1 评论容器">
+  <rect x="72" y="374" width="966" height="207" rx="16" class="card"/>
+  <rect x="96" y="395" width="107" height="34" rx="7" class="badge"/>
+  <text x="149.5" y="418" text-anchor="middle" class="level">子组件 1</text>
+  <text x="223" y="421" class="component">评论容器</text>
+  <text x="346" y="420" class="filename">index.vue · comment-eg</text>
+  <line x1="548" y1="451" x2="548" y2="557" class="divider"/>
+  <text x="98" y="467" class="caption">持有的状态</text>
+  <text x="98" y="495" class="body">commentData 保存评论列表与数量</text>
+  <text x="98" y="522" class="body">foldList 记录展开的楼层</text>
+  <text x="98" y="549" class="body">reqFlag 控制重复请求</text>
+  <text x="572" y="467" class="caption">关键函数</text>
+  <text x="572" y="495" class="body">getComment() 按文章加载并更新列表</text>
+  <text x="572" y="522" class="body">add() / like() / del() 调后端接口</text>
+  <text x="572" y="549" class="body">fold() 更新已有回复的展开状态</text>
+</g>
+<g role="group" aria-label="评论容器与评论区块之间的通信">
+  <path d="M 110 589 V 711" class="arrow props"/>
+  <text x="126" y="641" class="edge-title prop-label">props · cmData</text>
+  <text x="126" y="666" class="edge-note">把最新的评论列表传给区块</text>
+  <path d="M 409 711 V 589" class="arrow emit"/>
+  <text x="425" y="641" class="edge-title emit-label">emit · add / like / del / fold</text>
+  <text x="425" y="666" class="edge-note">区块上报操作和对应参数</text>
+  <path d="M 758 589 V 711" class="arrow ref"/>
+  <text x="774" y="641" class="edge-title ref-label">ref · 调用子组件完成方法</text>
+  <text x="774" y="666" class="edge-note">容器在接口成功后通知区块</text>
+</g>
+
+<g id="level-block" role="group" aria-label="子组件 2 评论区块">
+  <rect x="72" y="720" width="966" height="255" rx="16" class="card"/>
+  <rect x="96" y="741" width="107" height="34" rx="7" class="badge"/>
+  <text x="149.5" y="764" text-anchor="middle" class="level">子组件 2</text>
+  <text x="223" y="767" class="component">评论区块</text>
+  <text x="346" y="766" class="filename">hb-comment.vue</text>
+  <line x1="548" y1="797" x2="548" y2="953" class="divider"/>
+  <text x="98" y="816" class="caption">展示和局部状态</text>
+  <text x="98" y="844" class="body">用 cmData 渲染一级评论和二级回复</text>
+  <text x="98" y="871" class="body">sendConf 保存草稿和实际回复对象</text>
+  <text x="98" y="898" class="body">submit、focus 和 KeyboardHeight</text>
+  <text x="98" y="925" class="body">分别控制弹层显示、聚焦和底部位置</text>
+  <text x="572" y="816" class="caption">关键函数</text>
+  <text x="572" y="844" class="body">replyChild() 设回复对象，commentInput() 打开输入</text>
+  <text x="572" y="871" class="body">addMsg() 发出发送事件，addComplete() 清草稿</text>
+  <text x="572" y="898" class="body">like()、confirmDelete()、foldMsg() 上报操作</text>
+  <text x="572" y="925" class="body">likeComplete()、deleteComplete() 更新列表显示</text>
+</g>
+
+<a href="https://blog.csdn.net/qq_53273706/article/details/136458373">
+  <text x="72" y="1014" class="source">来源 · CSDN《uniapp 实现一个评论区》</text>
+</a>
+</svg>
