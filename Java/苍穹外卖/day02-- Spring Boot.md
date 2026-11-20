@@ -1,23 +1,56 @@
-下适配的 jdk
-⚪Maven：
+# day02 Spring Boot
+
+## 环境准备
+
+### JDK
+
+安装并切换到适配的 JDK 版本。
+
+### Maven 多模块工程
+
+```xml
 <modules>
     <module>sky-common</module>  <!-- 工具类、常量、异常、配置属性 -->
     <module>sky-pojo</module>    <!-- Entity / DTO / VO -->
     <module>sky-server</module>  <!-- Controller / Service / Mapper，启动类在这 -->
 </modules>
-- steps
-1. 先点Reload All Maven Projects（或者 Sync） 
-2. 代码是否编译通过：compile jdk
-3. 改公共模块其他代码有依赖：install -- 【业务模块改完直接启动 SpringBoot 不需要每次 install】
-P.S. compile 是生命周期里靠前的阶段，install 会自动走完 compile，install 是包含 compile 的
+```
 
-⚪数据库账号密码在 dev.yaml 修改
+| 模块          | 职责                                         |
+| ------------- | -------------------------------------------- |
+| `sky-common`  | 工具类、常量、异常、配置属性                 |
+| `sky-pojo`    | Entity / DTO / VO                            |
+| `sky-server`  | Controller / Service / Mapper，启动类在这   |
 
-⚪数据库环境搭建
+### 导入项目步骤
 
-⚪断点调试
+1. 先点 **Reload All Maven Projects**（或 Sync）
+2. 检查代码是否编译通过：`compile`（确认 JDK 配置正确）
+3. 改了公共模块的其他代码后需要 `install`
 
-⚪ctrl+alt+b 否则进入的是接口
+> [!note] compile 与 install 的关系
+> `compile` 是生命周期里靠前的阶段，`install` 会自动走完 `compile`，也就是 `install` 包含 `compile`。
+> 业务模块改完直接启动 SpringBoot 即可，不需要每次 `install`。
 
-⚪简单的 sql 注解，复杂的配置到 mapper 映射文件中
-## login登录
+## 配置
+
+### 数据库账号密码
+
+在 `dev.yaml` 中修改数据库账号密码。
+
+## 数据库环境搭建
+
+> TODO：待补充
+
+## 断点调试
+
+- 调试图标旁使用 **`Ctrl + Alt + B`** 进入实现类，否则进入的是接口
+
+### SQL 的位置
+
+- 简单的 SQL 用注解
+- 复杂的 SQL 配置到 mapper 映射文件中
+
+## login 登录
+
+> TODO：待补充
